@@ -1,0 +1,1067 @@
+
+
+Inicio: 22/09/2026 19:10:24
+======================================================================
+
+MLflow Run: 960be04c26954fde999e0d8110f1e8a4
+Busca: 25 trials x 3 folds x ate 12 epocas
+O AUC otimizado e o da VALIDACAO INTERNA. Os conjuntos de
+teste dos folds nao sao tocados durante a busca.
+
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  3-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 344 (36 casos) | teste 173 (19 casos)
+    fold 1: treino 345 (37 casos) | teste 172 (18 casos)
+    fold 2: treino 345 (37 casos) | teste 172 (18 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   0 | AUC val 0.5892 +- 0.0429 |   473,057 par | base 32 layers 1,1,1,1 avg | lr 2.6e-04 wd 6.4e-03 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   1 | AUC val 0.5394 +- 0.1201 |   997,217 par | base 32 layers 2,2,2,2 max | lr 3.7e-04 wd 2.3e-03 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   2 | AUC val 0.5668 +- 0.1164 | 1,818,049 par | base 64 layers 1,1,1,1 max | lr 9.8e-05 wd 2.3e-04 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   3 | AUC val 0.5226 +- 0.1308 | 3,910,849 par | base 64 layers 2,2,2,2 avg | lr 2.5e-05 wd 1.8e-04 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   4 | AUC val 0.4994 +- 0.1014 |   473,057 par | base 32 layers 1,1,1,1 avg | lr 4.3e-04 wd 1.0e-04 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   5 | AUC val 0.5845 +- 0.0452 |   259,249 par | base 16 layers 2,2,2,2 max | lr 8.8e-05 wd 4.6e-02 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   6 | AUC val 0.5686 +- 0.0343 |   127,729 par | base 16 layers 1,1,1,1 avg | lr 3.2e-05 wd 5.3e-02 | win 24000
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  3-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 344 (36 casos) | teste 173 (19 casos)
+    fold 1: treino 345 (37 casos) | teste 172 (18 casos)
+    fold 2: treino 345 (37 casos) | teste 172 (18 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   7 | AUC val 0.5483 +- 0.0924 |   127,729 par | base 16 layers 1,1,1,1 max | lr 6.2e-04 wd 2.6e-02 | win 12000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial   9 | AUC val 0.6155 +- 0.0967 | 1,818,049 par | base 64 layers 1,1,1,1 max | lr 9.5e-05 wd 2.7e-04 | win 12000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial  13 | AUC val 0.5800 +- 0.0181 | 1,818,049 par | base 64 layers 1,1,1,1 avg | lr 1.7e-04 wd 4.3e-02 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial  17 | AUC val 0.5833 +- 0.0502 |   127,729 par | base 16 layers 1,1,1,1 avg | lr 9.6e-04 wd 3.3e-03 | win 24000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3850 mV
+   Escala Y: 1.1379 mV
+   Escala Z: 2.4933 mV
+  trial  19 | AUC val 0.5909 +- 0.1441 |   127,729 par | base 16 layers 1,1,1,1 max | lr 1.9e-04 wd 1.6e-04 | win 12000
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 258 (27 casos) | Val 86 (9) | Teste 173 (19)
+  pos_weight: 8.56
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5134 mV
+   Escala Y: 0.9989 mV
+   Escala Z: 2.0812 mV
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 258 (28 casos) | Val 87 (9) | Teste 172 (18)
+  pos_weight: 8.21
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5392 mV
+   Escala Y: 1.2038 mV
+   Escala Z: 2.5633 mV
+
+======================================================================
+MELHORES HIPERPARAMETROS
+======================================================================
+  trial #9 | AUC val 0.6155 +- 0.0967
+  parametros da rede: 1,818,049
+    base_planes: 64
+    layers: 1,1,1,1
+    pooling: max
+    dropout: 0.4
+    weight_decay: 0.000272072480594867
+    lr: 9.525889086580776e-05
+    window_size: 12000
+    samples_train: 100
+    batch_size: 128
+
+  Importancia dos hiperparametros:
+    dropout         : 0.290
+    lr              : 0.195
+    window_size     : 0.112
+    base_planes     : 0.099
+    layers          : 0.091
+    samples_train   : 0.079
+    batch_size      : 0.060
+    weight_decay    : 0.043
+    pooling         : 0.030
+
+======================================================================
+RODADA FINAL — 5 folds
+======================================================================
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+  fold 0: AUC teste 0.5914 (val 0.6662, 7 epocas)
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5294 mV
+   Escala Y: 1.3044 mV
+   Escala Z: 2.5272 mV
+  fold 1: AUC teste 0.5846 (val 0.6123, 8 epocas)
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4195 mV
+   Escala Y: 1.0943 mV
+   Escala Z: 2.6359 mV
+  fold 2: AUC teste 0.4585 (val 0.6624, 14 epocas)
+
+======================================================================
+FOLD 3
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5358 mV
+   Escala Y: 1.1305 mV
+   Escala Z: 2.6929 mV
+  fold 3: AUC teste 0.4091 (val 0.5367, 9 epocas)
+
+======================================================================
+FOLD 4
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Clinicas desativadas — modelo usa apenas o ECG
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4604 mV
+   Escala Y: 1.2672 mV
+   Escala Z: 2.4316 mV
+  fold 4: AUC teste 0.5069 (val 0.5210, 10 epocas)
+
+======================================================================
+RESULTADO FINAL — OUT-OF-FOLD
+======================================================================
+  517 pacientes | 55 casos
+    AUC-ROC.......: 0.4964  IC95% [0.4109, 0.5843]
+    AUC-PR........: 0.1224   (prevalencia 0.1064)
+    Sensibilidade.: 0.4545
+    Especificidade: 0.5649
+    VPP...........: 0.1106
+    AUC por fold..: 0.5101 +- 0.0791
+                    Predito 0   Predito 1
+      Real 0 (vive)     261         201
+      Real 1 (morre)     30          25
+
+======================================================================
+COMO REPORTAR
+======================================================================
+  AUC out-of-fold: 0.496 (IC95% 0.411-0.584)
+
+  ⚠️ Declare que os hiperparametros foram escolhidos por busca bayesiana
+     sobre a MEDIA do AUC das validacoes internas, e que os conjuntos de
+     teste dos folds nao participaram da selecao. Mencione tambem que a
+     ausencia de validacao cruzada aninhada implica algum otimismo residual
+     na estimativa.
+
+  Referencias deste projeto:
+     ResNet pequena, sem busca : AUC 0,480  IC95% [0,400, 0,556]
+     CNN simples, sem busca    : AUC 0,498  IC95% [0,411, 0,586]
+     CNN com Optuna            : AUC 0,556  IC95% [0,464, 0,647]
+

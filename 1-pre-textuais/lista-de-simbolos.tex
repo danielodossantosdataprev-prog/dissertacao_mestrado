@@ -1,0 +1,77 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Atencao! A lista nao ordena automaticamente   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Atencao! A lista nao ordena automaticamente   %%
+%%   Ordem: latinas (A-Z), negrito, caligraficas,  %%
+%%   gregas (ordem do alfabeto grego)              %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{simbolos} \itemsep -1pt
+	% ---------------- latinas ----------------
+	\item[$ b_{c'} $] Termo de viés do filtro $c'$
+	\item[$ B $] Tamanho do lote de treinamento
+	\item[$ B^{*} $] Número de reamostragens \textit{bootstrap}
+	\item[$ C $] Número de derivações do sinal (canais de entrada)
+	\item[$ C' $] Número de filtros de uma camada convolucional
+	\item[$ d $] Dimensão das representações no \textit{Transformer}
+	\item[$ d_k $] Dimensão das consultas e das chaves
+	\item[$ d_{\mathrm{ff}} $] Dimensão interna da rede alimentada adiante
+	\item[$ E $] Fator de expansão do bloco residual
+	\item[$ f $] Frequência
+	\item[$ f_c $] Frequência de corte
+	\item[$ f_{\mathrm{inf}} $] Frequência de corte inferior
+	\item[$ f_{\mathrm{sup}} $] Frequência de corte superior
+	\item[$ H(f) $] Resposta em frequência do filtro
+	\item[$ i $] Índice do paciente
+	\item[$ J $] Índice de Youden
+	\item[$ K $] Número de partições da validação cruzada
+	\item[$ L $] Comprimento do sinal, em amostras
+	\item[$ L' $] Comprimento da sequência após as camadas convolucionais
+	\item[$ m $] Índice da janela
+	\item[$ M_i $] Número de janelas do paciente $i$
+	\item[$ n $] Ordem do filtro de Butterworth
+	\item[$ n_h $] Número de cabeças de atenção
+	\item[$ N $] Número de pacientes da coorte
+	\item[$ N_0 $] Número de controles
+	\item[$ N_1 $] Número de casos
+	\item[$ \hat{p}_i $] Probabilidade estimada de óbito para o paciente $i$
+	\item[$ \hat{p}_{i,m} $] Probabilidade estimada para a $m$-ésima janela do paciente $i$
+	\item[$ P $] Número de canais do primeiro estágio da rede residual
+	\item[$ r $] Fator de agrupamento
+	\item[$ t $] Posição temporal no sinal
+	\item[$ w_{+} $] Peso da classe positiva na função de perda
+	\item[$ y_i $] Rótulo do paciente $i$
+	\item[$ z_i $] \textit{Logit} do paciente $i$
+	% ---------------- negrito ----------------
+	\item[$ \mathbf{Q}, \mathbf{K}, \mathbf{V} $] Matrizes de consultas, chaves e valores
+	\item[$ \mathbf{S} $] Sinal de \gls{ECG}, matriz de $C$ derivações por $L$ amostras
+	\item[$ \mathbf{U}_Q, \mathbf{U}_K, \mathbf{U}_V, \mathbf{U}_O $] Matrizes de projeção da atenção
+	\item[$ \mathbf{x} $] Entrada de um bloco residual
+	\item[$ \mathbf{X} $] Sequência de entrada do \textit{Transformer}
+	% ---------------- caligraficas ----------------
+	\item[$ \mathcal{B} $] Lote de exemplos de treinamento
+	\item[$ \mathcal{C}_0 $] Conjunto dos controles
+	\item[$ \mathcal{C}_1 $] Conjunto dos casos
+	\item[$ \mathcal{F} $] Transformação aprendida por um bloco residual
+	\item[$ \mathcal{H} $] Mapeamento desejado de um bloco residual
+	\item[$ \mathcal{L} $] Função de perda
+	% ---------------- gregas ----------------
+	\item[$ \beta $] Parâmetro de deslocamento da normalização em lote
+	\item[$ \gamma $] Parâmetro de escala da normalização em lote
+	\item[$ \delta $] Limiar de decisão
+	\item[$ \delta^{*} $] Limiar escolhido pelo índice de Youden
+	\item[$ \Delta $] Diferença entre duas medidas
+	\item[$ \epsilon $] Constante de estabilidade numérica
+	\item[$ \theta $] Conjunto de parâmetros treináveis
+	\item[$ \boldsymbol{\Theta} $] Pesos de uma camada convolucional
+	\item[$ \boldsymbol{\Theta}_s $] Projeção do atalho residual
+	\item[$ \kappa $] Largura do núcleo convolucional
+	\item[$ \lambda $] Coeficiente de decaimento de pesos
+	\item[$ \mu_{\mathcal{B}} $] Média calculada sobre o lote
+	\item[$ \pi $] Prevalência do evento na coorte
+	\item[$ \sigma(\cdot) $] Função logística
+	\item[$ \sigma^{2}_{\mathcal{B}} $] Variância calculada sobre o lote
+	\item[$ \varphi $] Função de comparação entre um caso e um controle
+\end{simbolos}

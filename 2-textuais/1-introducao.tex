@@ -1,0 +1,327 @@
+\chapter{Introdução}
+\label{cap:introducao}
+
+% ==============================================================================
+% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
+% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
+% os nomes das variaveis, fica na metodologia.
+% ==============================================================================
+
+% ==============================================================================
+% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
+% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
+% os nomes das variaveis, fica na metodologia.
+% ==============================================================================
+
+% ==============================================================================
+% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
+% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
+% os nomes das variaveis, fica na metodologia.
+% ==============================================================================
+
+% \subsection{Objetivo e visão geral}
+% \label{sec:intro-objetivo}
+
+% Este trabalho investiga se o \gls{ECG} de Holter de 24~horas contém
+% informação suficiente para identificar, entre pacientes com insuficiência
+% cardíaca, aqueles que viriam a sofrer \gls{MSC}. A insuficiência cardíaca é
+% a condição comum a todos os pacientes estudados, e não o desfecho: o que se
+% procura distinguir é quem, dentro dessa população, morreu subitamente de
+% quem sobreviveu. Para responder a essa
+% pergunta, foram comparadas duas famílias de abordagens sobre a mesma coorte
+% e sob o mesmo protocolo de avaliação: modelos de aprendizado profundo, que
+% recebem o sinal bruto e aprendem dele as próprias representações, e modelos
+% de aprendizado de máquina clássico, que recebem biomarcadores extraídos do
+% \gls{ECG} --- medidas de variabilidade da frequência cardíaca, de ectopia e
+% de morfologia --- combinados ou não a variáveis clínicas.
+
+% A comparação foi conduzida em validação cruzada estratificada por paciente,
+% com a \gls{AUC} como métrica principal e intervalos de confiança estimados
+% por \textit{bootstrap}. Entre as redes avaliadas estão uma rede convolucional
+% simples, redes residuais de profundidades crescentes, uma rede residual
+% seguida de um codificador \textit{Transformer}, uma rede convolucional com
+% camada recorrente (\textit{Long Short-Term Memory}) e um codificador
+% pré-treinado em outra base de Holter.
+
+% O resultado central é que a complexidade do modelo não se converteu em
+% desempenho. Nenhuma das redes alimentadas com o sinal bruto se distinguiu do
+% acaso, com \gls{AUC} entre 0,49 e 0,54. Os modelos mais simples, baseados em
+% regressão logística sobre biomarcadores e variáveis clínicas, alcançaram os
+% melhores valores, até 0,689 [0,607--0,769], embora o ganho dos biomarcadores
+% sobre as variáveis clínicas isoladas não tenha sido estatisticamente
+% distinguível de zero. Atribui-se esse comportamento principalmente ao
+% tamanho da amostra e ao desbalanceamento entre as classes: com apenas 55
+% eventos, modelos com milhões de parâmetros não encontram exemplos
+% suficientes para aprender padrões que generalizem, enquanto modelos com
+% poucas variáveis bem definidas se ajustam com menor variância.
+
+% Mais do que propor um classificador, o trabalho contribui com uma avaliação
+% controlada dos limites dessas abordagens em uma coorte real e pequena. O
+% protocolo foi desenhado para evitar erros de avaliação que, quando presentes,
+% fazem um modelo parecer melhor do que é e que são frequentes em estudos de
+% aprendizado de máquina aplicado \cite{kapoor2023leakage}. Dois exemplos
+% tratados neste trabalho são calcular as métricas sobre janelas do sinal, e
+% não sobre pacientes, o que trata como independentes trechos de um mesmo
+% exame, e escolher o melhor entre vários modelos olhando o próprio conjunto
+% de teste, o que superestima o desempenho do modelo escolhido.
+
+% \subsection{Escolha dos dados e delimitação da coorte}
+% \label{sec:intro-dados}
+
+% Os dados deste trabalho provêm da base MUSIC (\textit{Muerte Súbita en
+%     Insuficiencia Cardiaca}), disponibilizada publicamente no PhysioNet
+% \cite{martinyebra2025music, martinyebra2024music}. A base reúne 992 pacientes
+% com insuficiência cardíaca crônica sintomática (classes II e III da
+% \textit{New York Heart Association}), recrutados entre abril de 2003 e
+% dezembro de 2004 em oito hospitais universitários da Espanha e acompanhados
+% por uma mediana de 44 meses. Para 936 deles há um registro de Holter de
+% 24~horas, e as causas de óbito foram adjudicadas segundo definições
+% explícitas, que separam a \gls{MSC} do óbito por falência de bomba.
+
+% Três características tornam a MUSIC adequada ao problema estudado. Primeiro,
+% trata-se de uma população em que a \gls{MSC} é um desfecho frequente e
+% clinicamente relevante, e não de uma amostra da população geral, na qual o
+% evento seria raro demais para o aprendizado. Segundo, o Holter de 24~horas
+% oferece uma observação longa do \gls{ECG}, que capta variações ao longo do
+% dia inacessíveis a um traçado de repouso de poucos segundos. Terceiro, a
+% adjudicação do mecanismo de óbito permite isolar a morte de origem elétrica,
+% que é o objeto deste trabalho.
+
+% O problema foi formulado como uma classificação binária no nível do
+% paciente: a partir do Holter, distinguir quem veio a óbito por \gls{MSC}
+% de quem sobreviveu ao período de observação. Essa formulação dispensa o
+% tratamento de censura próprio da análise de sobrevivência, mas transfere a
+% exigência para o rótulo, que precisa ser inequívoco para cada paciente. Os
+% critérios de seleção decorrem dessa exigência e são três.
+
+% \textbf{Critério 1: ritmo sinusal durante o Holter.} Foram mantidos apenas
+% os pacientes cujo registro foi anotado como ritmo sinusal. Em fibrilação ou
+% \textit{flutter} atrial não há onda P organizada e os intervalos entre
+% batimentos são irregulares por definição, de modo que as medidas de
+% variabilidade da frequência cardíaca e de morfologia perdem o significado
+% fisiológico que têm em ritmo sinusal. Além disso, o próprio ritmo está
+% associado ao risco: incluí-lo permitiria que um modelo aprendesse a
+% reconhecer a arritmia atrial, e não marcadores de vulnerabilidade elétrica
+% ventricular. Restringir a coorte ao ritmo sinusal remove esse fator de
+% confusão e torna homogêneo o sinal de entrada.
+
+% \textbf{Critério 2: somente óbito por \gls{MSC} e sobreviventes.} Os casos
+% são os pacientes cuja causa de óbito foi adjudicada como \gls{MSC}; os
+% controles, os que permaneceram vivos. Foram excluídos os óbitos por falência
+% de bomba, cujo mecanismo é mecânico e progressivo, e os óbitos de causa não
+% cardíaca. Incluir a falência de bomba entre os casos ensinaria o modelo a
+% reconhecer a gravidade da insuficiência cardíaca em geral, e não o risco
+% específico de morte súbita; incluí-la entre os controles colocaria do lado
+% ``sem evento'' pacientes que também morreram de causa cardíaca.
+
+% \textbf{Critério 3: controles com quatro anos completos de seguimento.} Um
+% paciente vivo na última avaliação só é um controle confiável se tiver sido
+% acompanhado por tempo suficiente. Um sobrevivente observado por poucos
+% meses pode ter sofrido o evento logo depois de deixar o estudo; rotulá-lo
+% como controle introduziria erro no rótulo. Por isso exigiu-se dos controles
+% um seguimento de pelo menos 1.460~dias (quatro anos), horizonte compatível
+% com a mediana de acompanhamento da base.
+
+% A aplicação sucessiva desses critérios está resumida na
+% \autoref{tab:intro-coorte}. Dos 710 pacientes em ritmo sinusal, 123 foram
+% excluídos por desfecho ambíguo, restando 587 casos e controles. Desses, 47
+% não tinham registro de Holter disponível e 23 tinham um registro sem as três
+% derivações exigidas pelos modelos. A coorte final reúne 517 pacientes: 55
+% casos de \gls{MSC} e 462 controles, uma prevalência de 10,6\%.
+
+% \begin{table}[h!]
+%     \captionsetup{width=13cm}
+%     \Caption{\label{tab:intro-coorte} Delimitação da coorte a partir da base
+%         MUSIC}
+%     \IBGEtab{}{
+%         \begin{tabular}{lrr}
+%             \toprule
+%             Etapa                                                   & \multicolumn{1}{c}{Excluídos} &
+%             \multicolumn{1}{c}{Restantes}                                                                 \\
+%             \midrule \midrule
+%             Pacientes na base MUSIC                                 & ---                           & 992 \\
+%             Critério 1: ritmo não sinusal                           & 282                           & 710 \\
+%             Critério 2: óbito não cardíaco                          & 35                            &     \\
+%             Critério 2: óbito por falência de bomba                 & 67                            &     \\
+%             Critério 3: vivos com seguimento inferior a quatro anos & 21                            & 587 \\
+%             Sem registro de Holter                                  & 47                            &     \\
+%             Registro sem as três derivações                         & 23                            & 517 \\
+%             \midrule
+%             \multicolumn{3}{l}{Coorte final: 55 casos de \gls{MSC} e 462
+%             controles (prevalência de 10,6\%)}                                                            \\
+%             \bottomrule
+%         \end{tabular}
+%     }{
+%         \Fonte{elaborado pelo autor (2026), a partir de
+%             \citeonline{martinyebra2025music}.}
+%     }
+% \end{table}
+
+% Os critérios têm um custo que deve ser reconhecido desde já. A restrição ao
+% ritmo sinusal e a exclusão dos desfechos ambíguos reduzem a coorte a pouco
+% mais da metade da base e deixam apenas 55 eventos, o que limita o poder
+% estatístico de qualquer comparação e torna amplos os intervalos de
+% confiança. Além disso, os resultados se aplicam a pacientes com
+% insuficiência cardíaca em ritmo sinusal e não podem ser estendidos, sem nova
+% avaliação, a pacientes com fibrilação atrial. Optou-se por essa troca porque
+% um rótulo confiável e um sinal de entrada homogêneo são pré-requisitos para
+% que um resultado, positivo ou negativo, possa ser interpretado. Os detalhes
+% de cada etapa, incluindo as variáveis da base utilizadas, são apresentados
+% na metodologia.
+
+
+% ==============================================================================
+% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
+% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
+% os nomes das variaveis, fica na metodologia.
+% ==============================================================================
+
+\subsection{Objetivo e visão geral}
+\label{sec:intro-objetivo}
+
+Este trabalho investiga se o \gls{ECG} de Holter de 24~horas contém
+informação suficiente para identificar, entre pacientes com insuficiência
+cardíaca, aqueles que viriam a sofrer \gls{MSC}. A insuficiência cardíaca é
+a condição comum a todos os pacientes estudados, e não o desfecho: o que se
+procura distinguir é quem, dentro dessa população, morreu subitamente de
+quem sobreviveu. Para responder a essa
+pergunta, foram comparadas duas famílias de abordagens sobre a mesma coorte
+e sob o mesmo protocolo de avaliação: modelos de aprendizado profundo, que
+recebem o sinal bruto e aprendem dele as próprias representações, e modelos
+de aprendizado de máquina clássico, que recebem marcadores extraídos do
+\gls{ECG} --- medidas de variabilidade da frequência cardíaca, de ectopia e
+de morfologia --- combinados ou não a variáveis clínicas.
+
+A comparação foi conduzida em validação cruzada estratificada por paciente,
+com a \gls{AUC} como métrica principal e intervalos de confiança estimados
+por \textit{bootstrap}. Entre as redes avaliadas estão uma rede convolucional
+simples, redes residuais de profundidades crescentes, uma rede residual
+seguida de um codificador \textit{Transformer}, uma rede convolucional com
+camada recorrente (\textit{Long Short-Term Memory}) e um codificador
+pré-treinado em outra base de Holter.
+
+O resultado central é que a complexidade do modelo não se converteu em
+desempenho. Nenhuma das redes alimentadas com o sinal bruto se distinguiu do
+acaso, com \gls{AUC} entre 0,49 e 0,54. Os modelos mais simples alcançaram os
+melhores valores: as seis variáveis clínicas, em regressão logística,
+atingiram \gls{AUC} de 0,661 [0,577--0,741], e os marcadores extraídos do
+\gls{ECG}, isoladamente, valores entre 0,58 e 0,65. Acrescentar os
+marcadores às variáveis clínicas não produziu ganho estatisticamente
+distinguível de zero. Atribui-se esse comportamento principalmente ao
+tamanho da amostra e ao desbalanceamento entre as classes: com apenas 55
+eventos, modelos com milhões de parâmetros não encontram exemplos
+suficientes para aprender padrões que generalizem, enquanto modelos com
+poucas variáveis bem definidas se ajustam com menor variância.
+
+Mais do que propor um classificador, o trabalho contribui com uma avaliação
+controlada dos limites dessas abordagens em uma coorte real e pequena. O
+protocolo foi desenhado para evitar erros de avaliação que, quando presentes,
+fazem um modelo parecer melhor do que é e que são frequentes em estudos de
+aprendizado de máquina aplicado \cite{kapoor2023leakage}. Dois exemplos
+tratados neste trabalho são calcular as métricas sobre janelas do sinal, e
+não sobre pacientes, o que trata como independentes trechos de um mesmo
+exame, e escolher o melhor entre vários modelos olhando o próprio conjunto
+de teste, o que superestima o desempenho do modelo escolhido.
+
+\subsection{Escolha dos dados e delimitação da coorte}
+\label{sec:intro-dados}
+
+Os dados deste trabalho provêm da base \gls{MUSIC}, disponibilizada publicamente no PhysioNet
+\cite{martinyebra2025music, martinyebra2024music}. A base reúne 992 pacientes
+com insuficiência cardíaca crônica sintomática (classes II e III da
+\textit{New York Heart Association}), recrutados entre abril de 2003 e
+dezembro de 2004 em oito hospitais universitários da Espanha e acompanhados
+por uma mediana de 44 meses. Para 936 deles há um registro de Holter de
+24~horas, e as causas de óbito foram adjudicadas segundo definições
+explícitas, que separam a \gls{MSC} do óbito por falência de bomba.
+
+Três características tornam a MUSIC adequada ao problema estudado. Primeiro,
+trata-se de uma população em que a \gls{MSC} é um desfecho frequente e
+clinicamente relevante, e não de uma amostra da população geral, na qual o
+evento seria raro demais para o aprendizado. Segundo, o Holter de 24~horas
+oferece uma observação longa do \gls{ECG}, que capta variações ao longo do
+dia inacessíveis a um traçado de repouso de poucos segundos. Terceiro, a
+adjudicação do mecanismo de óbito permite isolar a morte de origem elétrica,
+que é o objeto deste trabalho.
+
+O problema foi formulado como uma classificação binária no nível do
+paciente: a partir do Holter, distinguir quem veio a óbito por \gls{MSC}
+de quem sobreviveu ao período de observação. Essa formulação dispensa o
+tratamento de censura próprio da análise de sobrevivência, mas transfere a
+exigência para o rótulo, que precisa ser inequívoco para cada paciente. Os
+critérios de seleção decorrem dessa exigência e são três.
+
+\textbf{Critério 1: ritmo sinusal durante o Holter.} Foram mantidos apenas
+os pacientes cujo registro foi anotado como ritmo sinusal. Em fibrilação ou
+\textit{flutter} atrial não há onda P organizada e os intervalos entre
+batimentos são irregulares por definição, de modo que as medidas de
+variabilidade da frequência cardíaca e de morfologia perdem o significado
+fisiológico que têm em ritmo sinusal. Além disso, o próprio ritmo está
+associado ao risco: incluí-lo permitiria que um modelo aprendesse a
+reconhecer a arritmia atrial, e não marcadores de vulnerabilidade elétrica
+ventricular. Restringir a coorte ao ritmo sinusal remove esse fator de
+confusão e torna homogêneo o sinal de entrada.
+
+\textbf{Critério 2: somente óbito por \gls{MSC} e sobreviventes.} Os casos
+são os pacientes cuja causa de óbito foi adjudicada como \gls{MSC}; os
+controles, os que permaneceram vivos. Foram excluídos os óbitos por falência
+de bomba, cujo mecanismo é mecânico e progressivo, e os óbitos de causa não
+cardíaca. Incluir a falência de bomba entre os casos ensinaria o modelo a
+reconhecer a gravidade da insuficiência cardíaca em geral, e não o risco
+específico de morte súbita; incluí-la entre os controles colocaria do lado
+``sem evento'' pacientes que também morreram de causa cardíaca.
+
+\textbf{Critério 3: controles com quatro anos completos de seguimento.} Um
+paciente vivo na última avaliação só é um controle confiável se tiver sido
+acompanhado por tempo suficiente. Um sobrevivente observado por poucos
+meses pode ter sofrido o evento logo depois de deixar o estudo; rotulá-lo
+como controle introduziria erro no rótulo. Por isso exigiu-se dos controles
+um seguimento de pelo menos 1.460~dias (quatro anos), horizonte compatível
+com a mediana de acompanhamento da base.
+
+A aplicação sucessiva desses critérios está resumida na
+\autoref{tab:intro-coorte}. Dos 710 pacientes em ritmo sinusal, 123 foram
+excluídos por desfecho ambíguo, restando 587 casos e controles. Desses, 47
+não tinham registro de Holter disponível e 23 tinham um registro sem as três
+derivações exigidas pelos modelos. A coorte final reúne 517 pacientes: 55
+casos de \gls{MSC} e 462 controles, uma prevalência de 10,6\%.
+
+\begin{table}[h!]
+    \captionsetup{width=13cm}
+    \Caption{\label{tab:intro-coorte} Delimitação da coorte a partir da base
+        MUSIC}
+    \IBGEtab{}{
+        \begin{tabular}{lrr}
+            \toprule
+            Etapa                                                   & \multicolumn{1}{c}{Excluídos} &
+            \multicolumn{1}{c}{Restantes}                                                                 \\
+            \midrule \midrule
+            Pacientes na base MUSIC                                 & ---                           & 992 \\
+            Critério 1: ritmo não sinusal                           & 282                           & 710 \\
+            Critério 2: óbito não cardíaco                          & 35                            &     \\
+            Critério 2: óbito por falência de bomba                 & 67                            &     \\
+            Critério 3: vivos com seguimento inferior a quatro anos & 21                            & 587 \\
+            Sem registro de Holter                                  & 47                            &     \\
+            Registro sem as três derivações                         & 23                            & 517 \\
+            \midrule
+            \multicolumn{3}{l}{Coorte final: 55 casos de \gls{MSC} e 462
+            controles (prevalência de 10,6\%)}                                                            \\
+            \bottomrule
+        \end{tabular}
+    }{
+        \Fonte{elaborado pelo autor (2026), a partir de
+            \citeonline{martinyebra2025music}.}
+    }
+\end{table}
+
+Os critérios têm um custo que deve ser reconhecido desde já. A restrição ao
+ritmo sinusal e a exclusão dos desfechos ambíguos reduzem a coorte a pouco
+mais da metade da base e deixam apenas 55 eventos, o que limita o poder
+estatístico de qualquer comparação e torna amplos os intervalos de
+confiança. Além disso, os resultados se aplicam a pacientes com
+insuficiência cardíaca em ritmo sinusal e não podem ser estendidos, sem nova
+avaliação, a pacientes com fibrilação atrial. Optou-se por essa troca porque
+um rótulo confiável e um sinal de entrada homogêneo são pré-requisitos para
+que um resultado, positivo ou negativo, possa ser interpretado. Os detalhes
+de cada etapa, incluindo as variáveis da base utilizadas, são apresentados
+na metodologia.

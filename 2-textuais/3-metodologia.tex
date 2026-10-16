@@ -1,0 +1,917 @@
+\chapter{siteMetodologia}
+\label{chap:metodologia}
+
+
+% ==============================================================================
+% METODOLOGIA — Seleção da coorte e pré-processamento dos dados
+% Baseado em processamento_gpu.py (classe PassandoDadosClassificacao)
+%
+% Valores conferidos no código em 06/10/2026:
+%   filtro      Butterworth ordem 3, 0,5-40 Hz, fase nula (sosfiltfilt)
+%   escala      percentil 99 do valor absoluto, por derivação
+%   corte       +-5 após a normalização
+%   margem      5 min no início e no fim do registro
+%   validação   25% do treino de cada partição (frac_val = 0.25)
+% ==============================================================================
+
+\section{Seleção da coorte}
+\label{sec:met-coorte}
+
+A partir dos 992 pacientes da base MUSIC, a coorte foi definida em três
+etapas, resumidas na \autoref{fig:fluxograma-coorte}.
+
+% ---- FIGURA: fluxograma ----
+\begin{figure}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{fig:fluxograma-coorte} Fluxograma de seleção da coorte}
+	\UFCfig{}{
+		\fbox{\includegraphics[width=14cm]{figuras/fluxograma_coorte02.jpg}}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{figure}
+
+
+
+\begin{table}[htbp]
+	\centering
+	\caption{Fluxo de seleção da base MUSIC e disponibilidade dos registros de Holter.}
+	\label{tab:fluxo-music}
+	\begin{tabular}{lr}
+		\hline
+		\textbf{Etapa}                                & \textbf{N} \\
+		\hline
+		Registros de Holter na base (total)           & 936        \\
+		Pacientes na base MUSIC                       & 992        \\
+		\quad Excluídos: ritmo não sinusal            & 282        \\
+		Em ritmo sinusal                              & 710        \\
+		\quad Excluídos por desfecho ambíguo          & 123        \\
+		\qquad Morte não cardíaca (código 1)          & 35         \\
+		\qquad Falência de bomba (códigos 6 e 7)      & 67         \\
+		\qquad Vivos com seguimento inferior a 4 anos & 21         \\
+		Casos + controles                             & 587        \\
+		\quad Sem registro de Holter                  & 47         \\
+		\quad Registro sem derivação Z                & 23         \\
+		Analisados                                    & 517        \\
+		\quad Casos (MSC; prevalência de 10,6\%)      & 55         \\
+		\quad Controles                               & 462        \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% nome da figura ser adicionada fluxograma_coorte
+
+A primeira etapa restringiu a análise a pacientes em ritmo sinusal,
+excluindo 282 indivíduos com fibrilação atrial permanente, \textit{flutter}
+atrial ou ritmo de marcapasso. A exclusão justifica-se porque a ausência de
+onda P e a irregularidade dos intervalos RR na fibrilação atrial alteram
+qualitativamente o traçado, e porque o ritmo imposto pelo marcapasso não
+reflete a atividade elétrica espontânea do coração.
+
+A segunda etapa definiu os grupos. Foram considerados casos os pacientes com
+óbito por morte súbita cardíaca, e controles os sobreviventes com seguimento
+completo de quatro anos. Excluíram-se, por desfecho ambíguo, 35 óbitos de
+causa não cardíaca, 67 óbitos por falência de bomba e 21 sobreviventes com
+seguimento inferior a quatro anos. A exclusão destes últimos é necessária na
+formulação binária: diferentemente da análise de sobrevivência, que
+incorpora a informação parcial dos indivíduos censurados, a classificação
+exige rótulo definido para cada paciente, e um sobrevivente acompanhado por
+menos de quatro anos poderia ter vindo a óbito após o término do seguimento.
+
+A terceira etapa exigiu a presença das três derivações no registro Holter.
+Foram excluídos 47 pacientes sem registro disponível e 23 cujo registro não
+continha a derivação Z. A coorte final compreendeu 517 pacientes, dos quais
+55 casos e 462 controles, com prevalência de 10,6\,\%.
+
+\section{Pré-processamento do sinal}
+\label{sec:met-preprocessamento}
+
+\subsection{Extração de janelas}
+\label{subsec:met-janelas}
+
+Cada registro foi representado por janelas de 24\,000 amostras, equivalentes
+a dois minutos a 200\,Hz. Os cinco minutos iniciais e finais de cada registro
+foram descartados, por concentrarem artefatos de calibração do equipamento,
+de acomodação do paciente e de retirada dos eletrodos.
+
+As posições das janelas foram definidas de modo distinto no treinamento e na
+avaliação. No treinamento, cada uma das 250 janelas por paciente teve sua
+posição sorteada a cada época, de forma independente, ao longo do trecho
+útil do registro. O procedimento expõe o modelo a recortes diferentes a cada
+passagem pelos dados e admite sobreposição entre janelas. Na avaliação, as
+100 janelas por paciente foram posicionadas em grade regular, igualmente
+espaçadas ao longo do registro, o que torna as métricas reprodutíveis.
+
+\subsection{Filtragem}
+\label{subsec:met-filtragem}
+
+Cada janela foi submetida a filtro passa-faixa de Butterworth de terceira
+ordem, com frequências de corte de 0,5 e 40\,Hz, implementado em seções de
+segunda ordem e aplicado nos sentidos direto e reverso. A filtragem de fase
+nula resultante dobra a ordem efetiva do filtro e preserva a morfologia das
+ondas, conforme discutido na \autoref{subsubsec:fund-fase-nula}.
+
+A frequência de corte inferior remove a oscilação de linha de base e o
+deslocamento contínuo do sinal, que varia entre pacientes conforme o
+posicionamento dos eletrodos. A superior atenua o ruído muscular e elimina a
+interferência da rede elétrica de 50\,Hz, situada acima da banda passante. O
+valor de 0,5\,Hz encontra-se dentro do limite admitido pela American Heart
+Association para filtros digitais de fase nula
+\cite{kligfield2007recommendations}.
+
+A filtragem foi aplicada a cada janela individualmente, e não ao registro
+completo. A escolha torna o deslocamento de linha de base removido
+específico de cada trecho, sem pressupor estabilidade ao longo das 24\,horas.
+
+\subsection{Normalização}
+\label{subsec:met-normalizacao}
+
+Após a filtragem, cada derivação foi dividida por uma constante de escala
+global, comum a todos os pacientes. A constante corresponde ao percentil 99
+do valor absoluto do sinal filtrado, estimado sobre 100 pacientes sorteados
+do conjunto de treinamento de cada partição, com cinco janelas de 60\,s por
+paciente. As janelas usadas na estimativa passam pelo mesmo filtro aplicado
+no treinamento, de modo que a escala corresponde à distribuição efetivamente
+apresentada ao modelo.
+
+A estimativa é refeita a cada partição da validação cruzada, utilizando
+exclusivamente pacientes do respectivo conjunto de treinamento. Calculá-la
+uma única vez sobre a coorte completa introduziria informação dos pacientes
+de teste no pré-processamento.
+
+Os valores normalizados foram limitados ao intervalo $[-5, 5]$. Amostras fora
+desse intervalo correspondem a amplitudes superiores a cinco vezes a
+referência de escala, ocorrência compatível com artefato de movimento e não
+com atividade cardíaca.
+
+A separação entre filtragem e normalização é deliberada. A filtragem por
+janela remove o deslocamento individual de cada trecho; a escala global
+preserva as diferenças de amplitude entre pacientes. A padronização por
+janela, alternativa descartada, realizaria as duas operações
+simultaneamente e eliminaria a informação de amplitude absoluta.
+
+\subsection{Particionamento}
+\label{subsec:met-particionamento}
+
+A coorte foi dividida em cinco partições estratificadas pelo desfecho, com
+divisão no nível do paciente: cada indivíduo pertence a uma única partição, e
+as janelas são extraídas apenas após a divisão. Cada partição contém 103 ou
+104 pacientes, com 11 casos.
+
+Em cada rodada da validação cruzada, uma partição constitui o conjunto de
+teste e as quatro restantes, com 413 ou 414 pacientes, são subdivididas: 75\,\%
+compõem o conjunto de treinamento e 25\,\% a validação interna, também com
+estratificação pelo desfecho. A validação interna define a época de parada do
+treinamento e o limiar de decisão, que é então aplicado ao conjunto de teste
+sem ajuste adicional.
+
+\subsection{Variáveis clínicas}
+\label{subsec:met-clinicas}
+
+Nos experimentos que combinam o sinal a variáveis clínicas, foram empregadas
+seis: idade, gênero, classe funcional \gls{NYHA}, presença de ondas Q de necrose,
+taquicardia ventricular não sustentada e taquiarritmia supraventricular
+paroxística. As variáveis contínuas --- idade --- e as ordinais foram
+padronizadas pela média e pelo desvio-padrão do conjunto de treinamento de
+cada partição.
+
+Duas particularidades da coorte merecem registro. A classe funcional \gls{NYHA}
+assume apenas os valores II e III, comportando-se, na prática, como variável
+binária. A variável de taquiarritmia supraventricular paroxística é
+originalmente categórica nominal, com códigos para taquicardia
+supraventricular, fibrilação atrial paroxística, \textit{flutter} e outras;
+o código de ausência por fibrilação atrial crônica deixa de ocorrer após a
+restrição ao ritmo sinusal, e a variável foi tratada como indicadora da
+presença de qualquer episódio.
+
+
+
+% ==============================================================================
+% CONFIGURAÇÃO EXPERIMENTAL
+% Precede as seções de resultados das arquiteturas.
+%
+% ⚠️ Dois pontos exigem decisão do autor antes da redação final:
+%
+% 1. A justificativa dos hiperparâmetros. O texto abaixo afirma que os
+%    valores foram fixados após ensaios preliminares. Se esses ensaios não
+%    estiverem registrados, convém suavizar a afirmação ou documentá-los.
+%
+% 2. O tamanho do lote da ResNet-50, reduzido de 256 para 128 por limitação
+%    de memória. Está registrado como nota de rodapé.
+% ==============================================================================
+
+\section{Configuração experimental}
+\label{sec:configuracao-experimental}
+
+As arquiteturas avaliadas nas seções seguintes compartilham o mesmo
+protocolo de preparação dos dados, treinamento e avaliação. Essa
+uniformidade é condição para que a comparação entre elas isole o efeito da
+arquitetura, e não o de escolhas acessórias de configuração. Os valores
+adotados resultaram de ensaios preliminares e são apresentados a seguir,
+acompanhados da justificativa correspondente.
+
+\subsection{Representação do sinal}
+\label{subsec:config-sinal}
+
+Cada paciente é representado por janelas extraídas de seu registro de
+24\,horas, e não pelo registro integral. A opção decorre de uma limitação
+prática: a 200\,Hz, três derivações durante 24\,horas correspondem a
+aproximadamente 17 milhões de amostras por paciente, volume incompatível com
+o processamento em lote na memória disponível.
+
+A \autoref{tab:config-sinal} reúne os parâmetros de representação.
+
+% ---- TABELA: parâmetros do sinal ----
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:config-sinal} Parâmetros de representação do sinal}
+	\IBGEtab{}{
+		\begin{tabular}{lll}
+			\toprule
+			Parâmetro                        & Valor                      & Justificativa                        \\
+			\midrule \midrule
+			Comprimento da janela            & 24\,000 amostras           & 2 min, cerca de 140 ciclos cardíacos \\
+			Janelas por paciente (treino)    & 250                        & posições sorteadas a cada época      \\
+			Janelas por paciente (avaliação) & 100                        & posições em grade fixa               \\
+			Margem descartada                & 5 min                      & calibração do equipamento            \\
+			Filtro passa-banda               & 0,5--40\,Hz                & remove deriva e ruído muscular       \\
+			Normalização                     & percentil 99 por derivação & preserva amplitude relativa          \\
+			Limitação de amplitude           & $[-5, 5]$                  & atenua artefatos de movimento        \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A janela de dois minutos abrange aproximadamente 140 ciclos cardíacos a uma
+frequência de 70\,bpm, quantidade suficiente para que a morfologia se repita
+e para que a variabilidade entre batimentos seja observável. Janelas mais
+curtas podem recair sobre trechos sem conteúdo relevante; janelas mais longas
+elevam o consumo de memória e reduzem o número de amostras disponíveis por
+paciente.
+
+No treinamento, as posições das janelas são sorteadas a cada época,
+funcionando como forma de aumento de dados: o modelo nunca observa
+exatamente o mesmo recorte duas vezes. Na avaliação, as posições seguem grade
+regular determinística, assegurando reprodutibilidade das métricas.
+
+A separação entre filtragem e normalização é deliberada. O filtro
+passa-banda remove o deslocamento de linha de base de cada janela
+individualmente --- deslocamento que varia entre pacientes conforme o
+posicionamento dos eletrodos. A escala,
+por sua vez, é estimada uma única vez sobre o conjunto de treinamento de cada
+partição, de modo idêntico para todos os pacientes, o que preserva as
+diferenças de amplitude entre indivíduos --- informação associada a condições
+como baixa voltagem e hipertrofia ventricular. A padronização por janela,
+alternativa descartada, executaria as duas operações simultaneamente e
+eliminaria essa informação.
+
+\subsection{Treinamento}
+\label{subsec:config-treino}
+
+A \autoref{tab:config-treino} apresenta os hiperparâmetros de otimização,
+mantidos constantes em todas as arquiteturas.
+
+% ---- TABELA: hiperparâmetros de treino ----
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:config-treino} Hiperparâmetros de treinamento}
+	\IBGEtab{}{
+		\begin{tabular}{lll}
+			\toprule
+			Parâmetro                 & Valor                  & Justificativa                          \\
+			\midrule \midrule
+			Otimizador                & AdamW                  & desacopla regularização do gradiente   \\
+			Taxa de aprendizado       & $1{,}0 \times 10^{-4}$ & valores maiores causaram instabilidade \\
+			Regularização ($\lambda$) & $1{,}0 \times 10^{-2}$ & limite superior usual                  \\
+			Descarte                  & 0,6                    & compensa a razão parâmetros/eventos    \\
+			Tamanho do lote           & 256\footnotemark[1]    &                                        \\
+			Épocas máximas            & 20                     & melhor época ocorreu antes da quinta   \\
+			Paciência                 & 10 épocas              & sobre média móvel de três              \\
+			Agrupamento               & média e máximo         & estado típico e instante extremo       \\
+			Precisão                  & mista (fp16)           & reduz consumo de memória               \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\footnotetext[1]{Reduzido para 128 na ResNet-50 por limitação de memória da
+	unidade de processamento gráfico.}
+
+Os valores de regularização e descarte situam-se no extremo superior das
+faixas habituais. A escolha decorre da razão entre o número de parâmetros e
+o de eventos disponíveis: mesmo a arquitetura mais enxuta avaliada dispõe de
+$109\,361$ parâmetros para 37 casos positivos no conjunto de treinamento. Em
+ensaios preliminares, valores menores de regularização produziram perdas de
+treinamento próximas de zero já na terceira época.
+
+O limite de 20 épocas acompanha a observação, recorrente em todas as
+arquiteturas, de que o melhor valor de \gls{AUC} sobre o conjunto de
+validação ocorre nas primeiras épocas. O critério de parada emprega média
+móvel de três épocas em lugar do valor pontual: com sete a onze eventos no
+conjunto de validação, a métrica de uma única época oscila substancialmente
+sem que o modelo tenha se alterado de forma apreciável, e a suavização evita
+que se selecione o pico do ruído.
+
+\subsection{Desbalanceamento entre classes}
+\label{subsec:config-desbalanceamento}
+
+Com prevalência de 10,6\,\%, um classificador que atribua a classe
+majoritária a todos os pacientes alcança acurácia de 89,4\,\% com
+sensibilidade nula. Para evitar a convergência a esse ótimo local, a função
+de perda de entropia cruzada binária foi ponderada pelo fator
+
+\begin{equation}
+	w_{+} = \frac{N_0}{N_1} \approx 8{,}5,
+	\label{eq:pos-weight}
+\end{equation}
+
+\noindent
+em que $N_0$ e $N_1$ denotam, respectivamente, o número de controles e de
+casos no conjunto de treinamento de cada partição. O fator multiplica a
+contribuição dos casos positivos ao gradiente, sendo equivalente a replicar
+cada evento 8,5 vezes sem descartar controles.
+
+Técnicas de subamostragem da classe majoritária foram descartadas: o
+equilíbrio entre classes seria obtido às custas de reduzir a coorte de 517
+para 110 pacientes, sem alterar o número de eventos --- que constitui o
+fator efetivamente limitante --- e com ampliação dos intervalos de confiança.
+
+\subsection{Protocolo de avaliação}
+\label{subsec:config-avaliacao}
+
+A avaliação emprega validação cruzada estratificada em cinco partições. A
+divisão ocorre no nível do paciente, e as janelas são extraídas somente após
+a separação: nenhum indivíduo contribui simultaneamente para treinamento e
+teste. O cuidado é necessário porque janelas de um mesmo registro
+compartilham a assinatura eletrocardiográfica individual --- eixo elétrico,
+morfologia do complexo QRS e relação de amplitude entre derivações ---, e sua
+presença em ambos os conjuntos permitiria ao modelo reconhecer o paciente em
+lugar de estimar o risco.
+
+De cada conjunto de treinamento, uma fração é reservada para a definição do
+critério de parada antecipada e do limiar de decisão. O limiar é obtido pelo
+índice de Youden, que maximiza a soma de sensibilidade e especificidade, e
+apenas aplicado ao conjunto de teste --- sua determinação a partir do próprio
+teste produziria estimativas otimistas.
+
+As probabilidades preditas para as janelas de um mesmo paciente são
+agregadas por média antes do cálculo de qualquer métrica. Sem essa agregação,
+um indivíduo com 100 janelas seria contabilizado cem vezes, como se
+correspondesse a cem observações independentes --- o que estreitaria
+artificialmente os intervalos de confiança.
+
+Os intervalos de confiança de 95\,\% foram estimados por reamostragem
+\textit{bootstrap} com 2\,000 repetições, sorteando pacientes com reposição.
+Comparações entre modelos empregaram reamostragem pareada: a mesma amostra
+avalia ambos os modelos, de modo a isolar a incerteza da diferença.
+
+\subsection{Métricas}
+\label{subsec:config-metricas}
+
+A métrica principal é a \gls{AUC}, que mede a capacidade de ordenar
+corretamente os pacientes por risco e independe do limiar adotado. Reporta-se
+também a \gls{AP}, cuja linha de base sob classificação aleatória é a
+prevalência da classe positiva --- 0,106 nesta coorte --- em lugar de 0,5, o
+que a torna mais informativa quando os eventos são raros.
+
+Sensibilidade, especificidade e \gls{VPP} são reportadas no limiar definido
+na validação. A acurácia não é empregada como critério de comparação pela
+razão já exposta: o classificador trivial a maximiza sem apresentar
+utilidade.
+
+Dois valores de \gls{AUC} são apresentados em cada seção. A média entre
+partições, acompanhada do desvio-padrão, indica a estabilidade do resultado
+em relação à composição das partições. A estimativa agrupada, calculada sobre
+a totalidade dos 517 pacientes --- cada um predito pelo modelo que não o
+observou durante o treinamento ---, é considerada mais confiável por avaliar
+simultaneamente os 55 eventos, enquanto cada partição isolada dispõe de
+apenas onze. Eventuais discrepâncias entre as duas estimativas decorrem de os
+modelos ajustados em cada partição produzirem probabilidades em escalas
+distintas, que não coincidem exatamente ao serem reunidas em ordenamento
+único.
+
+% ==============================================================================
+% METODOLOGIA — Experimentos com a rede convolucional: capacidade x janela
+% Fonte da configuracao: config.yaml + processamento_gpu_classificacao.py
+% CONFERIR os valores marcados com [conferir] contra os logs antes de fechar.
+% ==============================================================================
+
+\subsection{Experimentos com a rede convolucional}
+\label{subsec:met-cnn-experimentos}
+
+A rede convolucional descrita na \autoref{subsec:fund-cnn-arquitetura} foi
+avaliada em um delineamento fatorial com dois fatores: a capacidade do
+modelo, nas variantes mínima, simples e média, e a duração da janela de
+entrada, de 2~minutos e de 10~segundos. As seis combinações resultantes,
+listadas na \autoref{tab:met-cnn-experimentos}, foram treinadas sob
+configuração idêntica, de modo que as diferenças de desempenho possam ser
+atribuídas apenas a esses dois fatores.
+
+\begin{table}[h!]
+	\captionsetup{width=12cm}
+	\Caption{\label{tab:met-cnn-experimentos} Combinações avaliadas da rede
+		convolucional}
+	\IBGEtab{}{
+		\begin{tabular}{lrrr}
+			\toprule
+			Variante                            & \multicolumn{1}{c}{Parâmetros} &
+			\multicolumn{1}{c}{Janela de 2 min} &
+			\multicolumn{1}{c}{Janela de 10 s}                                             \\
+			\midrule \midrule
+			Mínima                              & 14\,425                        & E1 & E4 \\
+			Simples                             & 109\,361                       & E2 & E5 \\
+			Média                               & 418\,145                       & E3 & E6 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\subsubsection{Amostragem das janelas}
+
+No treinamento, cada paciente contribui com o mesmo número de janelas por
+época nas duas durações. Desse modo, as seis configurações recebem o mesmo
+número de atualizações de gradiente, e o que varia entre as janelas de
+2~minutos e de 10~segundos é apenas o conteúdo de cada exemplo. As janelas
+de um paciente são sorteadas a cada época entre blocos consecutivos e sem
+sobreposição do registro, descartados os 5~minutos iniciais e finais. A
+permutação dos blocos é determinada pelo paciente e pela época, o que
+garante que duas janelas do mesmo paciente nunca se sobreponham dentro de
+uma época e que épocas sucessivas percorram trechos diferentes do exame.
+
+Na avaliação, as janelas são posicionadas em uma grade fixa e uniforme ao
+longo do registro, o que torna a predição reprodutível. São avaliadas 200 janelas
+por paciente nas duas durações, o que corresponde a cerca de 6,7~horas de
+registro com a janela de 2~minutos e a cerca de 33~minutos com a de
+10~segundos.
+
+\subsubsection{Filtragem com margem}
+
+O filtro passa-faixa descrito na \autoref{sec:met-preprocessamento} requer
+alguns segundos de sinal para estabilizar e, quando aplicado a um trecho
+curto, distorce suas extremidades. Para evitar esse efeito, cada janela é
+lida com 5~segundos adicionais de cada lado, filtrada e, em seguida,
+recortada no comprimento nominal. A rede recebe, assim, exatamente 24\,000 ou
+2\,000 amostras livres do transitório de borda, o que é particularmente
+relevante para a janela de 10~segundos, na qual as margens distorcidas
+representariam fração apreciável do sinal.
+
+\subsubsection{Configuração comum}
+
+As seis configurações compartilham a validação cruzada em cinco partições
+estratificadas por paciente, com 25\,\% do conjunto de treinamento de cada
+partição reservado para validação interna (309 ou 310 pacientes de
+treinamento por partição), a função de perda ponderada da
+\autoref{eq:bce-ponderada}, o otimizador AdamW com taxa de aprendizado de
+$10^{-4}$ e decaimento de pesos de $10^{-2}$, lotes de 256 janelas e
+no máximo 30 épocas, com interrupção antecipada após 15 épocas sem melhora. Em cada época, cada paciente contribui com 350 janelas de treinamento.
+A probabilidade de cada paciente é a média das probabilidades de suas
+janelas, e o limiar de decisão é escolhido pelo índice de Youden na
+validação interna, nunca no conjunto de teste.
+
+
+% ==============================================================================
+% METODOLOGIA — Redes profundas aplicadas ao sinal: arquiteturas e protocolo
+%
+% Fontes: classificacao_v2 (famílias ResNet, Transformer, fusão) e
+%         classificacao_cnn (CNN mínima, simples, média); ambos usam
+%         processamento_gpu_classificacao.py.
+%
+% A teoria de cada bloco está na fundamentação (sec:fund-cnn, sec:fund-resnet,
+% sec:fund-atencao, sec:fund-metricas). Aqui fica o que foi FEITO.
+%
+% [conferir] = valor a confirmar no log antes da versão final.
+% ==============================================================================
+
+\section{Redes neurais aplicadas ao sinal}
+\label{sec:met-redes}
+
+Esta seção descreve as arquiteturas de redes neurais avaliadas sobre o sinal
+de Holter e o protocolo comum de treinamento e avaliação. Todas as redes
+recebem janelas do sinal pré-processado conforme a
+\autoref{sec:met-preprocessamento}, produzem uma probabilidade por janela e
+são avaliadas no nível do paciente, após a agregação descrita na
+\autoref{subsec:fund-agregacao}. Os fundamentos de cada componente foram
+apresentados no \autoref{cap:fundamentacao}; esta seção registra as escolhas
+efetivamente adotadas.
+
+\subsection{Arquiteturas avaliadas}
+\label{subsec:met-arquiteturas}
+
+As arquiteturas foram organizadas em quatro famílias, avaliadas em ordem
+crescente de complexidade. A \autoref{tab:met-arquiteturas} resume cada uma
+delas.
+
+\begin{enumerate}
+	\item \textbf{Redes convolucionais sem atalhos.} A rede convolucional
+	      descrita na \autoref{sec:fund-cnn}, em três variantes de capacidade ---
+	      mínima, simples e média --- que diferem apenas no número de blocos e de
+	      filtros. É a família de menor capacidade e serve de referência para as
+	      demais.
+
+	\item \textbf{Redes residuais.} Adaptações unidimensionais da ResNet
+	      \cite{he2016deep}, na linha das redes empregadas para a classificação de
+	      \gls{ECG} por \citeonline{hannun2019cardiologist} e
+	      \citeonline{ribeiro2020automatic}. Foram avaliadas profundidades de 18, 34
+	      e 50 camadas e, para a profundidade de 18 camadas, três larguras, de modo a
+	      separar o efeito da profundidade do efeito do número de canais.
+
+	\item \textbf{Rede residual com atenção.} A ResNet-18 seguida de um
+	      codificador \textit{Transformer} \cite{vaswani2017attention}, que recebe a
+	      sequência de vetores produzida pelo último estágio residual e permite que
+	      cada trecho da janela seja relacionado aos demais antes do agrupamento.
+
+	\item \textbf{Fusão com variáveis clínicas.} A ResNet-18 com um segundo
+	      ramo, que recebe as seis variáveis clínicas da
+	      \autoref{subsec:met-variaveis-clinicas}. As representações dos dois ramos
+	      são concatenadas antes do classificador. Para medir a contribuição de cada
+	      modalidade, a mesma arquitetura foi treinada também com cada ramo isolado.
+\end{enumerate}
+
+\begin{table}[h!]
+	\captionsetup{width=15.5cm}
+	\Caption{\label{tab:met-arquiteturas} Arquiteturas de redes neurais
+		avaliadas sobre o sinal de Holter}
+	\IBGEtab{}{
+		\begin{tabular}{llrl}
+			\toprule
+			Família       & Variante                         & \multicolumn{1}{c}{Parâmetros} & Entrada             \\
+			\midrule \midrule
+			Convolucional & mínima (3 blocos)                & 14\,425                        & 2 min e 10 s        \\
+			              & simples (4 blocos)               & 109\,361                       & 2 min e 10 s        \\
+			              & média (4 blocos)                 & 418\,145                       & 2 min e 10 s        \\
+			\midrule
+			Residual      & ResNet-18 mínima                 & 78\,169                        & 5,12 s              \\
+			              & ResNet-18 reduzida               & 1\,029\,985                    & 2 min               \\
+			              & ResNet-18                        & 3\,976\,385                    & 2 min e 5,12 s      \\
+			              & ResNet-34                        & 7\,350\,721                    & 2 min               \\
+			              & ResNet-50                        & 16\,479\,937                   & 2 min               \\
+			\midrule
+			Atenção       & ResNet-18 + \textit{Transformer} & 1\,491\,553                    & 2 min               \\
+			\midrule
+			Fusão         & ResNet-18 + ramo clínico         & 3\,987\,041                    & 2 min + 6 variáveis \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Todas as variantes compartilham o mesmo classificador final --- agrupamento
+global por média e máximo, seguido de duas camadas totalmente conectadas com
+descarte --- e a mesma saída: um único \textit{logit} por janela, convertido
+em probabilidade pela \autoref{eq:logistica}. A diferença entre elas está
+apenas no extrator de características, o que permite atribuir as diferenças
+de desempenho à arquitetura.
+
+\subsection{Estratégias de treinamento da rede de fusão}
+\label{subsec:met-fusao}
+
+Na rede de fusão, o ramo do sinal tem cerca de 4 milhões de parâmetros,
+enquanto o ramo clínico recebe apenas seis variáveis. Treinados juntos com a
+mesma taxa de aprendizado, o ramo do sinal tende a dominar o ajuste e a
+memorizar os pacientes de treinamento antes que o ramo clínico contribua.
+Para controlar esse desequilíbrio, foram comparadas três estratégias:
+
+\begin{itemize}
+	\item \textit{treinamento conjunto}, com a mesma taxa de aprendizado
+	      ($10^{-4}$) para toda a rede;
+	\item \textit{taxa de aprendizado discriminativa}, em que o ramo do sinal
+	      recebe taxa de $10^{-6}$ e decaimento de pesos de $10^{-1}$, e o restante
+	      da rede mantém $10^{-4}$ e $10^{-2}$;
+	\item \textit{ramo do sinal congelado}, em que apenas o ramo clínico e o
+	      classificador são ajustados.
+\end{itemize}
+
+\subsection{Protocolo de treinamento e avaliação}
+\label{subsec:met-protocolo-redes}
+
+Todas as redes foram treinadas e avaliadas pelo mesmo procedimento,
+resumido na \autoref{fig:met-protocolo} e detalhado a seguir. Os
+hiperparâmetros constam da \autoref{tab:config-treino}.
+
+% ---- FIGURA: fluxo do protocolo em uma partição ----
+% Sugestão de conteúdo (uma caixa por etapa, da esquerda para a direita):
+%   517 pacientes -> 5 partições estratificadas -> [partição k]
+%   treino (75%) | validação interna (25%) | teste
+%   -> estatísticas só no treino -> épocas: treino / validação / AUC suavizada
+%   -> melhor época -> limiar de Youden na validação -> teste
+%   -> predições fora da partição dos 517 -> AUC agrupada + IC bootstrap
+% \begin{figure}[h!]
+% 	\captionsetup{width=16cm}
+% 	\Caption{\label{fig:met-protocolo} Protocolo de treinamento e avaliação
+% 		em uma partição da validação cruzada}
+% 	\UFCfig{}{
+% 		\fbox{\includegraphics[width=16cm]{figuras/protocolo_validacao.png}}
+% 	}{
+% 		\Fonte{elaborado pelo autor (2026).}
+% 	}
+% \end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[
+		step/.style={rectangle, rounded corners=3pt, draw=#1!65!black,
+				fill=#1!7, text width=0.82\linewidth, align=left,
+				inner xsep=10pt, inner ysep=6pt, font=\small},
+		flow/.style={-{Latex[length=2.2mm]}, draw=gray!75, line width=0.8pt},
+		node distance=5mm
+		]
+		\node[step=gray] (cohort) {\textbf{1. Coorte e partições}\\[-2pt]
+			517 pacientes (55 casos de MSC), distribuídos em 5 partições estratificadas\\
+			Cada partição contém aproximadamente 103--104 pacientes (11 casos)};
+
+		\node[step=gray, below=of cohort] (split) {\textbf{2. Separar teste e desenvolvimento em cada rodada $k$}\\[-2pt]
+			\textbf{Teste:} partição $k$ (cerca de 20\%; 103--104 pacientes)\\
+			\textbf{Desenvolvimento:} 4 partições (cerca de 80\%; 413--414 pacientes), divididos em treino (75\%; cerca de 310) e validação interna (25\%; cerca de 103)};
+
+		\node[step=gray, below=of split] (model) {\textbf{3. Pré-processar, treinar e selecionar o modelo}\\[-2pt]
+			Calcular escala do sinal, padronização e peso da classe positiva somente no treino, evitando \textit{data leakage}.\\
+			A cada época, avaliar por paciente (AUC suavizada em 3 épocas); escolher o melhor \textit{checkpoint} e o limiar de Youden usando a validação.};
+
+		\node[step=gray, below=of model] (test) {\textbf{4. Avaliar na partição de teste}\\[-2pt]
+			Predizer nas janelas de teste e calcular a média das predições por paciente.};
+
+		\node[step=gray, below=of test] (results) {\textbf{5. Reunir os resultados das 5 rodadas}\\[-2pt]
+			Reportar média $\pm$ desvio-padrão das métricas e AUC agrupada \textit{out-of-fold}, com IC de 95\% por \textit{bootstrap}.};
+
+		\draw[flow] (cohort) -- (split);
+		\draw[flow] (split) -- (model);
+		\draw[flow] (model) -- (test);
+		\draw[flow] (test) -- (results);
+	\end{tikzpicture}
+	\caption{Fluxo da validação cruzada estratificada em 5 partições. As etapas 2--4 são repetidas para cada partição, com avaliação no nível do paciente.}
+	\label{fig:met-protocolo}
+\end{figure}
+
+
+
+\subsubsection{Divisão dos pacientes}
+
+Os 517 pacientes foram divididos em cinco partições estratificadas, com 103
+ou 104 pacientes e 11 casos cada uma. Em cada rodada, uma partição forma o
+conjunto de teste e as outras quatro, o conjunto de desenvolvimento. Deste,
+25\,\% dos pacientes, também por sorteio estratificado, formam a validação
+interna, e os 75\,\% restantes, o treinamento --- 309 ou 310 pacientes, dos
+quais 33 casos. A validação interna é usada para escolher a época do modelo
+e o limiar de decisão; o conjunto de teste não participa de nenhuma escolha.
+
+A cada rodada, as estatísticas que dependem dos dados --- a escala do sinal
+por derivação, as médias e desvios das variáveis clínicas e o peso da classe
+positiva, $w_{+} = N_0/N_1 \approx 8{,}4$ --- são recalculadas com os
+pacientes de treinamento daquela rodada.
+
+\subsubsection{Seleção da época}
+
+Ao final de cada época, a rede prediz as janelas da validação interna, as
+probabilidades são agregadas por paciente, e calcula-se a \gls{AUC}. Como a
+validação contém apenas 11 casos, a \gls{AUC} de uma única época oscila
+consideravelmente sem que o modelo tenha mudado de forma relevante. Por isso,
+o critério de seleção é a média móvel da \gls{AUC} nas três últimas épocas:
+os pesos são salvos sempre que essa média supera o melhor valor anterior, e
+o treinamento é interrompido quando ela deixa de melhorar por um número
+pré-definido de épocas. A taxa de aprendizado decai ao longo das épocas
+segundo uma função cosseno.
+
+\subsubsection{Avaliação no teste}
+
+Concluído o treinamento, os pesos da melhor época são restaurados. O limiar
+de decisão é obtido pelo índice de Youden (\autoref{eq:youden}) sobre as
+predições da validação interna e aplicado, sem alteração, ao conjunto de
+teste. Para cada paciente de teste, a probabilidade é a média das
+probabilidades de suas janelas.
+
+\subsubsection{Consolidação das cinco rodadas}
+
+Os resultados de cada arquitetura são reportados de duas formas
+complementares. A primeira é a média e o desvio-padrão das métricas das
+cinco partições, que indicam a estabilidade do modelo: desvios elevados
+sinalizam que o resultado depende de quais pacientes caíram em cada
+partição. A segunda reúne as predições fora da partição dos 517 pacientes em
+uma única curva ROC, cuja \gls{AUC} recebe um intervalo de confiança de
+95\,\% por \textit{bootstrap} com $B^{*} = 1\,000$ reamostragens de
+pacientes. Para as métricas dependentes de limiar dessa curva agrupada,
+emprega-se a mediana dos cinco limiares obtidos nas validações internas.
+
+Como análise secundária, registra-se também a \gls{AUC} obtida quando a
+probabilidade do paciente é a máxima, e não a média, de suas janelas, o que
+privilegia a janela de maior risco ao longo do registro.
+
+
+% ==============================================================================
+% METODOLOGIA — Extração dos marcadores eletrocardiográficos
+%
+% Fontes:
+%   Protocolo A: extrair_biomarcadores.py        (5 min a cada hora)
+%   Protocolo B: extrair_biomarcadores_30s_nn.py (30 s a cada 2 min, versão NN)
+%   Agregação B: janelas30s_agregado_paciente.py
+%   Auditoria B: saída da extração completa (517 pacientes, 328 807 segmentos)
+%
+% [conferir] = número a confirmar no log antes da versão final.
+% Citações sem entrada no .bib: swee2026 (use a chave que você já tem),
+% emrich2024 (método de proeminência do NeuroKit2; completar a referência).
+% ==============================================================================
+
+\section{Extração dos marcadores eletrocardiográficos}
+\label{sec:met-extracao}
+
+Os marcadores descritos na \autoref{sec:fund-marcadores} foram extraídos dos
+registros de Holter dos 517 pacientes da coorte segundo dois protocolos,
+que diferem na duração e na densidade dos segmentos analisados. O protocolo
+A privilegia segmentos longos, que permitem a análise espectral; o protocolo
+B adota segmentos curtos e densos, que permitem acompanhar o ritmo ao longo
+do dia, seguindo o desenho de \citeonline{swee2026multimodal}. A
+\autoref{tab:met-protocolos} resume as diferenças. Ambos empregam o mesmo
+filtro passa-faixa das redes neurais (\autoref{sec:met-preprocessamento}) e
+a biblioteca NeuroKit2 \cite{makowski2021neurokit2} para a detecção de picos
+e a delineação dos batimentos.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:met-protocolos} Protocolos de extração dos marcadores}
+	\IBGEtab{}{
+		\begin{tabular}{lll}
+			\toprule
+			                       & Protocolo A                 & Protocolo B                  \\
+			\midrule \midrule
+			Segmento               & 5 minutos                   & 30 segundos                  \\
+			Espaçamento            & um segmento por hora        & um segmento a cada 2 minutos \\
+			Margem descartada      & 1 hora em cada extremidade  & 1 hora em cada extremidade   \\
+			Segmentos por paciente & cerca de 21                 & cerca de 650                 \\
+			Derivação              & a de maior amplitude        & Y                            \\
+			Correção de artefatos  & sim                         & não                          \\
+			Base da \gls{VFC}      & intervalos RR filtrados     & intervalos NN                \\
+			Domínio da frequência  & sim                         & não                          \\
+			Indicadores de ectopia & proporção de RR irregulares & contagens completas          \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\subsection{Protocolo A: segmentos de 5 minutos}
+\label{subsec:met-protocolo-a}
+
+Do registro de cada paciente foi extraído um segmento de 5~minutos a cada
+hora, a partir de 1~hora após o início e até 1~hora antes do fim. A primeira
+e a última hora foram descartadas por concentrarem os artefatos de colocação
+e de retirada dos eletrodos. Foram obtidos 11\,071 segmentos dos 517
+pacientes, com mediana de 22 por paciente (mínimo de 16).
+
+Em cada segmento, os picos R foram detectados na derivação de maior
+desvio-padrão, que tende a apresentar a melhor relação sinal-ruído, com a
+correção de artefatos do NeuroKit2 \cite{lipponen2019robust}. Intervalos RR
+fora da faixa de 300 a 2\,000\,ms, ou afastados mais de 40\,\% da mediana do
+segmento, foram descartados, e segmentos com menos de 30 picos ou 20
+intervalos válidos não produziram marcadores. Foram calculados 22
+marcadores: a frequência cardíaca média, o intervalo RR médio, o SDNN, o
+RMSSD, o pNN50, o coeficiente de variação e o índice triangular dos
+intervalos; as potências VLF, LF e HF e a razão LF/HF; o SD1, o SD2, a razão
+SD1/SD2 e a entropia amostral; a duração do QRS, o QT e o QTc; a amplitude
+de cada derivação; e a proporção de intervalos afastados mais de 20\,\% da
+mediana, como indicador de irregularidade. Todos foram obtidos em pelo menos
+99,6\,\% dos segmentos.
+
+Os segmentos de cada paciente foram resumidos pela média de cada marcador,
+que descreve seu nível típico, e pelo desvio-padrão entre segmentos, que
+descreve sua variação ao longo do registro, totalizando 44 variáveis por
+paciente. A diferença entre o primeiro e o último terço do registro também
+foi calculada, mas não foi utilizada nos modelos.
+
+Antes da modelagem, valores acima de limites fisiológicos --- 200\,ms para
+SDNN, RMSSD e SD1, e 400\,ms para SD2 --- foram tratados como ausentes, o que
+afetou 200 valores, e imputados pela mediana do conjunto de treinamento de
+cada partição. Esse tratamento tem uma consequência que se tornou evidente
+apenas depois: os valores extremos não se distribuíam ao acaso. Dos 34
+pacientes com SD1 médio superior a 200\,ms, 7 eram casos, o que corresponde
+a 12,7\,\% dos casos contra 5,8\,\% dos controles. Os extremos refletiam,
+em boa parte, batimentos ectópicos e falhas de detecção, que a correção de
+artefatos e o filtro de 40\,\% não removeram por completo, e motivaram a
+revisão adotada no protocolo B.
+
+\subsection{Protocolo B: segmentos de 30 segundos}
+\label{subsec:met-protocolo-b}
+
+O protocolo B segue \citeonline{swee2026multimodal}, que extraem marcadores de
+segmentos de 30~segundos não sobrepostos. Para reduzir o custo
+computacional, extraiu-se um segmento de 30~segundos a cada 2~minutos de
+registro, mantidas as margens de 1~hora, o que resultou em 328\,807
+segmentos, com mediana de 652 por paciente. Os picos R foram detectados na
+derivação Y, como no trabalho de referência, após a limpeza do sinal pelo
+método padrão do NeuroKit2 e \textit{sem} correção de artefatos: a correção
+substitui os batimentos ectópicos por batimentos interpolados e apagaria
+justamente os eventos que os indicadores de ectopia procuram contar.
+
+\subsubsection{Classificação dos intervalos}
+
+Cada intervalo RR foi classificado em três categorias. Intervalos fora da
+faixa de 250 a 3\,000\,ms foram considerados \textit{implausíveis}, por
+corresponderem a picos duplicados ou a perdas de sinal. Entre os plausíveis,
+foram considerados \textit{normais} (NN) os que não se afastam mais de
+20\,\% da mediana móvel dos cinco intervalos vizinhos. A mediana local, e
+não a do segmento inteiro, acompanha as variações lentas da frequência
+cardíaca, de modo que um trecho em que o paciente apenas acelerou não seja
+confundido com ectopia. Os intervalos plausíveis restantes foram
+considerados \textit{irregulares}.
+
+\subsubsection{Marcadores calculados}
+
+Os marcadores de \gls{VFC} --- frequência média, SDNN, RMSSD, pNN50, SD1,
+SD2 e SD1/SD2 --- foram calculados apenas sobre os intervalos NN, e somente
+em segmentos com pelo menos oito deles. As diferenças sucessivas
+consideraram apenas pares de intervalos NN adjacentes no registro.
+Marcadores espectrais e a entropia amostral não foram calculados, pelos
+motivos expostos na \autoref{subsec:fund-duracao-segmento}.
+
+Os indicadores de ectopia foram obtidos a partir da mediana local: foram
+considerados \textit{precoces} os intervalos inferiores a 80\,\% dela;
+\textit{extrassístoles}, os intervalos precoces seguidos de outro superior a
+115\,\% dela; e \textit{dupletes}, dois intervalos precoces consecutivos.
+Registraram-se ainda a maior pausa, o número de pausas superiores a
+2~segundos e as frações de intervalos irregulares e implausíveis.
+
+Para a morfologia, os batimentos foram delineados pelo método de
+proeminência do NeuroKit2 \cite{emrich2024}. A largura do QRS foi tomada
+entre o início e o fim do complexo, e o QT, do início do QRS ao fim da onda
+T, com a mediana sobre os batimentos do segmento. O QTc foi calculado pela
+\autoref{eq:bazett} com a média dos intervalos NN. Registraram-se ainda as
+frações de batimentos com onda P e com onda T identificadas e a amplitude
+de cada derivação. Em um teste preliminar, o método de ondaletas
+inicialmente considerado produziu durações de QRS sistematicamente
+superiores a 125\,ms em todos os segmentos de um mesmo paciente, indício de
+superestimação, e foi substituído.
+
+\subsubsection{Controle de qualidade}
+
+Uma primeira versão da extração calculava a \gls{VFC} sobre todos os
+intervalos plausíveis, sem separar os intervalos NN. Nela, 19,65\,\% dos
+segmentos apresentaram RMSSD superior a 200\,ms, valor implausível em
+repouso, e 12,35\,\% apresentaram SDNN acima do mesmo limite. Esses valores
+não eram ruído aleatório: resultavam de batimentos ectópicos e de picos não
+detectados, que inflam as diferenças sucessivas. Tratá-los como ausentes
+teria removido seletivamente os segmentos com ectopia.
+
+Com o cálculo restrito aos intervalos NN, as proporções caíram para
+2,21\,\% e 2,94\,\%, e as medianas do RMSSD e do SDNN passaram de 41,7 para
+23,9\,ms e de 44,0 para 29,5\,ms, respectivamente
+(\autoref{tab:met-auditoria-nn}). A queda das medianas mostra que a
+inflação não se restringia aos extremos, mas afetava a distribuição como um
+todo. Na versão final, a mediana da fração de intervalos NN por segmento foi
+de 1,00, e 11,1\,\% dos segmentos tiveram menos de 80\,\% de intervalos
+normais. Todos os marcadores foram calculados em pelo menos 96\,\% dos
+segmentos, e a largura do QRS em 98,7\,\%.
+
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:met-auditoria-nn} Efeito do cálculo sobre intervalos
+		NN nos marcadores de variabilidade (328\,807 segmentos)}
+	\IBGEtab{}{
+		\begin{tabular}{lrrrr}
+			\toprule
+			                                & \multicolumn{2}{c}{Acima de 200\,ms} & \multicolumn{2}{c}{Mediana (ms)}               \\
+			\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+			Marcador                        & \multicolumn{1}{c}{Todos os RR}      & \multicolumn{1}{c}{NN}           &
+			\multicolumn{1}{c}{Todos os RR} & \multicolumn{1}{c}{NN}                                                                \\
+			\midrule \midrule
+			RMSSD                           & 19,65\,\%                            & 2,21\,\%                         & 41,7 & 23,9 \\
+			SDNN                            & 12,35\,\%                            & 2,94\,\%                         & 44,0 & 29,5 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\subsubsection{Resumo por paciente}
+
+Os segmentos de cada paciente foram resumidos em uma única linha. Para os
+marcadores contínuos, calcularam-se a mediana, o intervalo interquartil e os
+percentis 10 e 90; para as contagens de ectopia, a média por segmento e a
+fração de segmentos com pelo menos um evento. Os limites fisiológicos não
+foram aplicados nesta etapa, pois os resumos por mediana e percentis são
+robustos aos valores extremos remanescentes.
+
+A partir desses resumos, foram definidos três conjuntos de variáveis, de
+dimensão crescente: o conjunto A, apenas com a mediana de cada marcador
+contínuo e a média de cada contagem (32 variáveis); o conjunto B, que
+acrescenta o intervalo interquartil e a fração de segmentos com evento
+(64 variáveis); e o conjunto C, com todos os resumos (122 variáveis).
+
+\subsection{Número de variáveis e risco de sobreajuste}
+\label{subsec:met-numero-variaveis}
+
+Os dois protocolos produzem de algumas dezenas a mais de uma centena de
+variáveis por paciente, um número elevado diante de 55 eventos. A regra
+usual de pelo menos dez eventos por variável em modelos de regressão
+logística \cite{peduzzi1996simulation} limitaria o modelo a cerca de cinco
+variáveis. Por isso, os modelos apresentados na
+\autoref{sec:met-modelos-marcadores} empregam penalização, redução de
+dimensionalidade ou seleção de variáveis, sempre ajustadas dentro de cada
+partição da validação cruzada, conforme a
+\autoref{subsec:fund-validacao-cruzada}.

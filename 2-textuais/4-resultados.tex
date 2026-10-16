@@ -1,0 +1,2373 @@
+\chapter{Resultados}
+\label{chap:resultados}
+
+% ==============================================================================
+% CONFIGURAÇÃO EXPERIMENTAL
+% Precede as seções de resultados das arquiteturas.
+%
+% ⚠️ Dois pontos exigem decisão do autor antes da redação final:
+%
+% 1. A justificativa dos hiperparâmetros. O texto abaixo afirma que os
+%    valores foram fixados após ensaios preliminares. Se esses ensaios não
+%    estiverem registrados, convém suavizar a afirmação ou documentá-los.
+%
+% 2. O tamanho do lote da ResNet-50, reduzido de 256 para 128 por limitação
+%    de memória. Está registrado como nota de rodapé.
+% ==============================================================================
+
+\section{Configuração experimental}
+\label{sec:configuracao-experimental}
+
+As arquiteturas avaliadas nas seções seguintes compartilham o mesmo
+protocolo de preparação dos dados, treinamento e avaliação. Essa
+uniformidade é condição para que a comparação entre elas isole o efeito da
+arquitetura, e não o de escolhas acessórias de configuração. Os valores
+adotados resultaram de ensaios preliminares e são apresentados a seguir,
+acompanhados da justificativa correspondente.
+
+\subsection{Representação do sinal}
+\label{subsec:config-sinal}
+
+Cada paciente é representado por janelas extraídas de seu registro de
+24\,horas, e não pelo registro integral. A opção decorre de uma limitação
+prática: a 200\,Hz, três derivações durante 24\,horas correspondem a
+aproximadamente 17 milhões de amostras por paciente, volume incompatível com
+o processamento em lote na memória disponível.
+
+A \autoref{tab:config-sinal} reúne os parâmetros de representação.
+
+% ---- TABELA: parâmetros do sinal ----
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:config-sinal} Parâmetros de representação do sinal}
+	\IBGEtab{}{
+		\begin{tabular}{lll}
+			\toprule
+			Parâmetro                        & Valor                       & Justificativa                        \\
+			\midrule \midrule
+			Comprimento da janela            & 24\,000 amostras            & 2 min, cerca de 140 ciclos cardíacos \\
+			Janelas por paciente (treino)    & 250                         & posições sorteadas a cada época      \\
+			Janelas por paciente (avaliação) & 100                         & posições em grade fixa               \\
+			Margem descartada                & 5 min                       & calibração do equipamento            \\
+			Filtro passa-banda               & 0,5--40\,Hz                 & remove deriva e ruído muscular       \\
+			Normalização                     & escala global por derivação & preserva amplitude relativa          \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A janela de dois minutos abrange aproximadamente 140 ciclos cardíacos a uma
+frequência de 70\,bpm, quantidade suficiente para que a morfologia se repita
+e para que a variabilidade entre batimentos seja observável. Janelas mais
+curtas podem recair sobre trechos sem conteúdo relevante; janelas mais longas
+elevam o consumo de memória e reduzem o número de amostras disponíveis por
+paciente.
+
+No treinamento, as posições das janelas são sorteadas a cada época,
+funcionando como forma de aumento de dados: o modelo nunca observa
+exatamente o mesmo recorte duas vezes. Na avaliação, as posições seguem grade
+regular determinística, assegurando reprodutibilidade das métricas.
+
+A separação entre filtragem e normalização é deliberada. O filtro
+passa-banda remove o deslocamento de linha de base de cada janela
+individualmente --- deslocamento que varia entre pacientes conforme o
+posicionamento dos eletrodos, tendo-se observado medianas de $-0{,}29$,
+$-0{,}96$ e $+0{,}42$\,mV nas três derivações de um mesmo registro. A escala,
+por sua vez, é estimada uma única vez sobre o conjunto de treinamento de cada
+partição, de modo idêntico para todos os pacientes, o que preserva as
+diferenças de amplitude entre indivíduos --- informação associada a condições
+como baixa voltagem e hipertrofia ventricular. A padronização por janela,
+alternativa descartada, executaria as duas operações simultaneamente e
+eliminaria essa informação.
+
+\subsection{Treinamento}
+\label{subsec:config-treino}
+
+A \autoref{tab:config-treino} apresenta os hiperparâmetros de otimização,
+mantidos constantes em todas as arquiteturas.
+
+% ---- TABELA: hiperparâmetros de treino ----
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:config-treino} Hiperparâmetros de treinamento}
+	\IBGEtab{}{
+		\begin{tabular}{lll}
+			\toprule
+			Parâmetro                 & Valor                  & Justificativa                          \\
+			\midrule \midrule
+			Otimizador                & AdamW                  & desacopla regularização do gradiente   \\
+			Taxa de aprendizado       & $1{,}0 \times 10^{-4}$ & valores maiores causaram instabilidade \\
+			Regularização ($\lambda$) & $1{,}0 \times 10^{-2}$ & limite superior usual                  \\
+			Descarte                  & 0,6                    & compensa a razão parâmetros/eventos    \\
+			Tamanho do lote           & 256\footnotemark[1]    &                                        \\
+			Épocas máximas            & 20                     & melhor época ocorreu antes da quinta   \\
+			Paciência                 & 10 épocas              & sobre média móvel de três              \\
+			Agrupamento               & média e máximo         & estado típico e instante extremo       \\
+			Precisão                  & mista (fp16)           & reduz consumo de memória               \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\footnotetext[1]{Reduzido para 128 na ResNet-50 por limitação de memória da
+	unidade de processamento gráfico.}
+
+Os valores de regularização e descarte situam-se no extremo superior das
+faixas habituais. A escolha decorre da razão entre o número de parâmetros e
+o de eventos disponíveis: mesmo a arquitetura mais enxuta avaliada dispõe de
+$109\,361$ parâmetros para 37 casos positivos no conjunto de treinamento. Em
+ensaios preliminares, valores menores de regularização produziram perdas de
+treinamento próximas de zero já na terceira época.
+
+O limite de 20 épocas acompanha a observação, recorrente em todas as
+arquiteturas, de que o melhor valor de \gls{AUC} sobre o conjunto de
+validação ocorre nas primeiras épocas. O critério de parada emprega média
+móvel de três épocas em lugar do valor pontual: com sete a onze eventos no
+conjunto de validação, a métrica de uma única época oscila substancialmente
+sem que o modelo tenha se alterado de forma apreciável, e a suavização evita
+que se selecione o pico do ruído.
+
+\subsection{Desbalanceamento entre classes}
+\label{subsec:config-desbalanceamento}
+
+Com prevalência de 10,6\,\%, um classificador que atribua a classe
+majoritária a todos os pacientes alcança acurácia de 89,4\,\% com
+sensibilidade nula. Para evitar a convergência a esse ótimo local, a função
+de perda de entropia cruzada binária foi ponderada pelo fator
+
+\begin{equation}
+	w_{+} = \frac{N_0}{N_1} \approx 8{,}5,
+	\label{eq:pos-weight}
+\end{equation}
+
+\noindent
+em que $N_0$ e $N_1$ denotam, respectivamente, o número de controles e de
+casos no conjunto de treinamento de cada partição. O fator multiplica a
+contribuição dos casos positivos ao gradiente, sendo equivalente a replicar
+cada evento 8,5 vezes sem descartar controles.
+
+Técnicas de subamostragem da classe majoritária foram descartadas: o
+equilíbrio entre classes seria obtido às custas de reduzir a coorte de 517
+para 110 pacientes, sem alterar o número de eventos --- que constitui o
+fator efetivamente limitante --- e com ampliação dos intervalos de confiança.
+
+\subsection{Protocolo de avaliação}
+\label{subsec:config-avaliacao}
+
+A avaliação emprega validação cruzada estratificada em cinco partições. A
+divisão ocorre no nível do paciente, e as janelas são extraídas somente após
+a separação: nenhum indivíduo contribui simultaneamente para treinamento e
+teste. O cuidado é necessário porque janelas de um mesmo registro
+compartilham a assinatura eletrocardiográfica individual --- eixo elétrico,
+morfologia do complexo QRS e relação de amplitude entre derivações ---, e sua
+presença em ambos os conjuntos permitiria ao modelo reconhecer o paciente em
+lugar de estimar o risco.
+
+De cada conjunto de treinamento, uma fração é reservada para a definição do
+critério de parada antecipada e do limiar de decisão. O limiar é obtido pelo
+índice de Youden, que maximiza a soma de sensibilidade e especificidade, e
+apenas aplicado ao conjunto de teste --- sua determinação a partir do próprio
+teste produziria estimativas otimistas.
+
+As probabilidades preditas para as janelas de um mesmo paciente são
+agregadas por média antes do cálculo de qualquer métrica. Sem essa agregação,
+um indivíduo com 100 janelas seria contabilizado cem vezes, como se
+correspondesse a cem observações independentes --- o que estreitaria
+artificialmente os intervalos de confiança.
+
+Os intervalos de confiança de 95\,\% foram estimados por reamostragem
+\textit{bootstrap} com 2\,000 repetições, sorteando pacientes com reposição.
+Comparações entre modelos empregaram reamostragem pareada: a mesma amostra
+avalia ambos os modelos, de modo a isolar a incerteza da diferença.
+
+\subsection{Métricas}
+\label{subsec:config-metricas}
+
+A métrica principal é a \gls{AUC}, que mede a capacidade de ordenar
+corretamente os pacientes por risco e independe do limiar adotado. Reporta-se
+também a \gls{AP}, cuja linha de base sob classificação aleatória é a
+prevalência da classe positiva --- 0,106 nesta coorte --- em lugar de 0,5, o
+que a torna mais informativa quando os eventos são raros.
+
+Sensibilidade, especificidade e \gls{VPP} são reportadas no limiar definido
+na validação. A acurácia não é empregada como critério de comparação pela
+razão já exposta: o classificador trivial a maximiza sem apresentar
+utilidade.
+
+Dois valores de \gls{AUC} são apresentados em cada seção. A média entre
+partições, acompanhada do desvio-padrão, indica a estabilidade do resultado
+em relação à composição das partições. A estimativa agrupada, calculada sobre
+a totalidade dos 517 pacientes --- cada um predito pelo modelo que não o
+observou durante o treinamento ---, é considerada mais confiável por avaliar
+simultaneamente os 55 eventos, enquanto cada partição isolada dispõe de
+apenas onze. Eventuais discrepâncias entre as duas estimativas decorrem de os
+modelos ajustados em cada partição produzirem probabilidades em escalas
+distintas, que não coincidem exatamente ao serem reunidas em ordenamento
+único.
+
+% ==============================================================================
+% RESULTADOS — CNN unidimensional (primeira arquitetura avaliada)
+% Fonte: classificacao_cv.log, execução de 18/09/2026 (5 partições)
+%
+% Esta seção precede as três de ResNet. A ordem adotada vai da arquitetura
+% mais simples para a mais complexa, o que torna natural a progressão do
+% argumento sobre capacidade.
+% ==============================================================================
+
+\section{Rede convolucional aplicada ao sinal bruto}
+\label{sec:resultados-cnn-simples}
+
+A primeira arquitetura avaliada foi uma \gls{CNN} unidimensional sem
+conexões residuais, composta por quatro blocos sequenciais. Cada bloco
+executa convolução, normalização em lote, ativação \textit{ReLU}, agrupamento
+máximo com fator quatro e descarte. O número de filtros duplica a cada bloco
+--- 16, 32, 64 e 64 --- enquanto o comprimento temporal é dividido por
+quatro, reduzindo-se de 24\,000 para 93 posições.
+
+O núcleo convolucional foi dimensionado em 15 amostras, equivalentes a
+75\,ms na frequência de amostragem de 200\,Hz --- aproximadamente a duração
+de um complexo QRS. Essa escolha difere da convenção herdada de arquiteturas
+para imagens, em que núcleos de três elementos são predominantes e
+corresponderiam, neste contexto, a 15\,ms. O agrupamento global combina média
+e máximo ao longo do tempo, permitindo que a representação final capture
+tanto o estado típico da janela quanto o instante de maior ativação.
+
+A configuração resultante possui $109\,361$ parâmetros treináveis, o menor
+valor entre as arquiteturas aplicadas ao sinal bruto, correspondendo a 311
+parâmetros por paciente do conjunto de treinamento.
+
+\subsection{Protocolo}
+\label{subsec:protocolo-cnn-simples}
+
+Cada paciente foi representado por janelas de 24\,000 amostras, equivalentes
+a dois minutos de registro, das quais 250 foram amostradas por indivíduo no
+treinamento e 100 na avaliação. Na avaliação, as posições das janelas são
+determinísticas, distribuídas em grade regular ao longo do registro, de modo
+a garantir reprodutibilidade.
+
+O sinal passou por filtro passa-banda de 0,5 a 40\,Hz, aplicado a cada janela
+individualmente, seguido de divisão por escala global estimada por derivação
+no conjunto de treinamento de cada partição. A separação entre as duas
+operações é deliberada: o filtro remove o deslocamento de linha de base, que
+é particular de cada paciente, enquanto a escala global preserva as
+diferenças de amplitude entre indivíduos.
+
+O desbalanceamento entre as classes foi tratado por ponderação da função de
+perda, com peso de 8,5 atribuído à classe positiva. A validação cruzada
+empregou cinco partições estratificadas, com divisão no nível do paciente:
+351 indivíduos no treinamento, 62 na validação interna e 104 no conjunto de
+teste de cada partição. As probabilidades preditas para as janelas de um
+mesmo paciente foram agregadas por média antes do cálculo de qualquer
+métrica, uma vez que janelas de um mesmo registro não constituem observações
+independentes.
+
+\subsection{Desempenho}
+\label{subsec:desempenho-cnn-simples}
+
+A \gls{AUC} sobre as predições fora da amostra foi de 0,498, com intervalo de
+confiança de 95\,\% entre 0,411 e 0,586. O intervalo contém o valor 0,5, de
+modo que não é possível afirmar que o modelo discrimine os desfechos acima do
+acaso. Os resultados por partição constam da \autoref{tab:cnn-simples-folds}.
+
+% ---- TABELA 1: desempenho por partição ----
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:cnn-simples-folds} Desempenho da rede convolucional
+		por partição da validação cruzada}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+			\multicolumn{1}{c}{VPP}                                                                                                 \\
+			\midrule \midrule
+			0                                 & 0,487                              & 0,200                  & 0,182 & 0,785 & 0,091 \\
+			1                                 & 0,498                              & 0,147                  & 0,091 & 0,925 & 0,125 \\
+			2                                 & 0,489                              & 0,147                  & 0,545 & 0,391 & 0,097 \\
+			3                                 & 0,441                              & 0,113                  & 0,000 & 0,957 & 0,000 \\
+			4                                 & 0,574                              & 0,173                  & 0,545 & 0,435 & 0,103 \\
+			\midrule
+			Média                             & 0,498                              & 0,156                  & 0,273 & 0,698 & 0,083 \\
+			Desvio-padrão                     & 0,048                              & 0,033                  & 0,264 & 0,264 & 0,048 \\
+			\midrule
+			\textit{Out-of-fold}              & 0,498                              & 0,142                  & 0,309 & 0,704 & 0,110 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A \gls{AUC} manteve-se próxima de 0,5 em quatro das cinco partições, variando
+de 0,441 a 0,574, com desvio-padrão de 0,048. A estimativa agrupada coincide
+com a média entre partições, ambas em 0,498.
+
+As métricas dependentes de limiar, por outro lado, apresentaram dispersão
+elevada --- desvio-padrão de 0,264 tanto na sensibilidade quanto na
+especificidade, valor próximo ou superior às respectivas médias. A partição~3
+é o caso extremo: sensibilidade nula e especificidade de 0,957, situação em
+que o modelo classificou praticamente todos os pacientes como sobreviventes e
+nenhum dos onze eventos foi identificado. Esse comportamento aproxima-se do
+classificador trivial que atribui a classe majoritária a todos os
+indivíduos, o qual obteria acurácia de 89,4\,\% nesta coorte sem qualquer
+utilidade clínica.
+
+A \gls{AP} agrupada, de 0,142, situa-se acima da prevalência de 0,106, que
+constitui a linha de base dessa métrica sob classificação aleatória.
+
+\subsection{Comportamento durante o treinamento}
+\label{subsec:treinamento-cnn-simples}
+
+A \autoref{tab:cnn-simples-perdas} apresenta a evolução das perdas nas cinco
+partições.
+
+% ---- TABELA 2: perdas ----
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:cnn-simples-perdas} Perdas de treinamento e validação
+		no início e ao término do ajuste, por partição}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrrr}
+			\toprule
+			Partição                         & \multicolumn{2}{c}{Época 1}   &
+			\multicolumn{2}{c}{Última época} &
+			\multicolumn{1}{c}{Razão}        & \multicolumn{1}{c}{Épocas}                                                              \\
+			\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+			                                 & \multicolumn{1}{c}{Treino}    & \multicolumn{1}{c}{Validação} &
+			\multicolumn{1}{c}{Treino}       & \multicolumn{1}{c}{Validação} &                               &                         \\
+			\midrule \midrule
+			0                                & 1,282                         & 1,248                         & 0,155 & 3,624 & 23 & 15 \\
+			1                                & 1,268                         & 1,223                         & 0,237 & 4,827 & 20 & 11 \\
+			2                                & 1,280                         & 1,319                         & 0,121 & 3,425 & 28 & 14 \\
+			3                                & 1,291                         & 1,279                         & 0,175 & 2,696 & 15 & 17 \\
+			4                                & 1,283                         & 1,310                         & 0,142 & 2,827 & 20 & 15 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+As razões finais entre as perdas de validação e treinamento situaram-se entre
+15 e 28 --- valores que, embora indiquem ajuste excessivo, são
+substancialmente menores que os observados nas arquiteturas residuais
+avaliadas adiante, que alcançaram razões de três a quatro ordens de grandeza
+superiores. A perda de treinamento permaneceu entre 0,121 e 0,237 ao término
+do ajuste, sem aproximar-se de zero.
+
+Esse comportamento é consistente com o reduzido número de parâmetros: com
+$109\,361$ pesos e 37 casos positivos no conjunto de treinamento, a rede não
+dispõe de capacidade para ajustar individualmente cada exemplo. A perda de
+validação, contudo, cresce desde a primeira época em todas as partições, o
+que indica que o pouco aprendido não se transfere a pacientes não observados.
+
+O melhor valor de \gls{AUC} sobre o conjunto de validação ocorreu entre a
+primeira e a quinta época em todas as partições, alcançando 0,764 na
+partição~0 e 0,763 na partição~4. Esses valores elevados sobre sete eventos
+de validação não se sustentaram no conjunto de teste, em que as mesmas
+partições produziram 0,487 e 0,574 --- discrepância que ilustra a
+instabilidade das estimativas obtidas sobre poucos eventos.
+
+\subsection{Matriz de confusão}
+\label{subsec:confusao-cnn-simples}
+
+A \autoref{tab:cnn-simples-confusao} apresenta a matriz de confusão agregada,
+construída a partir das predições fora da amostra e do limiar mediano entre
+as partições.
+
+% ---- TABELA 3: matriz de confusão ----
+\begin{table}[h!]
+	\captionsetup{width=11cm}
+	\Caption{\label{tab:cnn-simples-confusao} Matriz de confusão agregada da
+		rede convolucional}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			                               & \multicolumn{1}{c}{Predito: sobrevivente} &
+			\multicolumn{1}{c}{Predito: óbito}                                               \\
+			\midrule \midrule
+			Sobrevivente ($n = 462$)       & 325                                       & 137 \\
+			Óbito por \gls{MSC} ($n = 55$) & 38                                        & 17  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Dos 55 pacientes que vieram a óbito por morte súbita cardíaca, 17 foram
+identificados --- sensibilidade de 0,309 --- com 137 falsos positivos entre
+os 462 sobreviventes. O \gls{VPP} resultante, de 0,110, é praticamente igual
+à prevalência de 0,106: a classificação como alto risco não altera de forma
+apreciável a probabilidade estimada de óbito em relação à probabilidade basal
+da coorte.
+
+
+
+% ==============================================================================
+% RESULTADOS — ResNet-18 reduzida sobre o sinal bruto
+% Fonte: classificacao_ResNet18_1D_pequena_n_5.log (validação em 5 partições)
+% ==============================================================================
+
+\section{Rede residual aplicada ao sinal bruto}
+\label{sec:resultados-resnet18-pequena}
+
+A primeira estratégia avaliada consistiu em aplicar uma rede neural
+convolucional residual diretamente ao sinal de \gls{ECG}, sem extração prévia
+de características. Adotou-se uma variante reduzida da arquitetura ResNet-18
+unidimensional, com 32 filtros na camada inicial em lugar dos 64 da
+configuração original, totalizando $1\,029\,985$ parâmetros treináveis. A
+redução de capacidade foi motivada pelo tamanho da amostra: com 33 casos no
+conjunto de treinamento de cada partição, a configuração completa implicaria
+razão superior a $120\,000$ parâmetros por evento.
+
+Cada paciente foi representado por janelas de 24\,000 amostras, equivalentes
+a dois minutos de registro a 200\,Hz, das quais 250 foram amostradas por
+indivíduo no treinamento. O sinal passou por filtro passa-banda de 0,5 a
+40\,Hz e normalização por escala global estimada em cada partição. O
+desbalanceamento entre as classes foi tratado por ponderação da função de
+perda, com peso de aproximadamente 8,4 atribuído à classe positiva.
+
+A avaliação empregou validação cruzada estratificada em cinco partições, com
+divisão realizada no nível do paciente. Em cada partição, 104 pacientes
+compuseram o conjunto de teste e outros 104 foram reservados, a partir do
+conjunto de treinamento, para definição do critério de parada antecipada e do
+limiar de decisão pelo índice de Youden. As probabilidades preditas para as
+janelas de um mesmo indivíduo foram agregadas por média antes do cálculo de
+qualquer métrica.
+
+\subsection{Desempenho}
+\label{subsec:desempenho-resnet18-pequena}
+
+O desempenho obtido encontra-se na \autoref{tab:resnet18-pequena-folds}. A
+\gls{AUC} calculada sobre as predições fora da amostra foi de 0,504, com
+intervalo de confiança de 95\,\% entre 0,420 e 0,588. O intervalo contém o
+valor 0,5, de modo que não é possível afirmar que o modelo discrimine os
+desfechos acima do acaso.
+
+% ---- TABELA 1: desempenho por partição ----
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:resnet18-pequena-folds} Desempenho da ResNet-18
+		reduzida em cada partição da validação cruzada}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+			\multicolumn{1}{c}{Épocas}                                                                                            \\
+			\midrule \midrule
+			0                                 & 0,589                              & 0,201                  & 0,364 & 0,742 & 11  \\
+			1                                 & 0,537                              & 0,168                  & 0,636 & 0,462 & 14  \\
+			2                                 & 0,360                              & 0,090                  & 0,455 & 0,337 & 18  \\
+			3                                 & 0,616                              & 0,193                  & 0,909 & 0,250 & --- \\
+			4                                 & 0,478                              & 0,119                  & 0,727 & 0,185 & --- \\
+			\midrule
+			Média                             & 0,516                              & 0,154                  & 0,618 & 0,395 & --- \\
+			Desvio-padrão                     & 0,102                              & 0,048                  & 0,222 & 0,222 & --- \\
+			\midrule
+			\textit{Out-of-fold}              & 0,504                              & 0,117                  & 0,582 & 0,437 & --- \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A \gls{AUC} variou de 0,360 a 0,616 entre as partições, com desvio-padrão de
+0,102. Essa dispersão indica que o resultado depende substancialmente de
+quais pacientes compõem cada conjunto de teste. Duas partições apresentaram
+valores abaixo de 0,5, ou seja, ordenamento pior que o aleatório --- o que
+não constitui evidência de relação inversa, mas de instabilidade da
+estimativa quando calculada sobre 11 eventos.
+
+A média entre partições, de $0{,}516 \pm 0{,}102$, aproxima-se da estimativa
+agrupada. A pequena discrepância entre as duas decorre de os modelos
+ajustados em cada partição produzirem probabilidades em escalas distintas:
+ao serem reunidas em um único ordenamento, essas escalas não coincidem
+exatamente. A estimativa agrupada é considerada mais confiável por avaliar
+simultaneamente os 55 casos da coorte, enquanto cada partição isolada dispõe
+de apenas 11 eventos.
+
+A dispersão nas métricas dependentes de limiar é ainda mais acentuada. A
+sensibilidade variou de 0,364 a 0,909 e a especificidade, de 0,185 a 0,742,
+ambas com desvio-padrão de 0,222 --- valor próximo à própria média. Tal
+comportamento é compatível com o número reduzido de eventos em cada conjunto
+de teste, em que a reclassificação de dois pacientes altera a sensibilidade
+em quase vinte pontos percentuais.
+
+A \gls{AP} agrupada, de 0,117, situa-se marginalmente acima da prevalência de
+0,106, que constitui a linha de base dessa métrica sob classificação
+aleatória.
+
+\subsection{Comportamento durante o treinamento}
+\label{subsec:treinamento-resnet18-pequena}
+
+O acompanhamento das curvas de perda revela padrão consistente nas cinco
+partições e esclarece a origem do desempenho observado. A
+\autoref{tab:resnet18-pequena-curvas} apresenta a evolução na partição~0,
+representativa das demais.
+
+% ---- TABELA 2: curvas de treino ----
+\begin{table}[h!]
+	\captionsetup{width=12cm}
+	\Caption{\label{tab:resnet18-pequena-curvas} Evolução das perdas e da
+		\gls{AUC} de validação na partição~0}
+	\IBGEtab{}{
+		\begin{tabular}{crrr}
+			\toprule
+			Época                                 & \multicolumn{1}{c}{Perda (treinamento)} &
+			\multicolumn{1}{c}{Perda (validação)} &
+			\multicolumn{1}{c}{AUC (validação)}                                                             \\
+			\midrule \midrule
+			1                                     & 1,200                                   & 1,224 & 0,658 \\
+			2                                     & 0,696                                   & 1,589 & 0,615 \\
+			3                                     & 0,214                                   & 1,927 & 0,522 \\
+			5                                     & 0,080                                   & 2,631 & 0,501 \\
+			8                                     & 0,037                                   & 3,252 & 0,554 \\
+			11                                    & 0,024                                   & 3,678 & 0,537 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A perda de treinamento reduziu-se de 1,2 para 0,024 ao longo de onze
+épocas, uma diminuição de aproximadamente cinquenta vezes, enquanto a perda
+de validação triplicou, de 1,224 para 3,678. A razão final entre as duas
+perdas atinge 153. Comportamento equivalente ocorre nas demais partições, com
+razões finais entre 181 e 234.
+
+Trata-se de memorização do conjunto de treinamento. Com 33 casos positivos
+disponíveis e mais de um milhão de parâmetros, a rede dispõe de capacidade
+suficiente para ajustar individualmente cada exemplo, sem que isso implique
+aprendizado de padrões transferíveis a pacientes não observados.
+
+Dois aspectos adicionais merecem registro. O primeiro é que, em todas as
+partições, o melhor valor de \gls{AUC} sobre o conjunto de validação ocorreu
+na primeira ou na segunda época --- 0,658 na época~1 da partição~0 e 0,695 na
+época~2 da partição~1. A informação eventualmente extraível do sinal é,
+portanto, capturada em poucas passagens sobre os dados, e as épocas
+subsequentes apenas deterioram a capacidade de generalização.
+
+O segundo é a alternância entre regimes degenerados. Na partição~2, entre as
+épocas~9 e~16, o classificador atribuiu a classe positiva à totalidade dos
+pacientes em sete das oito épocas, obtendo sensibilidade unitária com
+especificidade entre 0,183 e 0,333; na época~13 e na época~17, inverteu para
+sensibilidade de 0,364 com especificidade próxima de 0,79. Não se observa
+convergência para uma solução intermediária estável, o que indica que o
+modelo não identificou fronteira de decisão informativa.
+
+\subsection{Matriz de confusão}
+\label{subsec:confusao-resnet18-pequena}
+
+A \autoref{tab:resnet18-pequena-confusao} apresenta a matriz de confusão
+agregada, construída a partir das predições fora da amostra e do limiar
+mediano entre as partições.
+
+% ---- TABELA 3: matriz de confusão ----
+\begin{table}[h!]
+	\captionsetup{width=11cm}
+	\Caption{\label{tab:resnet18-pequena-confusao} Matriz de confusão agregada
+		da ResNet-18 reduzida}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			                               & \multicolumn{1}{c}{Predito: sobrevivente} &
+			\multicolumn{1}{c}{Predito: óbito}                                               \\
+			\midrule \midrule
+			Sobrevivente ($n = 462$)       & 202                                       & 260 \\
+			Óbito por \gls{MSC} ($n = 55$) & 23                                        & 32  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Dos 55 pacientes que vieram a óbito por morte súbita cardíaca, 32 foram
+identificados pelo modelo, correspondendo a sensibilidade de 0,582. O custo
+associado foram 260 falsos positivos entre os 462 sobreviventes, resultando
+em especificidade de 0,437 e \gls{VPP} de 0,110. Este último valor situa-se
+praticamente no mesmo patamar da prevalência de 0,106, o que significa que a
+classificação como alto risco não eleva de forma apreciável a probabilidade
+estimada de óbito em relação à probabilidade basal da coorte --- resultado
+coerente com o intervalo de confiança da \gls{AUC} incluir o valor
+correspondente ao acaso.
+
+% ==============================================================================
+% RESULTADOS — ResNet-18 em configuração completa
+% Fonte: classificacao_resnet18_v2.log (5 partições)
+%
+% Substitui a versão anterior, executada em três partições. Todas as
+% arquiteturas passam a ser avaliadas sob o mesmo protocolo.
+% ==============================================================================
+
+\section{Efeito da capacidade do modelo}
+\label{sec:resultados-resnet18}
+
+Para verificar se a limitação de desempenho observada na
+\autoref{sec:resultados-resnet18-pequena} decorria da capacidade reduzida do
+modelo, avaliou-se a mesma arquitetura em sua configuração completa, com 64
+filtros na camada inicial em lugar de 32. O número de parâmetros treináveis
+passou de $1\,029\,985$ para $3\,976\,385$, um aumento de aproximadamente
+quatro vezes, elevando a razão para $12\,869$ parâmetros por paciente do
+conjunto de treinamento.
+
+Todos os demais elementos do protocolo foram mantidos: janelas de 24\,000
+amostras, 250 por paciente, filtro passa-banda de 0,5 a 40\,Hz, normalização
+por escala global, ponderação da classe positiva na função de perda e
+agregação das predições por paciente antes do cálculo das métricas. A
+validação cruzada empregou cinco partições, com 309 pacientes no conjunto de
+treinamento, 104 na validação interna e 104 no conjunto de teste de cada uma,
+contendo 11 eventos.
+
+\subsection{Desempenho}
+\label{subsec:desempenho-resnet18}
+
+A \gls{AUC} sobre as predições fora da amostra foi de 0,508, com intervalo de
+confiança de 95\,\% entre 0,431 e 0,588. O intervalo contém o valor 0,5, de
+modo que também nesta configuração não é possível afirmar que o modelo
+discrimine os desfechos acima do acaso. Os resultados por partição constam da
+\autoref{tab:resnet18-folds}.
+
+% ---- TABELA 1: desempenho por partição ----
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:resnet18-folds} Desempenho da ResNet-18 em
+		configuração completa, por partição da validação cruzada}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+			\multicolumn{1}{c}{VPP}                                                                                                 \\
+			\midrule \midrule
+			0                                 & 0,547                              & 0,185                  & 0,455 & 0,667 & 0,139 \\
+			1                                 & 0,578                              & 0,138                  & 0,727 & 0,419 & 0,129 \\
+			2                                 & 0,547                              & 0,127                  & 0,545 & 0,457 & 0,107 \\
+			3                                 & 0,375                              & 0,115                  & 0,182 & 0,478 & 0,040 \\
+			4                                 & 0,592                              & 0,161                  & 0,818 & 0,337 & 0,129 \\
+			\midrule
+			Média                             & 0,528                              & 0,145                  & 0,545 & 0,472 & 0,109 \\
+			Desvio-padrão                     & 0,088                              & 0,028                  & 0,255 & 0,122 & 0,041 \\
+			\midrule
+			\textit{Out-of-fold}              & 0,508                              & 0,121                  & 0,455 & 0,461 & 0,091 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A \gls{AUC} variou de 0,375 a 0,592 entre as partições, com desvio-padrão de
+0,088. Quatro das cinco partições situaram-se acima de 0,5, enquanto a
+partição~3 apresentou valor substancialmente inferior, acompanhado de
+sensibilidade de 0,182 --- identificação de dois dos onze eventos. Essa
+dispersão evidencia a dependência do resultado em relação à composição de
+cada conjunto de teste, no qual a reclassificação de poucos pacientes altera
+de forma expressiva as métricas calculadas.
+
+A média entre partições, de $0{,}528 \pm 0{,}088$, supera a estimativa
+agrupada de 0,508. A discrepância decorre de os modelos ajustados em cada
+partição produzirem probabilidades em escalas distintas: ao serem reunidas em
+um ordenamento único, essas escalas não coincidem exatamente. A estimativa
+agrupada é considerada mais confiável por avaliar simultaneamente os 55 casos
+da coorte, enquanto cada partição isolada dispõe de apenas 11 eventos.
+
+A \gls{AP} agrupada, de 0,121, situa-se pouco acima da prevalência de 0,106,
+que constitui a linha de base dessa métrica sob classificação aleatória.
+
+\subsection{Comparação com a configuração reduzida}
+\label{subsec:comparacao-capacidade}
+
+A \autoref{tab:comparacao-capacidade} confronta as duas configurações, ambas
+avaliadas em cinco partições sob protocolo idêntico.
+
+% ---- TABELA 2: comparação entre capacidades ----
+\begin{table}[h!]
+	\captionsetup{width=14.5cm}
+	\Caption{\label{tab:comparacao-capacidade} Comparação entre as
+		configurações reduzida e completa da ResNet-18}
+	\IBGEtab{}{
+		\begin{tabular}{lrrrr}
+			\toprule
+			Configuração                     & \multicolumn{1}{c}{Parâmetros} &
+			\multicolumn{1}{c}{Por paciente} &
+			\multicolumn{1}{c}{AUC}          & \multicolumn{1}{c}{IC 95\%}                                     \\
+			\midrule \midrule
+			Reduzida (32 filtros)            & 1\,029\,985                    & 3\,333  & 0,504 & 0,420--0,588 \\
+			Completa (64 filtros)            & 3\,976\,385                    & 12\,869 & 0,508 & 0,431--0,588 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Quadruplicar o número de parâmetros alterou a \gls{AUC} em 0,004 --- variação
+inferior a um centésimo e muito abaixo da amplitude dos intervalos de
+confiança, que se sobrepõem quase integralmente. A capacidade do modelo,
+portanto, não constitui o fator limitante do desempenho neste conjunto de
+dados.
+
+\subsection{Comportamento durante o treinamento}
+\label{subsec:treinamento-resnet18}
+
+O ajuste ao conjunto de treinamento foi mais rápido que na configuração
+reduzida, como seria esperado de um modelo com quatro vezes mais parâmetros.
+A \autoref{tab:resnet18-perdas} sintetiza a evolução das perdas.
+
+% ---- TABELA 2: perdas ----
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:resnet18-perdas} Perdas de treinamento e validação no
+		início e ao término do ajuste, por partição}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrrr}
+			\toprule
+			Partição                         & \multicolumn{2}{c}{Época 1}   &
+			\multicolumn{2}{c}{Última época} &
+			\multicolumn{1}{c}{Razão}        & \multicolumn{1}{c}{Épocas}                                                               \\
+			\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+			                                 & \multicolumn{1}{c}{Treino}    & \multicolumn{1}{c}{Validação} &
+			\multicolumn{1}{c}{Treino}       & \multicolumn{1}{c}{Validação} &                               &                          \\
+			\midrule \midrule
+			0                                & 0,655                         & 1,583                         & 0,012 & 4,727 & 411 & 11 \\
+			1                                & 0,651                         & 1,528                         & 0,005 & 4,892 & 923 & 20 \\
+			2                                & 0,636                         & 1,605                         & 0,007 & 4,656 & 638 & 18 \\
+			3                                & 0,648                         & 1,539                         & 0,009 & 4,642 & 505 & 13 \\
+			4                                & 0,703                         & 1,525                         & 0,010 & 4,545 & 450 & 11 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A perda de treinamento reduziu-se a valores entre 0,005 e 0,012, enquanto a
+de validação triplicou em todas as partições, atingindo patamares em torno de
+4,6 a 4,9. As razões finais entre as duas perdas situaram-se entre 411 e 923,
+contra valores entre 153 e 234 na configuração reduzida --- confirmando que o
+acréscimo de capacidade acelerou a memorização do conjunto de treinamento sem
+produzir ganho na capacidade de generalização.
+
+Observa-se ainda que o melhor valor de \gls{AUC} sobre o conjunto de
+validação ocorreu precocemente: na primeira época nas partições~0 e~4, na
+terceira na partição~3, na sétima na partição~2 e na nona na partição~1. Em
+todos os casos, o modelo selecionado pela parada antecipada corresponde a um
+estágio inicial do ajuste.
+
+\subsection{Matriz de confusão}
+\label{subsec:confusao-resnet18}
+
+A \autoref{tab:resnet18-confusao} apresenta a matriz de confusão agregada.
+
+% ---- TABELA 3: matriz de confusão ----
+\begin{table}[h!]
+	\captionsetup{width=11cm}
+	\Caption{\label{tab:resnet18-confusao} Matriz de confusão agregada da
+		ResNet-18 em configuração completa}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			                               & \multicolumn{1}{c}{Predito: sobrevivente} &
+			\multicolumn{1}{c}{Predito: óbito}                                               \\
+			\midrule \midrule
+			Sobrevivente ($n = 462$)       & 213                                       & 249 \\
+			Óbito por \gls{MSC} ($n = 55$) & 30                                        & 25  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Dos 55 óbitos por morte súbita cardíaca, 25 foram identificados ---
+sensibilidade de 0,455 --- com 249 falsos positivos entre os 462
+sobreviventes. O \gls{VPP} resultante, de 0,091, permanece abaixo da
+prevalência de 0,106, indicando que a classificação como alto risco não eleva
+a probabilidade estimada de óbito em relação à probabilidade basal da coorte.
+
+
+% ==============================================================================
+% RESULTADOS — ResNet-18 reduzida com camada de atenção
+% Fonte: classificacao_resnet18_transformer.log (5 partições)
+% ==============================================================================
+
+\section{Incorporação de mecanismo de atenção}
+\label{sec:resultados-resnet18-transformer}
+
+As arquiteturas convolucionais avaliadas nas seções anteriores processam o
+sinal por meio de filtros que percorrem vizinhanças locais. Relações entre
+instantes temporalmente distantes só são alcançadas indiretamente, pelo
+empilhamento sucessivo de camadas. Para verificar se a modelagem explícita
+dessas relações alteraria o desempenho, acrescentou-se uma camada de
+codificação por atenção entre o corpo convolucional e o agrupamento global.
+
+A arquitetura resultante mantém o corpo da ResNet-18 reduzida --- quatro
+estágios residuais com 32 filtros iniciais, produzindo uma sequência de 750
+instantes com 256 dimensões cada --- e insere um codificador \textit{Transformer}
+de uma camada, com quatro cabeças de atenção e dimensão interna de 512. O
+número de parâmetros treináveis passou de $1\,029\,985$ para $1\,491\,553$, e
+a razão em relação ao conjunto de treinamento situou-se em $4\,827$
+parâmetros por paciente.
+
+Os demais elementos do protocolo foram preservados: janelas de 24\,000
+amostras, 250 por paciente, filtro passa-banda de 0,5 a 40\,Hz, agrupamento
+global combinando média e máximo, taxa de aprendizado de $10^{-4}$,
+regularização de $10^{-2}$ e descarte de 0,6. A validação cruzada empregou
+cinco partições, com 309 pacientes no treinamento, 104 na validação interna e
+104 no conjunto de teste de cada uma, contendo 11 eventos.
+
+\subsection{Desempenho}
+\label{subsec:desempenho-resnet18-transformer}
+
+A \gls{AUC} sobre as predições fora da amostra foi de 0,493, com intervalo de
+confiança de 95\,\% entre 0,419 e 0,577. O intervalo contém o valor 0,5, e o
+resultado não difere do obtido pela arquitetura puramente convolucional. Os
+valores por partição constam da \autoref{tab:resnet-transformer-folds}.
+
+% ---- TABELA 1: desempenho por partição ----
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:resnet-transformer-folds} Desempenho da ResNet-18 com
+		camada de atenção, por partição da validação cruzada}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+			\multicolumn{1}{c}{VPP}                                                                                                 \\
+			\midrule \midrule
+			0                                 & 0,480                              & 0,266                  & 0,182 & 0,699 & 0,067 \\
+			1                                 & 0,550                              & 0,162                  & 0,545 & 0,570 & 0,130 \\
+			2                                 & 0,562                              & 0,122                  & 0,727 & 0,413 & 0,129 \\
+			3                                 & 0,472                              & 0,118                  & 0,273 & 0,826 & 0,158 \\
+			4                                 & 0,496                              & 0,127                  & 0,364 & 0,620 & 0,103 \\
+			\midrule
+			Média                             & 0,512                              & 0,159                  & 0,418 & 0,626 & 0,117 \\
+			Desvio-padrão                     & 0,041                              & 0,062                  & 0,219 & 0,153 & 0,035 \\
+			\midrule
+			\textit{Out-of-fold}              & 0,493                              & 0,134                  & 0,291 & 0,704 & 0,105 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A dispersão entre partições foi de 0,041, a menor observada entre as
+arquiteturas aplicadas ao sinal bruto. Esse valor reduzido não indica,
+contudo, maior confiabilidade do resultado: as cinco partições concentram-se
+em torno de 0,5, e a baixa variabilidade reflete a consistência com que o
+modelo deixa de discriminar, não a estabilidade de um desempenho útil.
+
+A \gls{AP} agrupada, de 0,134, situa-se acima da prevalência de 0,106,
+embora a margem seja estreita. A sensibilidade agrupada, de 0,291,
+corresponde à identificação de 16 dos 55 pacientes que vieram a óbito.
+
+\subsection{Comportamento durante o treinamento}
+\label{subsec:treinamento-resnet18-transformer}
+
+O ajuste ao conjunto de treinamento foi o mais acentuado entre todas as
+configurações avaliadas. A \autoref{tab:resnet-transformer-perdas} sintetiza
+a evolução das perdas nas cinco partições.
+
+% ---- TABELA 2: perdas inicial e final ----
+\begin{table}[h!]
+	\captionsetup{width=13.5cm}
+	\Caption{\label{tab:resnet-transformer-perdas} Perdas de treinamento e
+		validação no início e ao término do ajuste, por partição}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                         & \multicolumn{2}{c}{Época 1}   &
+			\multicolumn{2}{c}{Última época} &
+			\multicolumn{1}{c}{Razão final}                                                                                           \\
+			\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+			                                 & \multicolumn{1}{c}{Treino}    & \multicolumn{1}{c}{Validação} &
+			\multicolumn{1}{c}{Treino}       & \multicolumn{1}{c}{Validação} &                                                        \\
+			\midrule \midrule
+			0                                & 0,984                         & 2,368                         & 0,007 & 8,592 & 1\,322 \\
+			1                                & 0,949                         & 2,731                         & 0,004 & 8,014 & 2\,226 \\
+			2                                & 0,889                         & 4,065                         & 0,006 & 7,788 & 1\,366 \\
+			3                                & 0,814                         & 4,549                         & 0,005 & 7,818 & 1\,700 \\
+			4                                & 0,910                         & 3,818                         & 0,010 & 7,967 & 781    \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A perda de treinamento reduziu-se a valores entre 0,004 e 0,010, enquanto a
+de validação atingiu patamares entre 7,8 e 8,6 --- razões finais de 781 a
+$2\,226$ entre as duas. Para efeito de comparação, a ResNet-18 reduzida sem
+atenção apresentou razões entre 153 e 234, e a configuração completa, entre
+346 e 400.
+
+O acréscimo da camada de atenção, portanto, acelerou substancialmente a
+memorização do conjunto de treinamento. Com 33 casos positivos disponíveis,
+perdas de treinamento da ordem de $10^{-3}$ indicam que o modelo ajustou
+individualmente cada exemplo. O mecanismo de atenção, que em conjuntos
+extensos permite relacionar segmentos distantes do sinal, aqui dispõe de
+exemplos insuficientes para que tais relações sejam estimadas de forma
+generalizável.
+
+Observa-se ainda que a \gls{AUC} máxima sobre o conjunto de validação ocorreu
+precocemente em todas as partições --- na época~8 da partição~0, na~6 da
+partição~1, na~4 da partição~2 e na~2 da partição~3. A parada antecipada
+interrompeu o ajuste entre a décima terceira e a vigésima época, e o modelo
+selecionado corresponde sempre a um estágio inicial do treinamento.
+
+\subsection{Matriz de confusão}
+\label{subsec:confusao-resnet18-transformer}
+
+A \autoref{tab:resnet-transformer-confusao} apresenta a matriz de confusão
+agregada, construída a partir das predições fora da amostra e do limiar
+mediano entre as partições.
+
+% ---- TABELA 3: matriz de confusão ----
+\begin{table}[h!]
+	\captionsetup{width=11cm}
+	\Caption{\label{tab:resnet-transformer-confusao} Matriz de confusão
+		agregada da ResNet-18 com camada de atenção}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			                               & \multicolumn{1}{c}{Predito: sobrevivente} &
+			\multicolumn{1}{c}{Predito: óbito}                                               \\
+			\midrule \midrule
+			Sobrevivente ($n = 462$)       & 325                                       & 137 \\
+			Óbito por \gls{MSC} ($n = 55$) & 39                                        & 16  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+O limiar resultante produziu comportamento mais conservador que o das
+configurações anteriores: apenas 153 pacientes foram classificados como alto
+risco, contra 292 na ResNet-18 reduzida. Dos 55 óbitos, 16 foram
+identificados --- sensibilidade de 0,291 --- com 137 falsos positivos entre
+os 462 sobreviventes. O \gls{VPP} de 0,105 permanece equivalente à
+prevalência de 0,106, o que significa que a classificação como alto risco não
+altera a probabilidade estimada de óbito em relação à probabilidade basal da
+coorte.
+
+
+% ==============================================================================
+% RESULTADOS — ResNet-34
+% Fonte: classificacao_resnet34_v2.log (5 partições)
+%
+% Seção mais enxuta que as anteriores: o protocolo já foi descrito na seção
+% de configuração experimental, e a comparação com a ResNet-18 completa é o
+% que interessa aqui.
+% ==============================================================================
+
+\section{Efeito da profundidade do modelo}
+\label{sec:resultados-resnet34}
+
+A \autoref{sec:resultados-resnet18} demonstrou que ampliar a largura da rede
+--- de 32 para 64 filtros --- não alterou o desempenho. Resta verificar se o
+mesmo se aplica à profundidade.
+
+A ResNet-34 preserva integralmente a largura da ResNet-18 completa: as
+mesmas 64 unidades na camada inicial e a mesma progressão até 512 na última.
+O que difere é o número de blocos residuais empilhados em cada estágio,
+que passa de dois em todos eles para três, quatro, seis e três ---
+dobrando o total de 8 para 16 blocos, ou de 17 para 33 camadas
+convolucionais. O número de parâmetros treináveis sobe para $7\,350\,721$,
+correspondendo a $23\,789$ por paciente do conjunto de treinamento.
+
+Como a largura é idêntica, os tensores intermediários mantêm exatamente as
+mesmas dimensões da configuração anterior. Os blocos adicionais não alteram
+a forma da representação; apenas a refinam por meio de transformações
+sucessivas.
+
+Todos os demais elementos seguem o protocolo da
+\autoref{sec:configuracao-experimental}, com validação cruzada em cinco
+partições de 309 pacientes no treinamento, 104 na validação interna e 104 no
+conjunto de teste.
+
+\subsection{Desempenho}
+\label{subsec:desempenho-resnet34}
+
+A \gls{AUC} sobre as predições fora da amostra foi de 0,514, com intervalo
+de confiança de 95\,\% entre 0,429 e 0,601. Os resultados por partição
+constam da \autoref{tab:resnet34-folds}.
+
+% ---- TABELA 1: desempenho por partição ----
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:resnet34-folds} Desempenho da ResNet-34 por partição
+		da validação cruzada}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+			\multicolumn{1}{c}{VPP}                                                                                                 \\
+			\midrule \midrule
+			0                                 & 0,534                              & 0,186                  & 0,545 & 0,484 & 0,111 \\
+			1                                 & 0,493                              & 0,130                  & 0,727 & 0,312 & 0,111 \\
+			2                                 & 0,546                              & 0,132                  & 0,273 & 0,707 & 0,100 \\
+			3                                 & 0,526                              & 0,153                  & 0,455 & 0,522 & 0,102 \\
+			4                                 & 0,601                              & 0,155                  & 0,727 & 0,370 & 0,121 \\
+			\midrule
+			Média                             & 0,540                              & 0,151                  & 0,545 & 0,479 & 0,109 \\
+			Desvio-padrão                     & 0,039                              & 0,022                  & 0,201 & 0,159 & 0,008 \\
+			\midrule
+			\textit{Out-of-fold}              & 0,514                              & 0,122                  & 0,509 & 0,517 & 0,112 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+O desvio-padrão entre partições, de 0,039, é o menor observado entre as
+arquiteturas residuais, e todas as cinco partições situaram-se entre 0,493 e
+0,601. Essa concentração não indica desempenho útil, mas consistência com
+que o modelo deixa de discriminar: as cinco estimativas agrupam-se em torno
+de 0,5, e o intervalo de confiança da estimativa agrupada contém esse valor.
+
+A \gls{AP} agrupada, de 0,122, supera marginalmente a prevalência de 0,106.
+
+\subsection{Comparação entre largura e profundidade}
+\label{subsec:comparacao-profundidade}
+
+A \autoref{tab:comparacao-profundidade} reúne as três configurações da
+família residual com blocos básicos, avaliadas sob protocolo idêntico.
+
+% ---- TABELA 2: três configurações ----
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:comparacao-profundidade} Comparação entre as
+		configurações da família ResNet com blocos básicos}
+	\IBGEtab{}{
+		\begin{tabular}{lrrrrr}
+			\toprule
+			Configuração                   & \multicolumn{1}{c}{Blocos}       &
+			\multicolumn{1}{c}{Parâmetros} & \multicolumn{1}{c}{Por paciente} &
+			\multicolumn{1}{c}{AUC}        & \multicolumn{1}{c}{IC 95\%}                                                     \\
+			\midrule \midrule
+			ResNet-18 reduzida             & 8                                & 1\,029\,985 & 3\,333  & 0,504 & 0,420--0,588 \\
+			ResNet-18 completa             & 8                                & 3\,976\,385 & 12\,869 & 0,508 & 0,431--0,588 \\
+			ResNet-34                      & 16                               & 7\,350\,721 & 23\,789 & 0,514 & 0,429--0,601 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+As três configurações percorrem uma faixa de capacidade de sete vezes, de
+$1{,}03$ a $7{,}35$ milhões de parâmetros, combinando aumento de largura e de
+profundidade. A \gls{AUC} varia de 0,504 a 0,514 --- amplitude de 0,010,
+inferior a um décimo da largura dos intervalos de confiança, que se sobrepõem
+quase integralmente.
+
+Nem a largura nem a profundidade, portanto, constituem o fator limitante.
+Esse resultado restringe o espaço de explicações possíveis para o desempenho
+observado: se o modelo dispusesse de capacidade insuficiente para
+representar os padrões relevantes, o acréscimo de parâmetros teria produzido
+ganho mensurável em alguma das direções testadas.
+
+\subsection{Comportamento durante o treinamento}
+\label{subsec:treinamento-resnet34}
+
+As razões finais entre as perdas de validação e de treinamento situaram-se
+entre 283 e 476, valores intermediários entre os da ResNet-18 completa (411
+a 923) e os da configuração reduzida (153 a 234). A perda de treinamento
+atingiu valores entre 0,0099 e 0,0166 ao término do ajuste, enquanto a de
+validação permaneceu em torno de 4,5 a 4,7 em todas as partições.
+
+A parada antecipada interrompeu o treinamento entre a décima segunda e a
+vigésima época. O melhor valor de \gls{AUC} sobre o conjunto de validação
+foi atingido precocemente --- na segunda época nas partições~0 e~4, na
+quarta nas partições~2 e~3 e na nona na partição~1.
+
+Registre-se a magnitude desses valores de validação: 0,721 na partição~2 e
+0,676 na partição~1, ante 0,546 e 0,493 obtidos nos respectivos conjuntos de
+teste. A discrepância, de até 0,18, ilustra a limitação de selecionar modelos
+com base em onze eventos: o pico observado reflete, em boa medida, a
+composição particular do conjunto de validação, e não se reproduz em dados
+não observados.
+
+\subsection{Matriz de confusão}
+\label{subsec:confusao-resnet34}
+
+% ---- TABELA 3: matriz de confusão ----
+\begin{table}[h!]
+	\captionsetup{width=11cm}
+	\Caption{\label{tab:resnet34-confusao} Matriz de confusão agregada da
+		ResNet-34}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			                               & \multicolumn{1}{c}{Predito: sobrevivente} &
+			\multicolumn{1}{c}{Predito: óbito}                                               \\
+			\midrule \midrule
+			Sobrevivente ($n = 462$)       & 239                                       & 223 \\
+			Óbito por \gls{MSC} ($n = 55$) & 27                                        & 28  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Dos 55 óbitos por morte súbita cardíaca, 28 foram identificados ---
+sensibilidade de 0,509 --- com 223 falsos positivos entre os 462
+sobreviventes. O \gls{VPP} resultante, de 0,112, é praticamente igual à
+prevalência de 0,106: a classificação como alto risco eleva a probabilidade
+estimada de óbito em menos de um ponto percentual em relação à probabilidade
+basal da coorte.
+
+
+
+% ==============================================================================
+% RESULTADOS — ResNet-50 unidimensional (sinal bruto)
+% Fonte: classificacao_resnet50_v2.log, execução de 01/10/2026 (5 partições)
+%
+% ⚠️ Pendências antes da redação final:
+%
+% 1. Os detalhes da arquitetura (núcleo, filtros, estágios) não constam do log.
+%    O trecho está marcado com [PREENCHER].
+% 2. A divisão dos dados neste log (309 treino / 104 validação / 104 teste,
+%    33 casos no treino e 11 na validação) difere da usada na seção da CNN
+%    (351 / 62 / 104, 37 casos no treino e 7 na validação). Isso afeta a
+%    afirmação de protocolo idêntico na Configuração experimental.
+% 3. O limiar da matriz de confusão (0,0318) aparece no log sem indicar se é a
+%    mediana entre as partições, como na seção da CNN. Confirmar.
+% ==============================================================================
+
+\section{Rede residual de 50 camadas aplicada ao sinal bruto}
+\label{sec:resultados-resnet50}
+
+A segunda arquitetura avaliada foi uma versão unidimensional da ResNet-50,
+cujas conexões residuais permitem o treinamento de redes substancialmente mais
+profundas que a da seção anterior. \textbf{[PREENCHER: tamanho do núcleo
+			convolucional, número de filtros por estágio e distribuição dos blocos.]} Como
+na rede convolucional simples, o agrupamento global combina média e máximo ao
+longo do tempo, e o descarte foi fixado em 0,6.
+
+A configuração resultante possui $16\,479\,937$ parâmetros treináveis, cerca de
+151 vezes o da rede convolucional simples ($109\,361$), correspondendo a
+$53\,333$ parâmetros por paciente do conjunto de treinamento. Como o conjunto
+de treinamento de cada partição contém 33 casos positivos, o número de
+parâmetros supera em ordens de grandeza o de eventos a ser aprendido.
+
+\subsection{Protocolo}
+\label{subsec:protocolo-resnet50}
+
+O pré-processamento e a representação do sinal seguem o da seção anterior:
+janelas de 24\,000 amostras, das quais 250 foram amostradas por paciente no
+treinamento e 100 na avaliação, filtro passa-banda de 0,5 a 40\,Hz aplicado a
+cada janela e divisão por escala global estimada por derivação no conjunto de
+treinamento de cada partição. O desbalanceamento foi tratado por ponderação da
+função de perda, com peso de 8,4 atribuído à classe positiva (8,36 nas
+partições 0 e 1 e 8,39 nas demais). O tamanho do lote foi de 128, reduzido de
+256 por limitação de memória (\autoref{tab:config-treino}).
+
+A validação cruzada empregou cinco partições estratificadas, com divisão no
+nível do paciente: 309 ou 310 indivíduos no treinamento (33 casos), 104 na
+validação interna (11 casos) e 103 ou 104 no conjunto de teste (11 casos). As
+probabilidades preditas para as janelas de um mesmo paciente foram agregadas
+por média antes do cálculo de qualquer métrica. O critério de parada
+antecipada foi acionado nas partições 2, 3 e 4, nas épocas 16, 11 e 11; nas
+partições 0 e 1, o ajuste atingiu o limite de 20 épocas.
+
+\subsection{Desempenho}
+\label{subsec:desempenho-resnet50}
+
+A \gls{AUC} sobre as predições fora da amostra foi de 0,536, com intervalo de
+confiança de 95\,\% entre 0,448 e 0,618. O intervalo contém o valor 0,5, de
+modo que não é possível afirmar que o modelo discrimine os desfechos acima do
+acaso. Os resultados por partição constam da \autoref{tab:resnet50-folds}.
+
+% ---- TABELA 1: desempenho por partição ----
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:resnet50-folds} Desempenho da ResNet-50 por partição da
+		validação cruzada}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+			\multicolumn{1}{c}{VPP}                                                                                                 \\
+			\midrule \midrule
+			0                                 & 0,487                              & 0,188                  & 0,818 & 0,258 & 0,115 \\
+			1                                 & 0,728                              & 0,290                  & 0,636 & 0,796 & 0,269 \\
+			2                                 & 0,492                              & 0,108                  & 0,000 & 0,848 & 0,000 \\
+			3                                 & 0,575                              & 0,171                  & 0,636 & 0,576 & 0,152 \\
+			4                                 & 0,562                              & 0,179                  & 0,727 & 0,391 & 0,125 \\
+			\midrule
+			Média                             & 0,569                              & 0,187                  & 0,564 & 0,574 & 0,132 \\
+			Desvio-padrão                     & 0,098                              & 0,065                  & 0,324 & 0,254 & 0,096 \\
+			\midrule
+			\textit{Out-of-fold}              & 0,536                              & 0,137                  & 0,455 & 0,511 & 0,100 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A média entre partições, de 0,569, supera a estimativa agrupada em 0,033. A
+diferença decorre sobretudo da partição~1, a única em que a \gls{AUC} se
+afasta de forma apreciável de 0,5 (0,728): nas outras quatro, os valores
+variam de 0,487 a 0,575, com média de 0,529. O desvio-padrão de 0,098 é
+aproximadamente o dobro do observado na rede convolucional simples (0,048), o
+que indica que o resultado depende da composição das partições. Com onze
+eventos por partição, um valor elevado isolado, sem replicação nas demais, não
+constitui evidência de capacidade discriminativa.
+
+As métricas dependentes de limiar apresentaram dispersão ainda maior ---
+desvio-padrão de 0,324 na sensibilidade e de 0,254 na especificidade. As
+partições 0 e 2 representam extremos opostos. Na partição~0, a sensibilidade
+foi de 0,818 com especificidade de 0,258: o modelo atribuiu alto risco a cerca
+de três quartos dos controles. Na partição~2, a sensibilidade foi nula e a
+especificidade de 0,848, de modo que nenhum dos onze eventos foi identificado.
+Essa instabilidade já é visível durante o ajuste: na partição~0, entre as
+épocas 4 e 5, a sensibilidade na validação passou de 0,273 para 1,000 e a
+especificidade de 0,828 para 0,129, sem alteração apreciável da \gls{AUC}
+(0,426 para 0,401). Como o limiar é definido sobre onze eventos de validação,
+sua escolha herda essa variabilidade.
+
+A \gls{AP} agrupada, de 0,137, situa-se acima da prevalência de 0,106, que
+constitui a linha de base dessa métrica sob classificação aleatória; a média
+entre partições foi de 0,187, com desvio-padrão de 0,065. A agregação das
+probabilidades por máximo, em lugar da média, produziu \gls{AUC} de 0,537 e
+\gls{AP} de 0,136, praticamente idênticas às obtidas pela média.
+
+Em relação à rede convolucional simples, cuja \gls{AUC} agrupada foi de 0,498
+(intervalo de 0,411 a 0,586), o aumento de aproximadamente 151 vezes no número
+de parâmetros não foi acompanhado de ganho discernível. Os intervalos de
+confiança das duas arquiteturas se sobrepõem amplamente e ambos contêm 0,5.
+
+\subsection{Comportamento durante o treinamento}
+\label{subsec:treinamento-resnet50}
+
+A \autoref{tab:resnet50-perdas} apresenta a evolução das perdas nas cinco
+partições.
+
+% ---- TABELA 2: perdas ----
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:resnet50-perdas} Perdas de treinamento e validação
+		no início e ao término do ajuste, por partição}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrrr}
+			\toprule
+			Partição                         & \multicolumn{2}{c}{Época 1}   &
+			\multicolumn{2}{c}{Última época} &
+			\multicolumn{1}{c}{Razão}        & \multicolumn{1}{c}{Épocas}                                                                \\
+			\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+			                                 & \multicolumn{1}{c}{Treino}    & \multicolumn{1}{c}{Validação} &
+			\multicolumn{1}{c}{Treino}       & \multicolumn{1}{c}{Validação} &                               &                           \\
+			\midrule \midrule
+			0                                & 0,881                         & 1,744                         & 0,008 & 6,370 & 777  & 20 \\
+			1                                & 1,019                         & 1,648                         & 0,005 & 6,416 & 1309 & 20 \\
+			2                                & 0,929                         & 1,847                         & 0,009 & 5,927 & 674  & 16 \\
+			3                                & 0,860                         & 1,721                         & 0,013 & 5,415 & 430  & 11 \\
+			4                                & 1,061                         & 1,515                         & 0,012 & 5,778 & 481  & 11 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A perda de treinamento reduziu-se de valores entre 0,860 e 1,061 na primeira
+época para valores entre 0,005 e 0,013 ao término do ajuste. Já na terceira
+época situava-se entre 0,082 e 0,096, apesar de a regularização e o descarte
+terem sido fixados nos valores máximos. As razões finais entre as perdas de
+validação e treinamento situaram-se entre 430 e 1\,309, de uma a duas ordens
+de grandeza acima das observadas na rede convolucional simples (15 a 28).
+
+A perda de validação foi mínima na primeira época em todas as partições e
+cresceu desde então, com oscilações pontuais, até valores entre 5,4 e 6,4.
+Esse comportamento é consistente com o número de parâmetros: com mais de 16
+milhões de pesos e 33 casos positivos, a rede dispõe de capacidade para
+ajustar individualmente os exemplos de treinamento, e o que foi aprendido não
+se transfere a pacientes não observados.
+
+O melhor valor pontual de \gls{AUC} sobre o conjunto de validação ocorreu nas
+épocas 11, 5, 4, 5 e 1 das partições 0 a 4, alcançando 0,753 na partição~2 e
+0,675 na partição~3. Na partição~2, a \gls{AUC} de validação manteve-se entre
+0,56 e 0,69 da segunda à décima quinta época, e o conjunto de teste produziu
+0,492 com sensibilidade nula. Em sentido oposto, a partição~1 teve pico de
+validação de 0,614 e \gls{AUC} de teste de 0,728. Essas discrepâncias, em
+ambas as direções, ilustram a instabilidade das estimativas obtidas sobre
+onze eventos.
+
+\subsection{Matriz de confusão}
+\label{subsec:confusao-resnet50}
+
+A \autoref{tab:resnet50-confusao} apresenta a matriz de confusão agregada,
+construída a partir das predições fora da amostra e do limiar de 0,0318.
+
+% ---- TABELA 3: matriz de confusão ----
+\begin{table}[h!]
+	\captionsetup{width=11cm}
+	\Caption{\label{tab:resnet50-confusao} Matriz de confusão agregada da
+		ResNet-50}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			                               & \multicolumn{1}{c}{Predito: sobrevivente} &
+			\multicolumn{1}{c}{Predito: óbito}                                               \\
+			\midrule \midrule
+			Sobrevivente ($n = 462$)       & 236                                       & 226 \\
+			Óbito por \gls{MSC} ($n = 55$) & 30                                        & 25  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Dos 55 pacientes que vieram a óbito por morte súbita cardíaca, 25 foram
+identificados --- sensibilidade de 0,455 --- com 226 falsos positivos entre os
+462 sobreviventes, isto é, 48,9\,\% destes foram classificados como de alto
+risco. O \gls{VPP} resultante, de 0,100, é ligeiramente inferior à prevalência
+de 0,106, e o valor preditivo negativo, de 0,887, também não supera a
+probabilidade basal de sobrevivência, de 0,894. A classificação, em qualquer
+dos dois sentidos, não altera de forma apreciável a probabilidade estimada de
+óbito em relação à da coorte, e a acurácia de 50,5\,\% situa-se bem abaixo da
+do classificador trivial (89,4\,\%).
+
+
+
+% ==============================================================================
+% RESULTADOS — ECG de repouso de alta resolução com arquitetura CNN-LSTM
+% Fonte: cnnlstm_res.log (5 partições)
+%
+% ⚠️ A coorte desta seção (367 pacientes, 41 eventos) difere da utilizada nas
+%    demais (517 pacientes, 55 eventos). O texto registra a limitação que
+%    isso impõe à comparação.
+% ==============================================================================
+
+\section{Eletrocardiograma de repouso de alta resolução}
+\label{sec:resultados-cnnlstm-repouso}
+
+As seções anteriores avaliaram arquiteturas distintas sobre a mesma
+modalidade de exame. Esta seção altera a modalidade: em lugar do registro
+ambulatorial de 24\,horas, emprega-se o eletrocardiograma de repouso de alta
+resolução, disponível para parte da coorte e adquirido sob condições
+controladas.
+
+A mudança responde a uma hipótese específica. O registro de 24\,horas
+contempla o paciente em sono, repouso, esforço e estresse, além de artefatos
+de movimento e de deslocamento de eletrodos. Essa variabilidade é alheia ao
+desfecho e pode dificultar a identificação de padrões morfológicos. O exame
+de repouso, por sua vez, é adquirido com o paciente deitado e imóvel, em
+ambiente controlado, e a 1\,000\,Hz --- cinco vezes a frequência de
+amostragem do Holter.
+
+\subsection{Dados e arquitetura}
+\label{subsec:cnnlstm-dados}
+
+O exame de repouso tem duração aproximada de 20\,minutos e está disponível
+para 380 dos 517 pacientes da coorte. A arquitetura adotada processa o exame
+integral, e não janelas amostradas: cada paciente corresponde a um único
+tensor de $1\,136\,000$ amostras por derivação, descartados 30\,segundos em
+cada extremidade. Treze registros mais curtos que esse comprimento foram
+excluídos, restando 367 pacientes e 41 eventos --- prevalência de 11,2\,\%.
+
+A arquitetura foi adaptada de \citeonline{freire2025scd}, que a propôs para
+estratificação de risco de morte súbita cardíaca por análise de
+sobrevivência. Três blocos convolucionais com passo e dilatação reduzem o sinal em
+aproximadamente 50\,000 vezes, convertendo $1\,136\,000$ amostras em 21
+posições temporais; sobre essa sequência opera uma rede recorrente de memória
+longa e curta com duas camadas e 128 unidades ocultas, cujo último estado
+alimenta o classificador. A compressão agressiva é o que viabiliza o
+processamento do exame integral: arquiteturas convencionais, com redução de
+fator quatro por bloco, não comportariam entrada desse comprimento.
+
+O modelo possui $321\,825$ parâmetros treináveis, dos quais cerca de 72\,\%
+pertencem à camada recorrente. Em relação à implementação original, três
+adaptações foram necessárias: a saída passou a fornecer um valor escalar por
+paciente, compatível com a função de perda de entropia cruzada binária; a
+camada densa destinada a variáveis tabulares, presente na versão original
+ainda quando não utilizada, foi suprimida; e acrescentou-se verificação do
+comprimento mínimo da entrada, uma vez que a compressão de aproximadamente
+50\,000 vezes inviabiliza sinais mais curtos que o previsto. A validação cruzada empregou cinco partições,
+com 219 ou 220 pacientes no treinamento, 74 na validação interna e 73 ou 74
+no conjunto de teste.
+
+\subsection{Desempenho}
+\label{subsec:cnnlstm-desempenho}
+
+A \gls{AUC} sobre as predições fora da amostra foi de 0,514, com intervalo de
+confiança de 95\,\% entre 0,425 e 0,610. O intervalo contém o valor 0,5. Os
+resultados por partição constam da \autoref{tab:cnnlstm-folds}.
+
+% ---- TABELA 1: desempenho por partição ----
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:cnnlstm-folds} Desempenho da arquitetura CNN-LSTM
+		sobre o exame de repouso, por partição}
+	\IBGEtab{}{
+		\begin{tabular}{crrrrr}
+			\toprule
+			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+			\multicolumn{1}{c}{VPP}                                                                                                 \\
+			\midrule \midrule
+			0                                 & 0,549                              & 0,164                  & 0,444 & 0,723 & 0,160 \\
+			1                                 & 0,648                              & 0,185                  & 0,625 & 0,606 & 0,156 \\
+			2                                 & 0,616                              & 0,160                  & 0,375 & 0,708 & 0,125 \\
+			3                                 & 0,564                              & 0,158                  & 0,125 & 0,923 & 0,167 \\
+			4                                 & 0,555                              & 0,145                  & 0,750 & 0,246 & 0,107 \\
+			\midrule
+			Média                             & 0,586                              & 0,162                  & 0,464 & 0,641 & 0,151 \\
+			Desvio-padrão                     & 0,044                              & 0,015                  & 0,240 & 0,249 & 0,029 \\
+			\midrule
+			\textit{Out-of-fold}              & 0,514                              & 0,124                  & 0,537 & 0,451 & 0,110 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Chama atenção a discrepância entre as duas estimativas de \gls{AUC}: a média
+entre partições, de $0{,}586 \pm 0{,}044$, supera em 0,072 a estimativa
+agrupada de 0,514. Trata-se da maior diferença observada entre todos os
+experimentos realizados.
+
+A explicação reside na calibração. Cada partição ajusta um modelo
+independente, e as probabilidades produzidas situam-se em escalas distintas.
+Dentro de uma partição, o ordenamento relativo dos pacientes é razoável ---
+donde os valores entre 0,549 e 0,648. Ao reunir as predições das cinco
+partições em um ordenamento único, as escalas não coincidem, e um paciente de
+baixo risco segundo um modelo pode receber probabilidade superior à de um
+paciente de alto risco segundo outro. A estimativa agrupada, embora inferior,
+é a que reflete o desempenho esperado em aplicação, na qual um único modelo
+ordenaria todos os pacientes.
+
+A \gls{AP} agrupada, de 0,124, supera marginalmente a prevalência de 0,112.
+
+\subsection{Comparação entre modalidades}
+\label{subsec:cnnlstm-comparacao}
+
+A \autoref{tab:comparacao-modalidades} confronta os resultados obtidos nas
+duas modalidades de exame.
+
+% ---- TABELA 2: comparação entre modalidades ----
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:comparacao-modalidades} Comparação entre as
+		modalidades de exame avaliadas}
+	\IBGEtab{}{
+		\begin{tabular}{llrrr}
+			\toprule
+			Modalidade              & Arquitetura                 & \multicolumn{1}{c}{$n$ / eventos} &
+			\multicolumn{1}{c}{AUC} & \multicolumn{1}{c}{IC 95\%}                                                            \\
+			\midrule \midrule
+			Holter 24\,h            & CNN                         & 517 / 55                          & 0,498 & 0,411--0,586 \\
+			Holter 24\,h            & ResNet-18 reduzida          & 517 / 55                          & 0,504 & 0,420--0,588 \\
+			Holter 24\,h            & ResNet-18 completa          & 517 / 55                          & 0,508 & 0,431--0,588 \\
+			Holter 24\,h            & ResNet-18 com atenção       & 517 / 55                          & 0,493 & 0,419--0,577 \\
+			Repouso 20\,min         & CNN-LSTM                    & 367 / 41                          & 0,514 & 0,425--0,610 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+O valor obtido sobre o exame de repouso é o mais elevado da tabela, embora a
+diferença em relação às demais modalidades seja de 0,006 a 0,021 --- inferior
+a um décimo da amplitude dos intervalos de confiança, que se sobrepõem
+integralmente. Não há, portanto, evidência de superioridade de uma
+modalidade sobre a outra.
+
+Duas ressalvas restringem ainda mais a comparação. A primeira é que as
+coortes diferem: 367 pacientes com 41 eventos no exame de repouso, contra 517
+com 55 no Holter. Parte de qualquer diferença observada pode decorrer da
+composição da amostra, e não da modalidade. A comparação rigorosa exigiria
+avaliar ambas as modalidades sobre o mesmo subconjunto de pacientes.
+
+A segunda é que a arquitetura também difere. O exame de repouso foi avaliado
+com a CNN-LSTM, enquanto o Holter o foi com arquiteturas convolucionais e
+residuais. O experimento altera simultaneamente duas variáveis, o que impede
+atribuir eventual diferença a qualquer uma delas isoladamente.
+
+\subsection{Matriz de confusão}
+\label{subsec:cnnlstm-confusao}
+
+% ---- TABELA 3: matriz de confusão ----
+\begin{table}[h!]
+	\captionsetup{width=11cm}
+	\Caption{\label{tab:cnnlstm-confusao} Matriz de confusão agregada da
+		arquitetura CNN-LSTM sobre o exame de repouso}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			                               & \multicolumn{1}{c}{Predito: sobrevivente} &
+			\multicolumn{1}{c}{Predito: óbito}                                               \\
+			\midrule \midrule
+			Sobrevivente ($n = 326$)       & 147                                       & 179 \\
+			Óbito por \gls{MSC} ($n = 41$) & 19                                        & 22  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Dos 41 óbitos por morte súbita cardíaca, 22 foram identificados ---
+sensibilidade de 0,537 --- com 179 falsos positivos entre os 326
+sobreviventes. O \gls{VPP} de 0,110 permanece praticamente igual à
+prevalência de 0,112.
+
+\subsection{Síntese}
+\label{subsec:cnnlstm-sintese}
+
+A hipótese que motivou o experimento --- de que a menor presença de
+artefatos no exame de repouso favoreceria a identificação de padrões
+morfológicos --- não se confirmou. O desempenho permaneceu na mesma faixa
+observada com o Holter, com intervalo de confiança compatível com o acaso.
+
+O resultado acrescenta elemento relevante ao conjunto de evidências: a
+limitação observada não decorre da qualidade do sinal nem da presença de
+artefatos de movimento, uma vez que persiste em registros adquiridos sob
+condições controladas e com frequência de amostragem cinco vezes superior.
+
+
+
+% % ==============================================================================
+% % RESULTADOS — Arquitetura DeepHHF (dois experimentos)
+% % Fontes: classificacao_deephhf.log (estágio 1, janelas de 2 min)
+% %         DeepHHF_2estagios_16h.log (protocolo completo, 16 h comprimidas)
+% % ==============================================================================
+
+% \section{Protocolo de treinamento em dois estágios}
+% \label{sec:resultados-deephhf}
+
+% Os experimentos descritos até aqui compartilham uma característica: o
+% modelo é ajustado em etapa única, recebendo como unidade de treinamento a
+% janela de sinal com o rótulo do paciente a que pertence. Essa formulação
+% implica que o extrator de características dispõe, efetivamente, de tantos
+% exemplos quantos são os pacientes --- 309 a 351, conforme a partição.
+
+% A arquitetura proposta por \citeonline{zvuloni2025deephhf} adota formulação
+% distinta, em dois estágios. No primeiro, o extrator é treinado para
+% classificar segmentos de 30\,segundos isoladamente, cada segmento herdando o
+% rótulo de seu paciente. No segundo, os pesos do extrator são congelados e
+% um codificador por atenção é ajustado sobre a sequência completa de
+% segmentos de cada indivíduo.
+
+% A vantagem pretendida é quantitativa: no primeiro estágio, o extrator
+% observa centenas de milhares de segmentos em lugar de algumas centenas de
+% pacientes. O rótulo atribuído a cada segmento constitui supervisão fraca
+% --- um paciente que veio a óbito tem todos os seus segmentos rotulados como
+% positivos, inclusive aqueles em que o traçado não apresenta alteração ---,
+% mas a tarefa é suficiente para que o extrator aprenda representações
+% morfológicas. O segundo estágio, por dispor de poucos exemplos, estima
+% número reduzido de parâmetros.
+
+% O trabalho original emprega essa arquitetura na predição de risco de
+% insuficiência cardíaca a partir de uma coorte de $47\,729$ pacientes, com
+% \gls{AUC} de 0,80. A avaliação conduzida aqui investiga se o mesmo
+% protocolo produz ganho em coorte duas ordens de grandeza menor.
+
+% \subsection{Primeiro estágio isolado}
+% \label{subsec:deephhf-estagio1}
+
+% Em um primeiro experimento, avaliou-se exclusivamente o extrator, sem o
+% codificador por atenção. A entrada corresponde às mesmas janelas de dois
+% minutos empregadas nas arquiteturas anteriores, subdivididas internamente em
+% quatro segmentos de 30\,segundos cujas predições são promediadas.
+
+% Este experimento adota integralmente o pipeline de dados descrito na
+% \autoref{sec:configuracao-experimental}: as janelas são amostradas do
+% registro original a cada época, filtradas individualmente e divididas pela
+% escala global estimada no conjunto de treinamento de cada partição. A única
+% alteração em relação às arquiteturas anteriores é o modelo.
+
+% O modelo possui $269\,569$ parâmetros treináveis --- 872 por paciente do
+% conjunto de treinamento, a menor razão entre todas as arquiteturas
+% avaliadas. O extrator baseia-se em blocos residuais seguidos de convoluções
+% com passo progressivo, reduzindo o sinal em 384 vezes antes do
+% classificador.
+
+% A \gls{AUC} sobre as predições fora da amostra foi de 0,486, com intervalo
+% de confiança de 95\,\% entre 0,403 e 0,573. Os resultados por partição
+% constam da \autoref{tab:deephhf-e1-folds}.
+
+% % ---- TABELA 1: estágio 1 por partição ----
+% \begin{table}[h!]
+% 	\captionsetup{width=13cm}
+% 	\Caption{\label{tab:deephhf-e1-folds} Desempenho do extrator isolado,
+% 		por partição da validação cruzada}
+% 	\IBGEtab{}{
+% 		\begin{tabular}{crrrrr}
+% 			\toprule
+% 			Partição                          & \multicolumn{1}{c}{AUC}            & \multicolumn{1}{c}{AP} &
+% 			\multicolumn{1}{c}{Sensibilidade} & \multicolumn{1}{c}{Especificidade} &
+% 			\multicolumn{1}{c}{VPP}                                                                                                 \\
+% 			\midrule \midrule
+% 			0                                 & 0,526                              & 0,194                  & 0,545 & 0,398 & 0,097 \\
+% 			1                                 & 0,599                              & 0,292                  & 0,727 & 0,226 & 0,100 \\
+% 			2                                 & 0,675                              & 0,250                  & 0,091 & 0,957 & 0,200 \\
+% 			3                                 & 0,262                              & 0,075                  & 0,000 & 0,957 & 0,000 \\
+% 			4                                 & 0,473                              & 0,160                  & 0,273 & 0,565 & 0,070 \\
+% 			\midrule
+% 			Média                             & 0,507                              & 0,194                  & 0,327 & 0,620 & 0,093 \\
+% 			Desvio-padrão                     & 0,157                              & 0,085                  & 0,306 & 0,330 & 0,072 \\
+% 			\midrule
+% 			\textit{Out-of-fold}              & 0,486                              & 0,134                  & 0,218 & 0,788 & 0,109 \\
+% 			\bottomrule
+% 		\end{tabular}
+% 	}{
+% 		\Fonte{elaborado pelo autor (2026).}
+% 	}
+% \end{table}
+
+% A dispersão entre partições foi de 0,157, a maior observada entre as
+% arquiteturas aplicadas ao Holter. Os valores variam de 0,262 na partição~3
+% a 0,675 na partição~2 --- amplitude de 0,41. A partição~3 apresentou
+% sensibilidade nula, com nenhum dos onze eventos identificado.
+
+% Essa variabilidade, associada à menor razão entre parâmetros e pacientes de
+% todo o conjunto de experimentos, sugere que a limitação não decorre de
+% excesso de capacidade. Com 872 parâmetros por paciente, o modelo dispõe de
+% margem reduzida para memorização; ainda assim, o desempenho permanece
+% compatível com o acaso e instável entre partições.
+
+% \subsection{Protocolo completo sobre o registro comprimido}
+% \label{subsec:deephhf-2estagios}
+
+% O segundo experimento implementa o protocolo integral, aproximando-se da
+% formulação original. Em lugar de janelas de dois minutos, cada paciente é
+% representado por 480 segmentos de 30\,segundos extraídos a intervalos de
+% dois minutos ao longo de 16\,horas de registro --- representação comprimida
+% que permite ao modelo observar o dia inteiro sem carregar os 17 milhões de
+% amostras do registro completo.
+
+% Este experimento emprega pipeline de dados distinto. Os segmentos foram
+% extraídos uma única vez, antes do treinamento, e armazenados em disco em
+% precisão reduzida --- cerca de 8,9\,GB para os 517 pacientes. Essa decisão
+% decorre do custo de leitura: a extração dos 480 segmentos a cada época
+% implicaria 248\,mil acessos ao disco por época, o que inviabilizaria o
+% treinamento. Em consequência, a filtragem passa-banda é aplicada uma única
+% vez, sobre o sinal comprimido, e a normalização é realizada por registro em
+% lugar de escala global por partição.
+
+% A janela de 16\,horas foi centralizada em cada registro, descartando-se o
+% excedente de forma simétrica nas extremidades. O corte em 16\,horas, em
+% lugar das 24\,horas do trabalho original, decorre da distribuição de
+% durações na coorte: 126 dos 517 registros apresentam menos de 22\,horas, e o
+% preenchimento com zeros geraria segmentos silenciosos em proporção
+% substancial desses pacientes. Com 16\,horas úteis, a totalidade dos 55
+% eventos é preservada.
+
+% O treinamento seguiu as duas etapas. No primeiro estágio, cada partição
+% processou cerca de $158\,000$ segmentos ao longo de três épocas, com a perda
+% reduzindo-se de 1,545 para 1,293. Os 91 tensores do extrator foram então
+% transferidos ao modelo completo e congelados, restando $173\,953$ parâmetros
+% treináveis no codificador por atenção e no classificador, contra $67\,072$
+% congelados.
+
+% % ---- TABELA 2: dois estágios por partição ----
+% \begin{table}[h!]
+% 	\captionsetup{width=11cm}
+% 	\Caption{\label{tab:deephhf-e2-folds} Desempenho do protocolo em dois
+% 		estágios, por partição}
+% 	\IBGEtab{}{
+% 		\begin{tabular}{cr}
+% 			\toprule
+% 			Partição             & \multicolumn{1}{c}{AUC} \\
+% 			\midrule \midrule
+% 			0                    & 0,610                   \\
+% 			1                    & 0,637                   \\
+% 			2                    & 0,602                   \\
+% 			3                    & 0,421                   \\
+% 			4                    & 0,365                   \\
+% 			\midrule
+% 			Média                & 0,527                   \\
+% 			Desvio-padrão        & 0,125                   \\
+% 			\midrule
+% 			\textit{Out-of-fold} & 0,525                   \\
+% 			\bottomrule
+% 		\end{tabular}
+% 	}{
+% 		\Fonte{elaborado pelo autor (2026).}
+% 	}
+% \end{table}
+
+% A \gls{AUC} agrupada foi de 0,525, com intervalo de confiança de 95\,\%
+% entre 0,442 e 0,602 --- novamente contendo o valor 0,5. A sensibilidade
+% resultante foi de 0,546 e a especificidade, de 0,470, com \gls{VPP} de
+% 0,109 ante prevalência de 0,106.
+
+% A \autoref{tab:deephhf-e2-folds} evidencia a divisão das partições em dois
+% grupos. As três primeiras apresentaram valores entre 0,602 e 0,637,
+% superiores aos obtidos por qualquer outra arquitetura sobre o Holter; as
+% duas últimas, 0,421 e 0,365, situaram-se bem abaixo do acaso. O
+% desvio-padrão de 0,125 é o segundo maior do conjunto de experimentos. Não há
+% relação aparente entre a composição das partições e essa separação, e a
+% interpretação mais parcimoniosa atribui o padrão à instabilidade esperada
+% quando a estimativa é calculada sobre onze eventos.
+
+% \subsection{Síntese}
+% \label{subsec:deephhf-sintese}
+
+% A \autoref{tab:deephhf-comparacao} reúne os dois experimentos.
+
+% % ---- TABELA 3: comparação ----
+% \begin{table}[h!]
+% 	\captionsetup{width=15cm}
+% 	\Caption{\label{tab:deephhf-comparacao} Comparação entre as duas
+% 		formulações da arquitetura DeepHHF}
+% 	\IBGEtab{}{
+% 		\begin{tabular}{lrrrr}
+% 			\toprule
+% 			Formulação                     & \multicolumn{1}{c}{Entrada} &
+% 			\multicolumn{1}{c}{Treináveis} &
+% 			\multicolumn{1}{c}{AUC}        & \multicolumn{1}{c}{IC 95\%}                                   \\
+% 			\midrule \midrule
+% 			Extrator isolado               & janela de 2\,min            & 269\,569 & 0,486 & 0,403--0,573 \\
+% 			Dois estágios                  & 16\,h comprimidas           & 173\,953 & 0,525 & 0,442--0,602 \\
+% 			\bottomrule
+% 		\end{tabular}
+% 	}{
+% 		\Fonte{elaborado pelo autor (2026).}
+% 	}
+% \end{table}
+
+% O protocolo em dois estágios superou o extrator isolado em 0,039, diferença
+% inferior a um quarto da amplitude dos intervalos de confiança, que se
+% sobrepõem amplamente. O ganho, portanto, não é demonstrável.
+
+% Cabe ressalva quanto à comparação: além do protocolo de treinamento, os dois
+% experimentos diferem na representação da entrada --- janelas de dois minutos
+% amostradas a cada época contra 16\,horas comprimidas e fixas --- e no
+% pré-processamento, conforme descrito. Eventual diferença de desempenho não
+% poderia ser atribuída isoladamente ao número de estágios.
+
+% O experimento é relevante por eliminar uma explicação alternativa para os
+% resultados anteriores. O pré-treinamento do extrator sobre $158\,000$
+% segmentos --- quinhentas vezes o número de pacientes disponíveis --- não
+% alterou o desempenho de forma apreciável. A limitação observada não decorre,
+% portanto, do número de exemplos apresentados ao extrator durante o
+% treinamento, mas do número de pacientes distintos e, sobretudo, de eventos
+% na coorte.
+
+
+
+% ==============================================================================
+% RESULTADOS — Marcadores eletrocardiográficos
+% Fontes (números verificados nas saídas dos notebooks):
+%   Protocolo A: modelar_biomarcadores.py, modelos_parcimoniosos.py
+%   Protocolo B: janelas_estatistica_modelos.py (por segmento, extração v1),
+%                janelas30s_agregado_paciente.py (por paciente, extração NN)
+% q de Benjamini-Hochberg do protocolo A calculado a partir dos p impressos
+% (44 testes) — [conferir] rodando a correção no script.
+% ==============================================================================
+
+\section{Marcadores eletrocardiográficos}
+\label{sec:res-marcadores}
+
+\subsection{Protocolo A: segmentos de 5 minutos}
+\label{subsec:res-protocolo-a}
+
+\subsubsection{Comparação univariada}
+
+Dos 44 resumos por paciente, oito apresentaram diferença entre casos e
+controles com $p < 0{,}05$ no teste de Mann-Whitney
+(\autoref{tab:res-a-univariada}). Com 44 testes, cerca de dois resultados
+dessa ordem seriam esperados apenas por acaso. Após a correção de
+Benjamini-Hochberg, três permaneceram significativos: o desvio-padrão e a
+média da potência HF e o desvio-padrão da frequência cardíaca entre os
+segmentos. Os dois desvios-padrão --- da potência HF e da frequência
+cardíaca --- sobrevivem também à correção de Bonferroni.
+
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:res-a-univariada} Marcadores do protocolo A com
+		$p < 0{,}05$ na comparação entre casos e controles}
+	\IBGEtab{}{
+		\begin{tabular}{lrrr}
+			\toprule
+			Marcador                                 & \multicolumn{1}{c}{Controles} & \multicolumn{1}{c}{Casos} &
+			\multicolumn{1}{c}{$p$}                                                                                      \\
+			\midrule \midrule
+			Potência HF, desvio-padrão               & 0,01                          & 0,02                      & 0,001 \\
+			Frequência cardíaca, desvio-padrão (bpm) & 7,84                          & 6,28                      & 0,001 \\
+			Potência HF, média                       & 0,01                          & 0,02                      & 0,001 \\
+			SD1/SD2, média                           & 0,46                          & 0,56                      & 0,006 \\
+			LF/HF, média                             & 2,07                          & 1,50                      & 0,008 \\
+			Entropia amostral, média                 & 1,10                          & 0,97                      & 0,013 \\
+			Amplitude da derivação Y, média (mV)     & 0,78                          & 0,95                      & 0,030 \\
+			Entropia amostral, desvio-padrão         & 0,45                          & 0,39                      & 0,034 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). Valores são medianas em cada grupo.}
+	}
+\end{table}
+
+A direção das diferenças contraria a leitura clássica da \gls{VFC}. Os
+casos apresentaram maior potência HF e maior razão SD1/SD2, isto é, mais
+variabilidade de curto prazo, e menor variação da frequência cardíaca ao
+longo do registro. Em pacientes com insuficiência cardíaca, variabilidade de
+curto prazo elevada pode refletir um ritmo errático, com batimentos
+ectópicos e irregularidades não removidos pela correção de artefatos, e não
+um tônus vagal preservado. Essa interpretação é coerente com a proporção de
+intervalos irregulares, maior nos casos (4,80\,\% contra 2,87\,\%;
+$p = 0{,}077$), e com a concentração de valores extremos de SD1 entre os
+casos, descrita na \autoref{subsec:met-protocolo-a}.
+
+\subsubsection{Modelos}
+
+A \autoref{tab:res-a-modelos} apresenta o desempenho dos modelos. Os
+marcadores, sozinhos, alcançaram \gls{AUC} entre 0,585 e 0,624, com
+intervalos de confiança que excluem o acaso por pequena margem. Os melhores
+resultados vieram dos modelos que reduzem a dimensão do problema --- a
+análise de componentes principais e a floresta aleatória ---, e não das
+regressões penalizadas sobre as 44 variáveis. Nenhum modelo baseado apenas
+em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-a-modelos} Desempenho dos modelos sobre os
+		marcadores do protocolo A}
+	\IBGEtab{}{
+		\begin{tabular}{lrcrr}
+			\toprule
+			Modelo                          & \multicolumn{1}{c}{Variáveis} & \gls{AUC} [IC 95\,\%] &
+			\multicolumn{1}{c}{Partições}   & \multicolumn{1}{c}{\gls{AP}}                                                      \\
+			\midrule \midrule
+			Clínicas (referência)           & 6                             & 0,661 [0,577--0,741]  & 0,673 $\pm$ 0,114 & 0,233 \\
+			\midrule
+			Marcadores, logística L2        & 44                            & 0,589 [0,507--0,671]  & 0,595 $\pm$ 0,066 & 0,180 \\
+			Marcadores, logística L1        & 44                            & 0,585 [0,503--0,666]  & 0,588 $\pm$ 0,044 & 0,163 \\
+			Marcadores, PCA (4) + logística & 44                            & 0,624 [0,535--0,708]  & 0,623 $\pm$ 0,052 & 0,232 \\
+			Marcadores, floresta aleatória  & 44                            & 0,621 [0,537--0,701]  & 0,627 $\pm$ 0,025 & 0,184 \\
+			\midrule
+			Clínicas + marcadores, L2       & 50                            & 0,672 [0,597--0,745]  & 0,679 $\pm$ 0,099 & 0,201 \\
+			Clínicas + marcadores, L1       & 50                            & 0,681 [0,604--0,756]  & 0,690 $\pm$ 0,065 & 0,191 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). Partições: média $\pm$
+			desvio-padrão da \gls{AUC} nas cinco partições. \gls{AP} de referência
+			(acaso): 0,106.}
+	}
+\end{table}
+
+Somar os marcadores às variáveis clínicas elevou a \gls{AUC} de 0,661 para
+0,672 e 0,681, mas as diferenças não foram distinguíveis de zero:
+$+0{,}010$ [$-0{,}056$; $+0{,}086$] com penalização L2 e $+0{,}020$
+[$-0{,}047$; $+0{,}095$] com L1.
+
+\subsubsection{Número reduzido de marcadores e otimismo da seleção}
+
+A \autoref{tab:res-a-selecao} compara as duas formas de escolher poucos
+marcadores descritas na \autoref{subsec:met-comparacoes-marcadores}. A
+partir da análise univariada da coorte inteira, foram escolhidos a média da
+potência HF, o desvio-padrão da frequência cardíaca, a média da entropia
+amostral e a média da razão SD1/SD2. Esses quatro marcadores alcançaram
+\gls{AUC} de 0,627, e os dois primeiros, isoladamente, 0,647. Somados às
+variáveis clínicas, produziram os maiores valores deste trabalho, 0,684 e
+0,689.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-a-selecao} Efeito da forma de seleção dos
+		marcadores no protocolo A}
+	\IBGEtab{}{
+		\begin{tabular}{llcc}
+			\toprule
+			Seleção            & Modelo                  & \gls{AUC} [IC 95\,\%] & $\Delta$ sobre clínicas [IC 95\,\%] \\
+			\midrule \midrule
+			Coorte inteira     & 4 marcadores            & 0,627 [0,541--0,710]  & ---                                 \\
+			Coorte inteira     & 2 marcadores            & 0,647 [0,559--0,727]  & ---                                 \\
+			Coorte inteira     & clínicas + 4 marcadores & 0,684 [0,601--0,762]  & $+0{,}023$ [$-0{,}027$; $+0{,}078$] \\
+			Coorte inteira     & clínicas + 2 marcadores & 0,689 [0,607--0,769]  & $+0{,}027$ [$-0{,}022$; $+0{,}081$] \\
+			\midrule
+			Dentro da partição & 4 marcadores            & 0,580 [0,497--0,660]  & ---                                 \\
+			Dentro da partição & clínicas + 4 marcadores & 0,640 [0,553--0,726]  & $-0{,}021$ [$-0{,}094$; $+0{,}060$] \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Quando a seleção foi refeita dentro de cada partição, sem acesso ao
+desfecho dos pacientes de teste, a \gls{AUC} dos quatro marcadores caiu para
+0,580, com intervalo que inclui o acaso, e a combinação com as variáveis
+clínicas ficou abaixo do modelo clínico isolado. A diferença de cerca de
+0,05 entre as duas formas de seleção estima o otimismo introduzido por
+escolher os marcadores olhando o desfecho de toda a coorte. Os valores
+obtidos com seleção dentro da partição são, por isso, os que melhor
+representam o desempenho esperado em pacientes novos.
+
+\subsection{Protocolo B: segmentos de 30 segundos}
+\label{subsec:res-protocolo-b}
+
+\subsubsection{Pseudorreplicação}
+
+A revisão estatística no nível do segmento foi realizada sobre a primeira
+versão da extração, anterior à correção pelos intervalos NN. A
+\autoref{tab:res-b-pseudorreplicacao} mostra como a unidade de análise
+altera as conclusões. Tratando os 328\,807 segmentos como observações
+independentes, 22 dos 24 marcadores diferiram entre casos e controles com
+$p < 0{,}05$. No nível do paciente, apenas dois --- a razão SD1/SD2 e a
+amplitude da derivação Y --- atingiram esse limiar, e nenhum permaneceu
+significativo após as correções para comparações múltiplas.
+
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:res-b-pseudorreplicacao} Marcadores significativos
+		segundo a unidade de análise (24 marcadores)}
+	\IBGEtab{}{
+		\begin{tabular}{lc}
+			\toprule
+			Análise                                     & Marcadores com diferença significativa \\
+			\midrule \midrule
+			Por segmento ($n = 328\,807$), $p < 0{,}05$ & 22                                     \\
+			Por paciente ($n = 517$), $p < 0{,}05$      & 2                                      \\
+			Por paciente, Benjamini-Hochberg            & 0                                      \\
+			Por paciente, Bonferroni                    & 0                                      \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+O contraste ilustra o problema discutido na
+\autoref{subsec:fund-agregacao}. Com centenas de segmentos por paciente,
+diferenças mínimas entre os grupos tornam-se estatisticamente
+significativas, embora o número real de unidades independentes seja 517.
+Foram identificados ainda 26 pares de marcadores redundantes, entre os
+quais o RMSSD e o SD1 ($\rho = 0{,}97$), coerentemente com a relação
+algébrica entre ambos (\autoref{eq:poincare}).
+
+\subsubsection{Modelos treinados por segmento}
+
+Os modelos treinados diretamente sobre os segmentos, com as probabilidades
+agregadas por paciente, permaneceram próximos do acaso
+(\autoref{tab:res-b-segmento}). Nenhum intervalo de confiança excluiu 0,5.
+
+\begin{table}[h!]
+	\captionsetup{width=13cm}
+	\Caption{\label{tab:res-b-segmento} Modelos treinados por segmento de
+		30 segundos e avaliados por paciente}
+	\IBGEtab{}{
+		\begin{tabular}{lcc}
+			\toprule
+			Modelo                     & \gls{AUC} [IC 95\,\%] & Partições         \\
+			\midrule \midrule
+			Logística L2               & 0,563 [0,461--0,663]  & 0,569 $\pm$ 0,079 \\
+			PCA (6) + logística        & 0,532 [0,442--0,616]  & 0,537 $\pm$ 0,031 \\
+			Floresta aleatória         & 0,564 [0,472--0,650]  & 0,576 $\pm$ 0,094 \\
+			\textit{Gradient boosting} & 0,549 [0,451--0,636]  & 0,559 $\pm$ 0,114 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\subsubsection{Modelos sobre os resumos por paciente}
+
+A \autoref{tab:res-b-paciente} apresenta as doze configurações avaliadas
+sobre os resumos por paciente da extração corrigida. Onze delas tiveram
+intervalo de confiança que inclui 0,5. A única exceção, a análise de
+componentes principais sobre o conjunto B, com \gls{AUC} de 0,619
+[0,537--0,700], é a melhor de doze tentativas e deve ser interpretada com a
+correspondente cautela. A versão da extração anterior à correção NN produziu
+o mesmo quadro, com o melhor resultado em 0,583 [0,483--0,674].
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-b-paciente} Modelos sobre os resumos por paciente
+		dos segmentos de 30 segundos (extração corrigida)}
+	\IBGEtab{}{
+		\begin{tabular}{lrcccc}
+			\toprule
+			Conjunto                   & \multicolumn{1}{c}{Variáveis} & Logística L2 & Logística L1 &
+			PCA (4) + logística        & Floresta aleatória                                                          \\
+			\midrule \midrule
+			A (mediana)                & 32                            & 0,552        & 0,550        & 0,563 & 0,532 \\
+			B (A + dispersão e fração) & 64                            & 0,540        & 0,548        & 0,619 & 0,562 \\
+			C (todos os resumos)       & 122                           & 0,545        & 0,550        & 0,548 & 0,582 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). Valores de \gls{AUC} das predições
+			fora da partição.}
+	}
+\end{table}
+
+Na comparação univariada dos 122 resumos, sete apresentaram $p < 0{,}05$,
+número próximo do esperado por acaso, e nenhum permaneceu significativo após
+a correção de Benjamini-Hochberg. Os menores valores-$p$ concentraram-se,
+porém, em um padrão consistente: medidas de dispersão ao longo do registro
+foram menores nos casos, como o intervalo interquartil do QT (35 contra
+45\,ms; $p < 0{,}001$; $q = 0{,}083$) e o da frequência cardíaca (9,9
+contra 11,5\,bpm; $p = 0{,}004$). O mesmo padrão apareceu no protocolo A,
+no qual o desvio-padrão da frequência cardíaca entre os segmentos foi um dos
+três marcadores que resistiram à correção para comparações múltiplas.
+
+\subsection{Síntese}
+\label{subsec:res-marcadores-sintese}
+
+A \autoref{tab:res-marcadores-sintese} reúne os principais resultados. Os
+marcadores extraídos do \gls{ECG} contêm informação sobre o desfecho, mas
+essa informação é fraca: nos melhores casos, a \gls{AUC} situou-se entre 0,60
+e 0,65, e cai para perto do acaso quando a escolha dos marcadores é feita
+sem acesso ao desfecho dos pacientes de teste. Em nenhuma configuração os
+marcadores superaram as seis variáveis clínicas, nem acrescentaram a elas
+um ganho distinguível de zero. O sinal mais consistente entre os dois
+protocolos foi a menor variação da frequência cardíaca ao longo do registro
+entre os pacientes que sofreram \gls{MSC}.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-marcadores-sintese} Síntese dos resultados com
+		marcadores eletrocardiográficos}
+	\IBGEtab{}{
+		\begin{tabular}{lc}
+			\toprule
+			Modelo                                                   & \gls{AUC} [IC 95\,\%] \\
+			\midrule \midrule
+			Clínicas (referência)                                    & 0,661 [0,577--0,741]  \\
+			Protocolo A, PCA (4) + logística                         & 0,624 [0,535--0,708]  \\
+			Protocolo A, 4 marcadores com seleção dentro da partição & 0,580 [0,497--0,660]  \\
+			Protocolo A, clínicas + marcadores (L1)                  & 0,681 [0,604--0,756]  \\
+			Protocolo B, por segmento (melhor de quatro)             & 0,564 [0,472--0,650]  \\
+			Protocolo B, por paciente (melhor de doze)               & 0,619 [0,537--0,700]  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\citeonline{swee2026multimodal} relatam, na mesma base, \gls{AUC} de
+0,682 $\pm$ 0,030 com um modelo apenas de \gls{ECG} sobre marcadores de
+segmentos de 30~segundos. A comparação direta é limitada: aquele trabalho
+utilizou 746 pacientes, sem restrição ao ritmo sinusal e com critérios de
+exclusão distintos, e reporta a média entre partições, enquanto a métrica
+principal deste trabalho é a \gls{AUC} das predições agrupadas. Na mesma
+métrica, a média entre partições, os modelos por segmento deste trabalho
+alcançaram entre 0,537 e 0,576.
+
+
+% ==============================================================================
+% RESULTADOS — Redes neurais sobre o sinal de Holter
+% Fontes: logs classificacao_*.log, optuna_*.log (rodada final em 5 partições).
+% Todos os valores verificados nos logs. Coorte: 517 pacientes, 55 casos.
+% [pendente] = CNN simples e CNN média de 2 min, em execução.
+% Configuração das ResNets (20 épocas, paciência 10, 250 janelas de treino e
+% 100 de avaliação por paciente) difere da das CNNs (30 épocas, paciência 15,
+% 350 e 200 janelas) — declarado no texto.
+% ==============================================================================
+
+\section{Redes neurais sobre o sinal de Holter}
+\label{sec:res-redes}
+
+Esta seção apresenta o desempenho das redes neurais treinadas diretamente
+sobre o sinal das três derivações do Holter. Todas foram avaliadas pelo mesmo
+protocolo: cinco partições estratificadas sobre os 517 pacientes, com 309 ou
+310 pacientes de treinamento, 104 de validação interna e 103 ou 104 de teste
+em cada partição. O valor principal é a \gls{AUC} fora da partição,
+calculada sobre as predições dos 517 pacientes, cada um predito pelo modelo
+que não o viu no treinamento, com intervalo de confiança de 95\,\% obtido por
+\textit{bootstrap}. A média e o desvio-padrão da \gls{AUC} entre as cinco
+partições são informados ao lado, como medida da instabilidade do resultado.
+
+\subsection{Redes convolucionais: capacidade e duração da janela}
+\label{subsec:res-cnn-capacidade}
+
+A \autoref{tab:res-cnn-capacidade} apresenta as redes convolucionais do
+desenho da \autoref{subsec:met-cnn-experimentos}, que varia a capacidade da
+rede e a duração da janela de entrada.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-cnn-capacidade} Desempenho das redes
+		convolucionais segundo a capacidade e a duração da janela}
+	\IBGEtab{}{
+		\begin{tabular}{llrcc}
+			\toprule
+			Rede                & Janela                                 & \multicolumn{1}{c}{Parâmetros} &
+			\gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%]                                                                             \\
+			\midrule \midrule
+			Mínima              & 2 min                                  & 14\,425                        & 0,543 $\pm$ 0,059 & 0,523 [0,440--0,612] \\
+			Simples             & 2 min                                  & 109\,361                       & [pendente]        & [pendente]           \\
+			Média               & 2 min                                  & 418\,145                       & [pendente]        & [pendente]           \\
+			\midrule
+			Mínima              & 10 s                                   & 14\,425                        & 0,589 $\pm$ 0,090 & 0,554 [0,467--0,634] \\
+			Simples             & 10 s                                   & 109\,361                       & 0,509 $\pm$ 0,051 & 0,491 [0,411--0,578] \\
+			Média               & 10 s                                   & 418\,145                       & 0,495 $\pm$ 0,118 & 0,485 [0,406--0,569] \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Nenhuma configuração se distinguiu do acaso: todos os intervalos de
+confiança incluem 0,5. A rede mínima obteve os maiores valores nas duas
+durações de janela, e, na janela de 10~segundos, o desempenho caiu à medida
+que a capacidade aumentou (0,554, 0,491 e 0,485). A diferença entre a rede
+mínima e a média, no entanto, é menor que a largura de qualquer um dos
+intervalos e não permite afirmar uma relação entre capacidade e desempenho.
+O mesmo vale para a duração da janela: a rede mínima obteve 0,523 com
+2~minutos e 0,554 com 10~segundos, valores compatíveis entre si.
+
+\subsection{Redes residuais: largura da ResNet-18}
+\label{subsec:res-resnet18-largura}
+
+As redes residuais foram treinadas com uma configuração anterior à das redes
+convolucionais da seção precedente: 20 épocas no máximo, paciência de
+10 épocas, 250 janelas de treinamento e 100 de avaliação por paciente. A
+\autoref{tab:res-resnet18-largura} compara três larguras da ResNet-18, que
+mantêm os quatro estágios de dois blocos e variam o número de canais.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-resnet18-largura} Desempenho da ResNet-18 em três
+		larguras}
+	\IBGEtab{}{
+		\begin{tabular}{llrcc}
+			\toprule
+			Rede                & Janela                                 & \multicolumn{1}{c}{Parâmetros} &
+			\gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%]                                                                             \\
+			\midrule \midrule
+			ResNet-18 mínima    & 5,12 s                                 & 78\,169                        & 0,569 $\pm$ 0,067 & 0,562 [0,475--0,642] \\
+			ResNet-18 reduzida  & 2 min                                  & 1\,029\,985                    & 0,516 $\pm$ 0,102 & 0,504 [0,420--0,588] \\
+			ResNet-18 completa  & 2 min                                  & 3\,976\,385                    & 0,528 $\pm$ 0,088 & 0,508 [0,431--0,588] \\
+			ResNet-18 completa  & 5,12 s                                 & 3\,976\,385                    & 0,500 $\pm$ 0,080 & 0,492 [0,411--0,577] \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A versão mínima, com 78~mil parâmetros (253 por paciente de treinamento),
+obteve o maior valor entre as redes residuais (0,562), e as versões reduzida
+e completa ficaram em torno de 0,50. Assim como nas redes convolucionais, a
+redução da largura retardou a memorização dos pacientes de treinamento, mas
+o intervalo de confiança da versão mínima ainda inclui 0,5. A ResNet-18
+completa obteve resultados equivalentes com janelas de 2~minutos e de
+5,12~segundos.
+
+\subsection{Redes residuais: profundidade (ResNet-18, ResNet-34 e ResNet-50)}
+\label{subsec:res-resnet-profundidade}
+
+A \autoref{tab:res-resnet-profundidade} compara redes residuais de 18, 34 e
+50 camadas com a mesma largura e a mesma janela de 2~minutos. A ResNet-34
+empilha mais blocos básicos em cada estágio, e a ResNet-50 substitui o bloco
+básico pelo bloco de gargalo (\autoref{sec:fund-resnet}).
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-resnet-profundidade} Desempenho das redes
+		residuais segundo a profundidade}
+	\IBGEtab{}{
+		\begin{tabular}{lrrcc}
+			\toprule
+			Rede                             & \multicolumn{1}{c}{Parâmetros}         &
+			\multicolumn{1}{c}{Por paciente} &
+			\gls{AUC} partições              & \gls{AUC} fora da partição [IC 95\,\%]                                                      \\
+			\midrule \midrule
+			ResNet-18                        & 3\,976\,385                            & 12\,869 & 0,528 $\pm$ 0,088 & 0,508 [0,431--0,588] \\
+			ResNet-34                        & 7\,350\,721                            & 23\,789 & 0,540 $\pm$ 0,039 & 0,514 [0,429--0,601] \\
+			ResNet-50                        & 16\,479\,937                           & 53\,333 & 0,569 $\pm$ 0,098 & 0,536 [0,448--0,618] \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). Parâmetros por paciente de
+			treinamento (309 pacientes).}
+	}
+\end{table}
+
+Quadruplicar o número de parâmetros, da ResNet-18 para a ResNet-50, não
+alterou o desempenho: os três valores ficaram entre 0,51 e 0,54, com
+intervalos amplamente sobrepostos e todos incluindo 0,5. A ResNet-50, com
+mais de 53~mil parâmetros por paciente de treinamento, memorizou o conjunto
+de treinamento já nas primeiras épocas, como as demais, e não extraiu do
+sinal informação adicional.
+
+\subsection{ResNet-18 com mecanismo de atenção}
+\label{subsec:res-resnet-atencao}
+
+Na rede com atenção, as características extraídas pela ResNet-18 ao
+longo da janela são relacionadas entre si por um codificador
+\textit{Transformer} antes do agrupamento (\autoref{sec:fund-atencao}),
+totalizando 1\,491\,553 parâmetros. A \gls{AUC} fora da partição foi de
+0,493 [0,419--0,577], com média entre partições de 0,512 $\pm$ 0,041. A
+modelagem explícita das relações temporais dentro da janela de 2~minutos,
+portanto, não acrescentou capacidade discriminativa à ResNet-18.
+
+\subsection{Busca de hiperparâmetros}
+\label{subsec:res-redes-optuna}
+
+Para verificar se o desempenho dependia de uma escolha inadequada de
+hiperparâmetros, uma rede convolucional e uma rede residual foram
+configuradas por busca bayesiana com o \textit{Optuna}
+(\autoref{tab:res-redes-optuna}). Foram feitas 25 tentativas para cada
+família, variando largura, profundidade, tipo de agrupamento, taxa de
+aprendizado, decaimento de pesos, descarte e duração da janela. A busca
+maximizou a \gls{AUC} média da validação interna em três partições, sem
+acesso aos conjuntos de teste, e a configuração escolhida foi avaliada nas
+cinco partições do protocolo.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-redes-optuna} Desempenho das redes configuradas
+		por busca de hiperparâmetros}
+	\IBGEtab{}{
+		\begin{tabular}{llrcc}
+			\toprule
+			Rede                & Janela                                 & \multicolumn{1}{c}{Parâmetros} &
+			\gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%]                                                                             \\
+			\midrule \midrule
+			Convolucional$^{a}$ & 1 min                                  & 473\,417                       & 0,574 $\pm$ 0,112 & 0,556 [0,464--0,647] \\
+			Residual$^{b}$      & 1 min                                  & 1\,818\,049                    & 0,510 $\pm$ 0,079 & 0,496 [0,411--0,584] \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). $^{a}$Quatro blocos com 24, 48, 96 e
+			96 canais, núcleo de 31 amostras e agrupamento por média.
+			$^{b}$ResNet com quatro estágios de um bloco, 64 canais iniciais e
+			agrupamento por máximo.}
+	}
+\end{table}
+
+A busca não superou as configurações escolhidas manualmente. A rede
+convolucional encontrada obteve 0,556, o mesmo valor da rede convolucional
+mínima sem busca (0,554), e a rede residual obteve 0,496. Como os
+hiperparâmetros foram escolhidos pela validação interna, e não em uma
+validação cruzada aninhada, mesmo esses valores carregam algum otimismo
+residual.
+
+\subsection{Comportamento durante o treinamento}
+\label{subsec:res-redes-treino}
+
+Os registros de treinamento mostram o mesmo padrão em todas as arquiteturas.
+A perda de treinamento cai rapidamente --- na ResNet-18, de cerca de 0,65
+para menos de 0,02 em dez épocas ---, enquanto a perda de validação sobe
+desde a segunda ou terceira época, de cerca de 1,5 para valores entre 4 e 8.
+A rede memoriza os pacientes de treinamento em vez de aprender um padrão que
+se transfira para pacientes novos. As redes de menor capacidade retardam esse
+processo: na rede convolucional mínima, a perda de treinamento ainda estava
+em torno de 0,55 ao final das 30 épocas, e é nela que se observaram os
+maiores valores de \gls{AUC}, ainda que não significativos.
+
+A \gls{AUC} de validação mostrou-se um indicador pouco confiável do
+desempenho no teste. Na quarta partição da rede convolucional média, por
+exemplo, a validação interna atingiu \gls{AUC} de 0,64, e o teste, 0,30; na
+terceira partição da ResNet-50, a validação chegou a 0,75 e o teste ficou em
+0,49. Com 11 casos na validação interna, a \gls{AUC} de validação oscila o
+suficiente entre épocas para que a escolha do melhor modelo seja, em boa
+parte, determinada pelo acaso.
+
+\subsection{Variabilidade entre execuções}
+\label{subsec:res-redes-reprodutibilidade}
+
+A ResNet-18 mínima, com janela de 5,12~segundos, foi treinada duas vezes
+sobre as mesmas partições, alterando-se apenas o tamanho do lote (2\,000 e
+1\,000 janelas) e o número de janelas sorteadas por paciente (500 e 850). A
+\gls{AUC} fora da partição passou de 0,562 [0,475--0,642] para 0,480
+[0,403--0,557]. Essa diferença de 0,08 entre duas execuções da mesma
+arquitetura é maior que a diferença entre a rede de melhor e a de pior
+desempenho entre as redes convolucionais e residuais avaliadas.
+O desvio-padrão da \gls{AUC} entre partições, entre 0,04 e 0,12, aponta na
+mesma direção. A ordenação das arquiteturas, portanto, não deve ser
+interpretada como evidência de superioridade de uma sobre as outras.
+
+\subsection{Fusão da ResNet-18 com variáveis clínicas}
+\label{subsec:res-redes-fusao}
+
+A rede de fusão combina o extrator da ResNet-18 com um ramo que recebe seis
+variáveis clínicas --- idade, sexo, classe funcional da \gls{NYHA}, ondas Q,
+taquicardia ventricular não sustentada e fibrilação atrial paroxística ---,
+totalizando 3\,987\,041 parâmetros, dos quais 10\,656
+pertencem ao ramo clínico. A \autoref{tab:res-fusao} compara as três
+estratégias de treinamento descritas na \autoref{subsec:met-fusao}.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-fusao} Desempenho da rede de fusão segundo a
+		estratégia de treinamento do extrator de sinal}
+	\IBGEtab{}{
+		\begin{tabular}{llcc}
+			\toprule
+			Estratégia                & Janela & \gls{AUC} partições &
+			\gls{AUC} fora da partição [IC 95\,\%]                                          \\
+			\midrule \midrule
+			Treinamento conjunto      & 2 min  & 0,534 $\pm$ 0,090   & 0,516 [0,433--0,603] \\
+			Taxa reduzida no extrator & 2 min  & 0,578 $\pm$ 0,046   & 0,579 [0,492--0,669] \\
+			Extrator congelado$^{a}$  & 2 min  & 0,572 $\pm$ 0,043   & 0,577 [0,491--0,659] \\
+			Treinamento conjunto      & 10 s   & 0,492 $\pm$ 0,105   & 0,491 [0,409--0,576] \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). $^{a}$142\,241 parâmetros
+			treináveis; o extrator de sinal permanece com os pesos iniciais.}
+	}
+\end{table}
+
+O resultado é informativo justamente pelo contraste entre as estratégias.
+Quando o extrator de sinal é congelado, a rede ajusta apenas o ramo clínico e
+o classificador, e a \gls{AUC} chega a 0,577. Quando o extrator aprende com
+taxa reduzida, o resultado é praticamente o mesmo (0,579). Quando o extrator
+é treinado livremente, junto com o restante da rede, a \gls{AUC} cai para
+0,516. Ou seja, o desempenho da rede de fusão vem das variáveis
+clínicas, e o sinal, quando treinado, introduz variabilidade que prejudica a
+discriminação em vez de acrescentar informação. Para referência, o modelo
+logístico sobre as variáveis clínicas, sem nenhuma informação do sinal,
+obteve 0,661 [0,577--0,741]. % [conferir: referenciar a seção das variáveis clínicas]
+
+\subsection{Análise de sensibilidade: ResNet-18 sem restrição ao ritmo sinusal}
+\label{subsec:res-redes-ritmo}
+
+Para verificar se o pipeline é capaz de extrair do sinal alguma informação
+associada ao desfecho, a ResNet-18 foi treinada também sobre a coorte sem o
+critério de ritmo sinusal, com 703 pacientes e 85 casos. Nessa coorte, a
+\gls{AUC} fora da partição foi de 0,575 [0,511--0,642], o único intervalo
+entre as redes que exclui 0,5 (média entre partições de 0,601 $\pm$ 0,049).
+Esse ganho não pode ser atribuído a um marcador de morte súbita: a coorte
+ampliada inclui pacientes em fibrilação atrial, um ritmo facilmente
+reconhecível no sinal e associado a pior prognóstico. A rede tem, portanto,
+um atalho para discriminar os grupos que não existe na coorte restrita ao
+ritmo sinusal. O resultado mostra que o pipeline aprende quando há um padrão
+reconhecível no sinal e justifica a restrição adotada na
+\autoref{sec:intro-dados}, que remove essa fonte de confundimento.
+
+\subsection{Síntese}
+\label{subsec:res-redes-sintese}
+
+Em 17 configurações avaliadas no protocolo principal, nenhuma rede treinada
+sobre o sinal do Holter discriminou casos e controles de forma distinguível
+do acaso. Os valores de \gls{AUC} fora da partição ficaram entre 0,48 e
+0,56, sem relação com a capacidade da rede, com a duração da janela ou com a
+presença de mecanismos de atenção, e a variação entre execuções da mesma rede
+foi da mesma ordem que a variação entre arquiteturas. Na rede de fusão, o
+sinal não acrescentou informação às variáveis clínicas. Esses resultados são
+coerentes com o tamanho da amostra: com 33 casos de treinamento por
+partição, mesmo a menor das redes tem centenas de parâmetros por caso, e a
+evidência disponível não sustenta a existência de um padrão no sinal de
+Holter, em ritmo sinusal, que antecipe a morte súbita nesta coorte.

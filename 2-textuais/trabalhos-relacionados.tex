@@ -1,0 +1,295 @@
+% ==============================================================================
+% TRABALHOS RELACIONADOS
+% Fontes verificadas nos artigos:
+%   ramirez2017sudden — PLoS ONE 12(10):e0186152 (texto completo)
+%   kim2025deep       — J Clin Med 14(20):7209 (texto completo)
+%   swee2026multimodal — números já usados em resultados_marcadores.tex;
+%                        o preprint não pôde ser reaberto agora.
+%                        [conferir] = completar com o PDF do preprint.
+% ==============================================================================
+
+\chapter{Trabalhos Relacionados}
+\label{cap:trabalhos-relacionados}
+
+A predição de morte súbita cardíaca a partir do \gls{ECG} ambulatorial tem
+seguido dois caminhos. O primeiro, mais antigo, extrai do registro de Holter
+marcadores definidos por especialistas --- variabilidade da frequência
+cardíaca, turbulência da frequência, alternância da onda T, dinâmica da
+repolarização, contagem de arritmias --- e os combina com variáveis clínicas
+em modelos estatísticos. O segundo, mais recente, aplica redes neurais
+profundas diretamente ao sinal, na expectativa de que a rede encontre padrões
+que os marcadores clássicos não capturam. Esse segundo caminho se apoia no
+sucesso das redes convolucionais em tarefas diagnósticas sobre o \gls{ECG},
+como a detecção de arritmias no Holter \cite{hannun2019cardiologist} e o
+diagnóstico automático no \gls{ECG} de 12 derivações
+\cite{ribeiro2020automatic}. Há, contudo, uma diferença importante entre
+essas tarefas e a predição de morte súbita: nas tarefas diagnósticas, o
+padrão a ser reconhecido está presente no traçado e há dezenas de milhares
+de exemplos rotulados; na predição de um evento futuro, o padrão pode não
+existir no traçado e os eventos são poucos.
+
+Este capítulo apresenta três trabalhos que representam esses caminhos e que
+servem de referência para a interpretação dos resultados desta dissertação.
+O primeiro e o segundo utilizam a mesma base de dados deste trabalho, a
+coorte MUSIC \cite{martinyebra2024music}: um com marcadores clássicos e
+modelos de Cox, o outro com marcadores de segmentos curtos e aprendizado de
+máquina. O terceiro aplica aprendizado profundo ao Holter de 24~horas em uma
+coorte coreana de pacientes com infarto ou insuficiência cardíaca. O
+capítulo se encerra com uma comparação entre eles e com o posicionamento
+desta dissertação.
+
+\section{Marcadores eletrocardiográficos e clínicos na coorte MUSIC}
+\label{sec:trab-ramirez}
+
+\citeonline{ramirez2017sudden} construíram modelos de risco para morte
+súbita e para morte por falência de bomba na coorte MUSIC, combinando
+marcadores do Holter e variáveis clínicas. A análise incluiu os pacientes em
+ritmo sinusal com todos os índices calculáveis --- 597 dos 992 pacientes
+originais ---, seguidos por mediana de 44~meses, período em que ocorreram
+49 mortes súbitas e 62 mortes por falência de bomba. Os pacientes com
+fibrilação atrial, ritmo de marca-passo ou ausência de extrassístoles
+ventriculares foram excluídos, este último critério porque a turbulência da
+frequência depende de extrassístoles para ser calculada.
+
+Os marcadores eletrocardiográficos incluíram a turbulência da frequência, a
+alternância da onda T, índices de restituição do intervalo QT e do intervalo
+entre o pico e o fim da onda T, a restituição da morfologia da onda T, a
+amplitude dos intervalos RR e um índice de arritmia complexa. Para cada
+desfecho, os autores ajustaram três modelos de Cox --- clínico, apenas
+eletrocardiográfico e combinado ---, com seleção das variáveis por
+eliminação regressiva, e derivaram deles escores de risco em pontos. O
+modelo combinado para morte súbita reteve sexo masculino, classe III da
+\gls{NYHA}, fração de ejeção $\leq$ 35\,\% e três marcadores da repolarização.
+Os pacientes no quintil de maior risco tiveram risco de morte súbita 13,8
+vezes maior que os dos dois quintis de menor risco, contra 4,0 vezes com o
+modelo apenas clínico. No subgrupo com fração de ejeção reduzida, a
+\gls{AUC} para morte súbita foi de 0,73 [0,64--0,81] com o modelo
+combinado.
+
+Os próprios autores apontam a principal limitação do trabalho: não houve
+coorte de validação separada, pelo número reduzido de eventos. A seleção
+das variáveis e a estimativa do desempenho foram feitas sobre os mesmos
+pacientes, o que tende a superestimar a discriminação. Ainda assim, o
+trabalho estabelece duas referências para esta dissertação: a restrição ao
+ritmo sinusal como critério da coorte e a evidência de que, na MUSIC, a
+informação prognóstica do Holter para morte súbita está concentrada em
+marcadores da repolarização, que exigem delineação precisa da onda T.
+
+\section{Integração de marcadores de segmentos curtos e variáveis clínicas}
+\label{sec:trab-swee}
+
+\citeonline{swee2026multimodal} também utilizaram a coorte MUSIC, com o
+objetivo de prever morte súbita e morte por falência de bomba a partir da
+integração de marcadores do Holter com variáveis clínicas. Em vez de
+marcadores calculados sobre o registro inteiro, os autores extraíram
+marcadores de segmentos de 30~segundos não sobrepostos, com detecção dos
+picos R na derivação Y, e treinaram modelos de aprendizado de máquina sobre
+essas representações. O desenho desses segmentos foi adotado no
+protocolo~B desta dissertação (\autoref{subsec:met-protocolo-b}).
+
+O trabalho incluiu 746 pacientes, sem restrição ao ritmo sinusal, e relata
+\gls{AUC} de 0,682 $\pm$ 0,030 para o modelo apenas com marcadores do
+\gls{ECG}, expressa como média entre as partições da validação cruzada.
+% [conferir no preprint: número de eventos de morte súbita, modelos
+% empregados, AUC do modelo clínico e do modelo combinado.]
+Dois aspectos limitam a comparação com os resultados desta dissertação. O
+primeiro é a coorte: sem a restrição ao ritmo sinusal, ela inclui pacientes
+em fibrilação atrial, ritmo facilmente reconhecível no sinal e associado a
+pior prognóstico, o que pode por si só elevar a discriminação, como mostrou
+a análise de sensibilidade da \autoref{subsec:res-redes-ritmo}. O segundo é a
+métrica: a média entre partições não equivale à \gls{AUC} das predições
+agrupadas usada como medida principal neste trabalho.
+
+\section{Aprendizado profundo no Holter de 24 horas}
+\label{sec:trab-kim}
+
+\citeonline{kim2025deep} aplicaram aprendizado profundo ao Holter de
+24~horas de 1\,108 pacientes hospitalizados por infarto agudo do miocárdio
+(885) ou insuficiência cardíaca aguda (223), provenientes de um registro
+prospectivo em 25 centros da Coreia do Sul. O desfecho foi composto por
+morte cardíaca e arritmias ventriculares em três anos, com 70 eventos.
+
+O modelo não foi treinado de ponta a ponta sobre o sinal do Holter. Os
+autores partiram de um codificador do tipo \textit{Transformer}
+pré-treinado como autocodificador mascarado sobre \gls{ECG}s de
+12~derivações de 10~segundos e, em seguida, ajustado para estimar a fração
+de ejeção, usada como rótulo substituto. Com o codificador congelado, cada
+registro de 24~horas da derivação V1, amostrado a 125~Hz, foi dividido em
+9\,600 segmentos de 9~segundos, cada um representado por um vetor latente.
+Somente a etapa final --- uma ResNet unidimensional compacta sobre a
+sequência de vetores --- foi treinada com o desfecho, em validação cruzada
+de cinco partições por paciente.
+
+Na coorte completa, o modelo obteve \gls{AUC} de 0,74 [0,70--0,77] para o
+desfecho composto e 0,79 [0,74--0,84] para morte cardíaca, superando a
+turbulência da frequência (0,62) e a alternância da onda T (0,55), e
+comparável à fração de ejeção isolada (0,75). No subgrupo de insuficiência
+cardíaca, no entanto, a \gls{AUC} caiu para 0,60 [0,53--0,68], igual à da
+turbulência da frequência, e a combinação com a fração de ejeção não
+acrescentou desempenho (0,58). Os autores reconhecem o número reduzido de
+eventos e a ausência de validação externa.
+
+Dois elementos desse trabalho são particularmente relevantes aqui. O
+primeiro é a estratégia: o extrator de características foi aprendido em
+grandes bases de \gls{ECG} de repouso e com um rótulo substituto
+abundante, e apenas um classificador pequeno foi ajustado com os poucos
+eventos disponíveis --- o oposto do treinamento de ponta a ponta adotado
+nas redes desta dissertação. O segundo é o resultado no subgrupo de
+insuficiência cardíaca, população equivalente à da coorte MUSIC, em que
+mesmo esse modelo pré-treinado ficou próximo do limite inferior de
+discriminação útil.
+
+\section{Comparação e posicionamento deste trabalho}
+\label{sec:trab-comparacao}
+
+O \autoref{qua:trab-comparacao} resume os três trabalhos e esta dissertação.
+
+\begin{quadro}[h!]
+	\centering
+	\Caption{\label{qua:trab-comparacao} Comparação entre os trabalhos
+		relacionados e esta dissertação}
+	\UFCqua{}{
+		\footnotesize
+		\begin{tabular}{|p{2.3cm}|p{2.6cm}|p{2.9cm}|p{2.9cm}|p{3.1cm}|}
+			\hline
+			\textbf{Trabalho}                                                                                & \textbf{Coorte}              & \textbf{Entrada} &
+			\textbf{Método e validação}                                                                      & \textbf{Resultado principal}                      \\
+			\hline
+			\citeonline{ramirez2017sudden}                                                                   &
+			MUSIC, ritmo sinusal; 597 pacientes, 49 mortes súbitas                                           &
+			Marcadores do Holter (repolarização, turbulência) e clínicos                                     &
+			Cox com seleção regressiva; sem validação separada                                               &
+			Razão de risco 13,8 (alto contra baixo risco); \gls{AUC} 0,73 na fração de ejeção reduzida                                                           \\
+			\hline
+			\citeonline{swee2026multimodal}                                                                  &
+			MUSIC, sem restrição de ritmo; 746 pacientes                                                     &
+			Marcadores de segmentos de 30~s e clínicos                                                       &
+			Aprendizado de máquina; validação cruzada                                                        &
+			\gls{AUC} 0,682 (apenas \gls{ECG}, média entre partições)                                                                                            \\
+			\hline
+			\citeonline{kim2025deep}                                                                         &
+			Coreia; infarto ou insuficiência cardíaca; 1\,108 pacientes, 70 eventos                          &
+			Holter de 24~h, derivação V1                                                                     &
+			Codificador pré-treinado e congelado; validação cruzada em 5 partições                           &
+			\gls{AUC} 0,74 na coorte; 0,60 na insuficiência cardíaca                                                                                             \\
+			\hline
+			Esta dissertação                                                                                 &
+			MUSIC, ritmo sinusal; 517 pacientes, 55 mortes súbitas em 4 anos                                 &
+			Sinal das três derivações; marcadores do Holter; clínicos                                        &
+			Redes treinadas de ponta a ponta; modelos lineares e florestas; validação cruzada em 5 partições &
+			\gls{AUC} 0,48--0,56 (redes); 0,661 (clínicos)                                                                                                       \\
+			\hline
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor.}
+	}
+\end{quadro}
+
+A comparação revela um padrão. Os desempenhos mais altos foram obtidos em
+condições que favorecem a discriminação: avaliação nos mesmos dados usados
+para selecionar as variáveis \cite{ramirez2017sudden}, coortes que incluem
+ritmos não sinusais \cite{swee2026multimodal} ou populações em que
+predominam pacientes pós-infarto, nas quais a fração de ejeção já
+discrimina bem \cite{kim2025deep}. Quando a população se restringe a
+pacientes com insuficiência cardíaca, como no subgrupo de
+\citeonline{kim2025deep}, o desempenho se aproxima de 0,60.
+
+Esta dissertação se diferencia dos trabalhos anteriores em três aspectos. O
+primeiro é a avaliação, no mesmo protocolo e sobre os mesmos pacientes, de
+três abordagens --- redes treinadas sobre o sinal, marcadores extraídos do
+Holter e variáveis clínicas ---, o que permite compará-las diretamente. O
+segundo é a ênfase no controle do otimismo: validação cruzada por paciente,
+seleção de variáveis dentro de cada partição, \gls{AUC} das predições
+agrupadas com intervalos de confiança e o registro das configurações que
+não funcionaram, em vez de apenas da melhor
+\cite{kapoor2023leakage}. O terceiro é a restrição ao ritmo sinusal, que
+elimina o atalho oferecido pela fibrilação atrial e torna a tarefa mais
+próxima do problema clínico de interesse: identificar, entre pacientes com
+insuficiência cardíaca em ritmo sinusal, aqueles com maior risco de morte
+súbita.
+
+% \chapter{Trabalhos Relacionados}
+% \label{cap:trabalhos-relacionados}
+
+% Nesta seção, escreva sobre uma introdução sobre os trabalhos relacionados se eles existirem. Evite começar da seção secundária, ou seja, escreva um texto para introduzir as subseções subsequentes, as quais serão sobre cada trabalho relacionado.
+
+% \section{Trabalho Relacionado A}
+% \label{sec:trabalho-relacionado-a}
+
+% Insira o texto sobre o Trabalho A aqui:
+
+% Texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto.
+
+% \section{Trabalho Relacionado B}
+% \label{sec:trabalho-relacionado-b}
+
+% Insira o texto sobre o Trabalho B aqui:
+
+% Texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto texto.
+
+% Exemplos de inserção de quadro:
+
+
+% 	\begin{quadro}[h!]	
+% 		\centering
+% 		\Caption{\label{qua:exemplo-1} Praesent ex velit, pulvinar at massa vel, fermentum dictum mauris. Ut feugiat accumsan augue}		
+% 		\UFCqua{}{
+% 			\begin{tabular}{|c|c|l|l|}
+% 				\hline
+% 				Quisque & pharetra & tempus & vulputate \\
+% 				\hline
+% 				E1 & Complete coverage by a single transcript & Both  & Complete\\
+% 				\hline
+% 				E2 & Complete coverage by more than & Both splice sites & Complete\\
+% 				\hline
+% 				E3 & Partial coverage & Both splice sites & Both \\				
+% 				\hline
+% 			\end{tabular}
+% 		}{
+% 			\Fonte{elaborado pelo autor.}
+% 		}
+% 	\end{quadro}
+
+
+
+% 	\begin{quadro}[h!]	
+% 		\centering
+% 		\Caption{\label{qua:exemplo-2} Duis faucibus, enim quis tincidunt pellentesque}		
+% 		\UFCqua{}{
+% 			\begin{tabular}{|c|c|}
+% 				\hline
+% 				Quisque & pharetra \\
+% 				\hline
+% 				E1 & Complete coverage by a single transcript \\
+% 				\hline
+% 				E2 & Complete coverage by more than \\
+% 				\hline
+% 				E3 & Partial coverage \\
+% 				\hline
+% 				E4 & Partial coverage \\
+% 				\hline
+% 				E5 & Partial coverage \\
+% 				\hline
+% 				E6 & Partial coverage \\
+% 				\hline
+% 				E7 & Partial coverage \\
+% 				\hline
+% 			\end{tabular}
+% 		}{
+% 			\Fonte{elaborado pelo autor.}
+% 		}
+% 	\end{quadro}
+
+
+% Texto  texto texto texto texto.
+
+% %\Gls{ambiguidade}
+% %\Gls{braile}
+% %\Gls{coerencia}
+% %\Gls{dialetos}
+% %\Gls{elipse}
+% %\Gls{locucao-adjetiva}
+% %\Gls{modificadores}
+% %\Gls{paronimos}
+% %\Gls{sintese}
+% %\Gls{borboleta}

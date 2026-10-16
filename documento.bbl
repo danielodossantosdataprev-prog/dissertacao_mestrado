@@ -1,0 +1,264 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Bazett 1920]{bazett1920analysis}
+\abntrefinfo{Bazett}{BAZETT}{1920}
+{BAZETT, H.~C. An analysis of the time-relations of electrocardiograms.
+\textbf{Heart}, v.~7, p. 353--370, 1920.}
+
+\bibitem[Brennan \textit{et al.} 2001]{brennan2001poincare}
+\abntrefinfo{Brennan \textit{et al.}}{BRENNAN \textit{et al.}}{2001}
+{BRENNAN, M.; PALANISWAMI, M.; KAMEN, P. Do existing measures of {P}oincar{\'e}
+  plot geometry reflect nonlinear features of heart rate variability?
+\textbf{IEEE Transactions on Biomedical Engineering}, v.~48, n.~11, p.
+  1342--1347, 2001.}
+
+\bibitem[Butterworth 1930]{butterworth1930theory}
+\abntrefinfo{Butterworth}{BUTTERWORTH}{1930}
+{BUTTERWORTH, S. On the theory of filter amplifiers.
+\textbf{Experimental Wireless and the Wireless Engineer}, v.~7, p. 536--541,
+  1930.}
+
+\bibitem[Clifford \textit{et al.} 2006]{clifford2006advanced}
+\abntrefinfo{Clifford \textit{et al.}}{CLIFFORD \textit{et al.}}{2006}
+{CLIFFORD, G.~D.; AZUAJE, F.; MCSHARRY, P.~E. (Ed.). \textbf{Advanced Methods
+  and Tools for {ECG} Data Analysis}. Boston: Artech House, 2006.}
+
+\bibitem[Davis e Goadrich 2006]{davis2006relationship}
+\abntrefinfo{Davis e Goadrich}{DAVIS; GOADRICH}{2006}
+{DAVIS, J.; GOADRICH, M. The relationship between precision-recall and {ROC}
+  curves. In:  \textbf{Proceedings of the 23rd International Conference on
+  Machine Learning}. [S.l.: s.n.], 2006. p. 233--240.}
+
+\bibitem[Efron e Tibshirani 1993]{efron1993introduction}
+\abntrefinfo{Efron e Tibshirani}{EFRON; TIBSHIRANI}{1993}
+{EFRON, B.; TIBSHIRANI, R.~J. \textbf{An Introduction to the Bootstrap}. New
+  York: Chapman \& Hall, 1993.}
+
+\bibitem[Fawcett 2006]{fawcett2006introduction}
+\abntrefinfo{Fawcett}{FAWCETT}{2006}
+{FAWCETT, T. An introduction to {ROC} analysis.
+\textbf{Pattern Recognition Letters}, v.~27, n.~8, p. 861--874, 2006.}
+
+\bibitem[Freire 2025]{freire2025scd}
+\abntrefinfo{Freire}{FREIRE}{2025}
+{FREIRE, L. \textbf{Sudden cardiac death risk stratification with deep
+  survival}. [S.l.]: GitHub, 2025.
+  \url{https://github.com/luizfreire96/scd_risk_stratification_deep_survival}.
+Acesso em: 30 set. 2026.}
+
+\bibitem[Gustafsson 1996]{gustafsson1996determining}
+\abntrefinfo{Gustafsson}{GUSTAFSSON}{1996}
+{GUSTAFSSON, F. Determining the initial states in forward-backward filtering.
+\textbf{IEEE Transactions on Signal Processing}, v.~44, n.~4, p. 988--992,
+  1996.}
+
+\bibitem[Hanley e McNeil 1982]{hanley1982meaning}
+\abntrefinfo{Hanley e McNeil}{HANLEY; MCNEIL}{1982}
+{HANLEY, J.~A.; MCNEIL, B.~J. The meaning and use of the area under a receiver
+  operating characteristic ({ROC}) curve.
+\textbf{Radiology}, v.~143, n.~1, p. 29--36, 1982.}
+
+\bibitem[Hannun \textit{et al.} 2019]{hannun2019cardiologist}
+\abntrefinfo{Hannun \textit{et al.}}{HANNUN \textit{et al.}}{2019}
+{HANNUN, A.~Y.; RAJPURKAR, P.; HAGHPANAHI, M.; TISON, G.~H.; BOURN, C.;
+  TURAKHIA, M.~P.; NG, A.~Y. Cardiologist-level arrhythmia detection and
+  classification in ambulatory electrocardiograms using a deep neural network.
+\textbf{Nature Medicine}, v.~25, n.~1, p. 65--69, 2019.}
+
+\bibitem[He \textit{et al.} 2015]{he2015delving}
+\abntrefinfo{He \textit{et al.}}{HE \textit{et al.}}{2015}
+{HE, K.; ZHANG, X.; REN, S.; SUN, J. Delving deep into rectifiers: surpassing
+  human-level performance on {ImageNet} classification. In:
+  \textbf{Proceedings of the IEEE International Conference on Computer Vision}.
+  [S.l.: s.n.], 2015. p. 1026--1034.}
+
+\bibitem[He \textit{et al.} 2016]{he2016deep}
+\abntrefinfo{He \textit{et al.}}{HE \textit{et al.}}{2016}
+{HE, K.; ZHANG, X.; REN, S.; SUN, J. Deep residual learning for image
+  recognition. In:  \textbf{Proceedings of the IEEE Conference on Computer
+  Vision and Pattern Recognition}. [S.l.: s.n.], 2016. p. 770--778.}
+
+\bibitem[Ioffe e Szegedy 2015]{ioffe2015batch}
+\abntrefinfo{Ioffe e Szegedy}{IOFFE; SZEGEDY}{2015}
+{IOFFE, S.; SZEGEDY, C. Batch normalization: accelerating deep network training
+  by reducing internal covariate shift. In:  \textbf{Proceedings of the 32nd
+  International Conference on Machine Learning}. [S.l.: s.n.], 2015.
+  (Proceedings of Machine Learning Research, v.~37), p. 448--456.}
+
+\bibitem[Kapoor e Narayanan 2023]{kapoor2023leakage}
+\abntrefinfo{Kapoor e Narayanan}{KAPOOR; NARAYANAN}{2023}
+{KAPOOR, S.; NARAYANAN, A. Leakage and the reproducibility crisis in
+  machine-learning-based science.
+\textbf{Patterns}, v.~4, n.~9, p. 100804, 2023.}
+
+\bibitem[Kim \textit{et al.} 2025]{kim2025deep}
+\abntrefinfo{Kim \textit{et al.}}{KIM \textit{et al.}}{2025}
+{KIM, J.~Y.; KIM, K.~G.; JOO, S.; CHANG, M.; KIM, J.; PARK, K.-M.; ON, Y.~K.;
+  KIM, J.~S.; LEE, Y.~S.; PARK, S.-J. Deep learning-based risk assessment and
+  prediction of cardiac outcomes using single-lead 24-hour {Holter}-{ECG} in
+  patients with heart failure or myocardial infarction.
+\textbf{Journal of Clinical Medicine}, v.~14, n.~20, p.~7209, 2025.}
+
+\bibitem[Kiranyaz \textit{et al.} 2021]{kiranyaz2021onedimensional}
+\abntrefinfo{Kiranyaz \textit{et al.}}{KIRANYAZ \textit{et al.}}{2021}
+{KIRANYAZ, S.; AVCI, O.; ABDELJABER, O.; INCE, T.; GABBOUJ, M.; INMAN, D.~J.
+  {1D} convolutional neural networks and applications: a survey.
+\textbf{Mechanical Systems and Signal Processing}, v.~151, p. 107398, 2021.}
+
+\bibitem[Kleiger \textit{et al.} 1987]{kleiger1987decreased}
+\abntrefinfo{Kleiger \textit{et al.}}{KLEIGER \textit{et al.}}{1987}
+{KLEIGER, R.~E.; MILLER, J.~P.; BIGGER, J.~T.; MOSS, A.~J. Decreased heart rate
+  variability and its association with increased mortality after acute
+  myocardial infarction.
+\textbf{The American Journal of Cardiology}, v.~59, n.~4, p. 256--262, 1987.}
+
+\bibitem[Kligfield \textit{et al.} 2007]{kligfield2007recommendations}
+\abntrefinfo{Kligfield \textit{et al.}}{KLIGFIELD \textit{et al.}}{2007}
+{KLIGFIELD, P.; GETTES, L.~S.; BAILEY, J.~J.; CHILDERS, R.; DEAL, B.~J.;
+  HANCOCK, E.~W.; HERPEN, G. van; KORS, J.~A.; MACFARLANE, P.; MIRVIS, D.~M.;
+  PAHLM, O.; RAUTAHARJU, P.; WAGNER, G.~S. Recommendations for the
+  standardization and interpretation of the electrocardiogram: part {I}: the
+  electrocardiogram and its technology.
+\textbf{Circulation}, v.~115, n.~10, p. 1306--1324, 2007.}
+
+\bibitem[Kohavi 1995]{kohavi1995study}
+\abntrefinfo{Kohavi}{KOHAVI}{1995}
+{KOHAVI, R. A study of cross-validation and bootstrap for accuracy estimation
+  and model selection. In:  \textbf{Proceedings of the 14th International Joint
+  Conference on Artificial Intelligence}. [S.l.: s.n.], 1995. v.~2, p.
+  1137--1145.}
+
+\bibitem[LeCun \textit{et al.} 1998]{lecun1998gradient}
+\abntrefinfo{LeCun \textit{et al.}}{LECUN \textit{et al.}}{1998}
+{LECUN, Y.; BOTTOU, L.; BENGIO, Y.; HAFFNER, P. Gradient-based learning applied
+  to document recognition.
+\textbf{Proceedings of the IEEE}, v.~86, n.~11, p. 2278--2324, 1998.}
+
+\bibitem[Lin \textit{et al.} 2014]{lin2014network}
+\abntrefinfo{Lin \textit{et al.}}{LIN \textit{et al.}}{2014}
+{LIN, M.; CHEN, Q.; YAN, S. Network in network. In:  \textbf{International
+  Conference on Learning Representations}. [S.l.: s.n.], 2014.}
+
+\bibitem[Lipponen e Tarvainen 2019]{lipponen2019robust}
+\abntrefinfo{Lipponen e Tarvainen}{LIPPONEN; TARVAINEN}{2019}
+{LIPPONEN, J.~A.; TARVAINEN, M.~P. A robust algorithm for heart rate
+  variability time series artefact correction using novel beat classification.
+\textbf{Journal of Medical Engineering \& Technology}, v.~43, n.~3, p.
+  173--181, 2019.}
+
+\bibitem[Loshchilov e Hutter 2019]{loshchilov2019decoupled}
+\abntrefinfo{Loshchilov e Hutter}{LOSHCHILOV; HUTTER}{2019}
+{LOSHCHILOV, I.; HUTTER, F. Decoupled weight decay regularization. In:
+  \textbf{International Conference on Learning Representations}. [S.l.: s.n.],
+  2019.}
+
+\bibitem[Makowski \textit{et al.} 2021]{makowski2021neurokit2}
+\abntrefinfo{Makowski \textit{et al.}}{MAKOWSKI \textit{et al.}}{2021}
+{MAKOWSKI, D.; PHAM, T.; LAU, Z.~J.; BRAMMER, J.~C.; LESPINASSE, F.; PHAM, H.;
+  SCH{\"O}LZEL, C.; CHEN, S. H.~A. {NeuroKit2}: A {Python} toolbox for
+  neurophysiological signal processing.
+\textbf{Behavior Research Methods}, v.~53, n.~4, p. 1689--1696, 2021.}
+
+\bibitem[Mart{\'\i}n-Yebra \textit{et al.} 2024]{martinyebra2024music}
+\abntrefinfo{Mart{\'\i}n-Yebra \textit{et al.}}{MART{\'I}N-YEBRA \textit{et
+  al.}}{2024}
+{MART{\'I}N-YEBRA, A.; LUNA, A. Bay{\'e}s~de; V{\'A}ZQUEZ, R.; CAMINAL, P.;
+  LAGUNA, P.; MART{\'I}NEZ, J.~P. The {MUSIC} database: Sudden cardiac death in
+  heart failure patients. In:  \textbf{Computing in Cardiology}. [S.l.: s.n.],
+  2024. v.~51.}
+
+\bibitem[Martin-Yebra \textit{et al.} 2025]{martinyebra2025music}
+\abntrefinfo{Martin-Yebra \textit{et al.}}{MARTIN-YEBRA \textit{et al.}}{2025}
+{MARTIN-YEBRA, A.; MART{\'I}NEZ, J.~P.; LAGUNA, P. \textbf{{MUSIC} (Sudden
+  Cardiac Death in Chronic Heart Failure) (version 1.0.1)}. PhysioNet, 2025.
+RRID:SCR\_007345.
+Dispon{\'\i}vel em:
+  \url{https://physionet.org/content/music-sudden-cardiac-death/1.0.1/}.}
+
+\bibitem[Nair e Hinton 2010]{nair2010rectified}
+\abntrefinfo{Nair e Hinton}{NAIR; HINTON}{2010}
+{NAIR, V.; HINTON, G.~E. Rectified linear units improve restricted {B}oltzmann
+  machines. In:  \textbf{Proceedings of the 27th International Conference on
+  Machine Learning}. [S.l.: s.n.], 2010. p. 807--814.}
+
+\bibitem[Peduzzi \textit{et al.} 1996]{peduzzi1996simulation}
+\abntrefinfo{Peduzzi \textit{et al.}}{PEDUZZI \textit{et al.}}{1996}
+{PEDUZZI, P.; CONCATO, J.; KEMPER, E.; HOLFORD, T.~R.; FEINSTEIN, A.~R. A
+  simulation study of the number of events per variable in logistic regression
+  analysis.
+\textbf{Journal of Clinical Epidemiology}, v.~49, n.~12, p. 1373--1379, 1996.}
+
+\bibitem[Ram{\'\i}rez \textit{et al.} 2017]{ramirez2017sudden}
+\abntrefinfo{Ram{\'\i}rez \textit{et al.}}{RAM{\'I}REZ \textit{et al.}}{2017}
+{RAM{\'I}REZ, J.; ORINI, M.; MINCHOL{\'E}, A.; MONASTERIO, V.; CYGANKIEWICZ,
+  I.; LUNA, A. Bay{\'e}s~de; MART{\'I}NEZ, J.~P.; LAGUNA, P.; PUEYO, E. Sudden
+  cardiac death and pump failure death prediction in chronic heart failure by
+  combining {ECG} and clinical markers in an integrated risk model.
+\textbf{PLoS ONE}, v.~12, n.~10, p. e0186152, 2017.}
+
+\bibitem[Ribeiro \textit{et al.} 2020]{ribeiro2020automatic}
+\abntrefinfo{Ribeiro \textit{et al.}}{RIBEIRO \textit{et al.}}{2020}
+{RIBEIRO, A.~H.; RIBEIRO, M.~H.; PAIX{\~A}O, G. M.~M.; OLIVEIRA, D.~M.; GOMES,
+  P.~R.; CANAZART, J.~A.; FERREIRA, M. P.~S.; ANDERSSON, C.~R.; MACFARLANE,
+  P.~W.; JR., W. M.; SCH{\"O}N, T.~B.; RIBEIRO, A. L.~P. Automatic diagnosis of
+  the 12-lead {ECG} using a deep neural network.
+\textbf{Nature Communications}, v.~11, p.~1760, 2020.}
+
+\bibitem[Richman e Moorman 2000]{richman2000physiological}
+\abntrefinfo{Richman e Moorman}{RICHMAN; MOORMAN}{2000}
+{RICHMAN, J.~S.; MOORMAN, J.~R. Physiological time-series analysis using
+  approximate entropy and sample entropy.
+\textbf{American Journal of Physiology -- Heart and Circulatory Physiology},
+  v.~278, n.~6, p. H2039--H2049, 2000.}
+
+\bibitem[Saito e Rehmsmeier 2015]{saito2015precision}
+\abntrefinfo{Saito e Rehmsmeier}{SAITO; REHMSMEIER}{2015}
+{SAITO, T.; REHMSMEIER, M. The precision-recall plot is more informative than
+  the {ROC} plot when evaluating binary classifiers on imbalanced datasets.
+\textbf{PLoS ONE}, v.~10, n.~3, p. e0118432, 2015.}
+
+\bibitem[Srivastava \textit{et al.} 2014]{srivastava2014dropout}
+\abntrefinfo{Srivastava \textit{et al.}}{SRIVASTAVA \textit{et al.}}{2014}
+{SRIVASTAVA, N.; HINTON, G.; KRIZHEVSKY, A.; SUTSKEVER, I.; SALAKHUTDINOV, R.
+  Dropout: a simple way to prevent neural networks from overfitting.
+\textbf{Journal of Machine Learning Research}, v.~15, n.~56, p. 1929--1958,
+  2014.}
+
+\bibitem[Swee \textit{et al.} 2026]{swee2026multimodal}
+\abntrefinfo{Swee \textit{et al.}}{SWEE \textit{et al.}}{2026}
+{SWEE, S.; ADAM, I.; ZHENG, E.~Y.; JI, E.; WANG, D.; SPEIER, W.; HSU, J.;
+  CHANG, K.-W.; SHIVKUMAR, K.; PING, P. Multimodal integration of ambulatory
+  {ECG} and clinical features for sudden cardiac death and pump failure death
+  prediction.
+\textbf{medRxiv}, 2026.
+Dispon{\'\i}vel em: \url{https://doi.org/10.64898/2026.04.21.26351421}.}
+
+\bibitem[{Task Force of the European Society of Cardiology and the North
+  American Society of Pacing and Electrophysiology} 1996]{taskforce1996heart}
+\abntrefinfo{{Task Force of the European Society of Cardiology and the North
+  American Society of Pacing and Electrophysiology}}{{Task Force of the
+  European Society of Cardiology and the North American Society of Pacing and
+  Electrophysiology}}{1996}
+{{Task Force of the European Society of Cardiology and the North American
+  Society of Pacing and Electrophysiology}. Heart rate variability: standards
+  of measurement, physiological interpretation, and clinical use.
+\textbf{Circulation}, v.~93, n.~5, p. 1043--1065, 1996.}
+
+\bibitem[Vaswani \textit{et al.} 2017]{vaswani2017attention}
+\abntrefinfo{Vaswani \textit{et al.}}{VASWANI \textit{et al.}}{2017}
+{VASWANI, A.; SHAZEER, N.; PARMAR, N.; USZKOREIT, J.; JONES, L.; GOMEZ, A.~N.;
+  KAISER, {\L}.; POLOSUKHIN, I. Attention is all you need. In:
+  \textbf{Advances in Neural Information Processing Systems}. [S.l.: s.n.],
+  2017. v.~30, p. 5998--6008.}
+
+\bibitem[Youden 1950]{youden1950index}
+\abntrefinfo{Youden}{YOUDEN}{1950}
+{YOUDEN, W.~J. Index for rating diagnostic tests.
+\textbf{Cancer}, v.~3, n.~1, p. 32--35, 1950.}
+
+\end{thebibliography}

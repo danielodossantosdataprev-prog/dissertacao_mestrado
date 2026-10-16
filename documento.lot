@@ -1,0 +1,52 @@
+\babel@toc {brazil}{}\relax 
+\contentsline {table}{\numberline {1}{\ignorespaces Delimitação da coorte a partir da base MUSIC}}{22}{table.caption.16}%
+\contentsline {table}{\numberline {2}{\ignorespaces Canais e comprimento das representações intermediárias das variantes da rede convolucional}}{31}{table.caption.18}%
+\contentsline {table}{\numberline {3}{\ignorespaces Distribuição dos parâmetros das variantes da rede convolucional}}{33}{table.caption.19}%
+\contentsline {table}{\numberline {4}{\ignorespaces Configurações das redes residuais avaliadas}}{36}{table.caption.21}%
+\contentsline {table}{\numberline {5}{\ignorespaces Dimensões e campo receptivo das redes residuais para janela de 24\,000 amostras}}{37}{table.caption.22}%
+\contentsline {table}{\numberline {6}{\ignorespaces Marcadores calculáveis em segmentos de 5 minutos e de 30 segundos}}{43}{table.caption.23}%
+\contentsline {table}{\numberline {7}{\ignorespaces Matriz de confusão de um classificador binário}}{44}{table.caption.24}%
+\contentsline {table}{\numberline {8}{\ignorespaces Métricas derivadas da matriz de confusão}}{44}{table.caption.25}%
+\contentsline {table}{\numberline {9}{\ignorespaces Fluxo de seleção da base MUSIC e disponibilidade dos registros de Holter.}}{50}{table.caption.27}%
+\contentsline {table}{\numberline {10}{\ignorespaces Parâmetros de representação do sinal}}{53}{table.caption.28}%
+\contentsline {table}{\numberline {11}{\ignorespaces Hiperparâmetros de treinamento}}{54}{table.caption.29}%
+\contentsline {table}{\numberline {12}{\ignorespaces Combinações avaliadas da rede convolucional}}{56}{table.caption.30}%
+\contentsline {table}{\numberline {13}{\ignorespaces Arquiteturas de redes neurais avaliadas sobre o sinal de Holter}}{58}{table.caption.31}%
+\contentsline {table}{\numberline {14}{\ignorespaces Protocolos de extração dos marcadores}}{61}{table.caption.33}%
+\contentsline {table}{\numberline {15}{\ignorespaces Efeito do cálculo sobre intervalos NN nos marcadores de variabilidade (328\,807 segmentos)}}{64}{table.caption.34}%
+\contentsline {table}{\numberline {16}{\ignorespaces Parâmetros de representação do sinal}}{66}{table.caption.35}%
+\contentsline {table}{\numberline {17}{\ignorespaces Hiperparâmetros de treinamento}}{67}{table.caption.36}%
+\contentsline {table}{\numberline {18}{\ignorespaces Desempenho da rede convolucional por partição da validação cruzada}}{71}{table.caption.37}%
+\contentsline {table}{\numberline {19}{\ignorespaces Perdas de treinamento e validação no início e ao término do ajuste, por partição}}{71}{table.caption.38}%
+\contentsline {table}{\numberline {20}{\ignorespaces Matriz de confusão agregada da rede convolucional}}{72}{table.caption.39}%
+\contentsline {table}{\numberline {21}{\ignorespaces Desempenho da ResNet-18 reduzida em cada partição da validação cruzada}}{73}{table.caption.40}%
+\contentsline {table}{\numberline {22}{\ignorespaces Evolução das perdas e da \gls {AUC} de validação na partição~0}}{74}{table.caption.41}%
+\contentsline {table}{\numberline {23}{\ignorespaces Matriz de confusão agregada da ResNet-18 reduzida}}{75}{table.caption.42}%
+\contentsline {table}{\numberline {24}{\ignorespaces Desempenho da ResNet-18 em configuração completa, por partição da validação cruzada}}{76}{table.caption.43}%
+\contentsline {table}{\numberline {25}{\ignorespaces Comparação entre as configurações reduzida e completa da ResNet-18}}{77}{table.caption.44}%
+\contentsline {table}{\numberline {26}{\ignorespaces Perdas de treinamento e validação no início e ao término do ajuste, por partição}}{78}{table.caption.45}%
+\contentsline {table}{\numberline {27}{\ignorespaces Matriz de confusão agregada da ResNet-18 em configuração completa}}{78}{table.caption.46}%
+\contentsline {table}{\numberline {28}{\ignorespaces Desempenho da ResNet-18 com camada de atenção, por partição da validação cruzada}}{79}{table.caption.47}%
+\contentsline {table}{\numberline {29}{\ignorespaces Perdas de treinamento e validação no início e ao término do ajuste, por partição}}{80}{table.caption.48}%
+\contentsline {table}{\numberline {30}{\ignorespaces Matriz de confusão agregada da ResNet-18 com camada de atenção}}{81}{table.caption.49}%
+\contentsline {table}{\numberline {31}{\ignorespaces Desempenho da ResNet-34 por partição da validação cruzada}}{82}{table.caption.50}%
+\contentsline {table}{\numberline {32}{\ignorespaces Comparação entre as configurações da família ResNet com blocos básicos}}{82}{table.caption.51}%
+\contentsline {table}{\numberline {33}{\ignorespaces Matriz de confusão agregada da ResNet-34}}{83}{table.caption.52}%
+\contentsline {table}{\numberline {34}{\ignorespaces Desempenho da ResNet-50 por partição da validação cruzada}}{85}{table.caption.53}%
+\contentsline {table}{\numberline {35}{\ignorespaces Perdas de treinamento e validação no início e ao término do ajuste, por partição}}{86}{table.caption.54}%
+\contentsline {table}{\numberline {36}{\ignorespaces Matriz de confusão agregada da ResNet-50}}{86}{table.caption.55}%
+\contentsline {table}{\numberline {37}{\ignorespaces Desempenho da arquitetura CNN-LSTM sobre o exame de repouso, por partição}}{88}{table.caption.56}%
+\contentsline {table}{\numberline {38}{\ignorespaces Comparação entre as modalidades de exame avaliadas}}{89}{table.caption.57}%
+\contentsline {table}{\numberline {39}{\ignorespaces Matriz de confusão agregada da arquitetura CNN-LSTM sobre o exame de repouso}}{90}{table.caption.58}%
+\contentsline {table}{\numberline {40}{\ignorespaces Marcadores do protocolo A com $p < 0{,}05$ na comparação entre casos e controles}}{91}{table.caption.59}%
+\contentsline {table}{\numberline {41}{\ignorespaces Desempenho dos modelos sobre os marcadores do protocolo A}}{91}{table.caption.60}%
+\contentsline {table}{\numberline {42}{\ignorespaces Efeito da forma de seleção dos marcadores no protocolo A}}{92}{table.caption.61}%
+\contentsline {table}{\numberline {43}{\ignorespaces Marcadores significativos segundo a unidade de análise (24 marcadores)}}{93}{table.caption.62}%
+\contentsline {table}{\numberline {44}{\ignorespaces Modelos treinados por segmento de 30 segundos e avaliados por paciente}}{93}{table.caption.63}%
+\contentsline {table}{\numberline {45}{\ignorespaces Modelos sobre os resumos por paciente dos segmentos de 30 segundos (extração corrigida)}}{94}{table.caption.64}%
+\contentsline {table}{\numberline {46}{\ignorespaces Síntese dos resultados com marcadores eletrocardiográficos}}{94}{table.caption.65}%
+\contentsline {table}{\numberline {47}{\ignorespaces Desempenho das redes convolucionais segundo a capacidade e a duração da janela}}{95}{table.caption.66}%
+\contentsline {table}{\numberline {48}{\ignorespaces Desempenho da ResNet-18 em três larguras}}{96}{table.caption.67}%
+\contentsline {table}{\numberline {49}{\ignorespaces Desempenho das redes residuais segundo a profundidade}}{96}{table.caption.68}%
+\contentsline {table}{\numberline {50}{\ignorespaces Desempenho das redes configuradas por busca de hiperparâmetros}}{97}{table.caption.69}%
+\contentsline {table}{\numberline {51}{\ignorespaces Desempenho da rede de fusão segundo a estratégia de treinamento do extrator de sinal}}{99}{table.caption.70}%

@@ -1,0 +1,70 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: documento.aux
+Reallocating 'name_of_file' (item size: 1) to 16 items.
+Reallocating 'name_of_file' (item size: 1) to 27 items.
+Reallocating 'name_of_file' (item size: 1) to 12 items.
+The style file: abntex2-alf.bst
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 9000 items.
+Database file #1: abntex2-options.bib
+Database file #2: 3-pos-textuais/referencias.bib
+Warning--I didn't find a database entry for "emrich2024"
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'glb_str_end' (item size: 4) to 20 items.
+Reallocating 'glb_str_ptr' (item size: 4) to 20 items.
+Reallocating 'global_strs' (item size: 1) to 4000000 items.
++---------------------------------------------------------+
+| Estilo bibliográfico abntex2-alf.bst versão v-1.9.7           |
+| Em caso de dúvidas ou problemas com este estilo procure |
+| http://www.abntex.net.br/                               |
++---------------------------------------------------------+
+You've used 43 entries,
+            6714 wiz_defined-function locations,
+            1438 strings with 17981 characters,
+and the built_in function-call counts, 42027 in all, are:
+= -- 3184
+> -- 1626
+< -- 215
++ -- 815
+- -- 466
+* -- 3179
+:= -- 5197
+add.period$ -- 137
+call.type$ -- 45
+change.case$ -- 543
+chr.to.int$ -- 132
+cite$ -- 38
+duplicate$ -- 2244
+empty$ -- 2800
+format.name$ -- 2455
+if$ -- 9852
+int.to.chr$ -- 4
+int.to.str$ -- 3
+missing$ -- 822
+newline$ -- 188
+num.names$ -- 190
+pop$ -- 1000
+preamble$ -- 1
+purify$ -- 179
+quote$ -- 0
+skip$ -- 2671
+stack$ -- 1
+substring$ -- 1781
+swap$ -- 1230
+text.length$ -- 78
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 10
+warning$ -- 0
+while$ -- 310
+width$ -- 0
+write$ -- 631
+(There was 1 warning)

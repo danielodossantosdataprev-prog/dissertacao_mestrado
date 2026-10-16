@@ -1,0 +1,36 @@
+Como você usa BibTeX com abnTeX2 (modelo UFC), rode:
+
+documento.tex
+bibtex documento
+pdflatex documento.tex
+pdflatex documento.tex
+
+pdflatex documento
+bibtex documento
+pdflatex documento
+pdflatex documento
+
+makeindex documento
+
+Ou com latexmk direto:
+?
+latexmk -pdf documento.tex
+
+
+Versão de commit
+
+primeira versão - 28/04/26
+
+atualizando resultado - 30/04/26
+
+escrevendo metodologia - 11/05/26
+
+escrevendo metodologia parte 2 14/05/2026
+
+corrigindo introdução - 08/06/26
+
+ajustando formatação - 01/07/26
+
+criando ponrto de restauração - 10/08/26
+
+ajustando simbolos e listas 11/08/26

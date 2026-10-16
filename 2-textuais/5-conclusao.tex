@@ -1,0 +1,132 @@
+% \chapter{Conclusões e Trabalhos Futuros}
+% \label{chap:conclusoes-e-trabalhos-futuros}
+
+% Parte final do texto na qual se apresentam as conclusões apoiadas no desenvolvimento do assunto. É a recapitulação sintética dos resultados obtidos. Pode apresentar recomendações e sugestões para pesquisas futuras.
+
+% %\label{sec:contribuicoes-do-trabalho}
+
+
+
+% %\label{sec:limitacoes}
+
+% ==============================================================================
+% CONCLUSÕES E TRABALHOS FUTUROS
+% Números conforme resultados_redes.tex e resultados_marcadores.tex.
+% Revisar o intervalo das redes (0,48--0,56) quando as CNNs de 2 min terminarem.
+% ==============================================================================
+
+\chapter{Conclusões e Trabalhos Futuros}
+\label{cap:conclusoes}
+
+Esta dissertação investigou se o registro de Holter de 24~horas contém
+informação capaz de identificar, entre pacientes com insuficiência cardíaca
+em ritmo sinusal, aqueles que sofrerão morte súbita cardíaca em quatro anos.
+Sobre os 517 pacientes da coorte MUSIC, com 55 casos, foram comparadas três
+abordagens no mesmo protocolo de validação cruzada por paciente: redes
+neurais treinadas diretamente sobre o sinal das três derivações, modelos
+sobre marcadores eletrocardiográficos extraídos do Holter e modelos sobre
+variáveis clínicas.
+
+\section{Conclusões}
+\label{sec:conc-conclusoes}
+
+A resposta obtida, dentro das condições deste estudo, é negativa para o
+sinal bruto. Nenhuma das redes neurais avaliadas --- redes convolucionais
+de três capacidades, redes residuais de 18, 34 e 50 camadas, uma rede com
+mecanismo de atenção e redes configuradas por busca de hiperparâmetros ---
+discriminou casos e controles de forma distinguível do acaso. As \gls{AUC}
+fora da partição ficaram entre 0,48 e 0,56, sem relação com a capacidade da
+rede, com a duração da janela de entrada ou com a arquitetura, e a variação
+entre duas execuções da mesma rede foi da mesma ordem que a variação entre
+arquiteturas. Os registros de treinamento mostraram, em todos os casos, a
+memorização dos pacientes de treinamento nas primeiras épocas.
+
+Os marcadores eletrocardiográficos tiveram desempenho modesto. Com seleção
+de variáveis feita dentro de cada partição, o melhor modelo sobre os
+marcadores de segmentos de 5~minutos obteve \gls{AUC} de 0,580; valores
+maiores só foram alcançados quando a seleção usou a coorte inteira, o que
+torna a estimativa otimista. Os marcadores de segmentos de 30~segundos
+mostraram, em grande parte, diferenças significativas apenas quando cada
+segmento foi tratado como observação independente, efeito da
+pseudorreplicação, e desapareceram quando a análise foi feita por paciente.
+
+As variáveis clínicas foram a fonte de informação mais consistente, com
+\gls{AUC} de 0,661 [0,577--0,741], e a adição dos marcadores ou do sinal
+não trouxe ganho significativo. A rede de fusão confirmou esse resultado de
+forma direta: com o extrator de sinal congelado, ela obteve o mesmo
+desempenho que com o extrator treinado com taxa reduzida, e o desempenho
+caiu quando o extrator foi treinado livremente.
+
+Dois resultados complementares ajudam a interpretar o quadro. Quando a
+restrição ao ritmo sinusal foi removida, a mesma rede residual passou a
+discriminar acima do acaso, o que mostra que o pipeline aprende quando há
+um padrão reconhecível no sinal --- no caso, a fibrilação atrial --- e
+justifica a restrição adotada. E, na literatura, o desempenho de um modelo
+de aprendizado profundo pré-treinado em grandes bases caiu para 0,60 no
+subgrupo de insuficiência cardíaca \cite{kim2025deep}, valor próximo dos
+obtidos aqui.
+
+A conclusão central é, portanto, que, com 33 casos de treinamento por
+partição, não foi possível aprender do sinal do Holter um padrão preditivo
+de morte súbita nesta população, e que as estimativas otimistas descritas
+na literatura e observadas em etapas iniciais deste trabalho decorrem, em
+boa parte, de escolhas de avaliação: seleção de variáveis sobre a coorte
+inteira, divisões únicas com poucos casos no teste, tratamento de segmentos
+como observações independentes e inclusão de ritmos não sinusais. A
+principal contribuição da dissertação está em quantificar esses efeitos
+sobre os mesmos pacientes e em documentar, com intervalos de confiança, os
+resultados de todas as configurações avaliadas, e não apenas os da melhor.
+
+\section{Limitações}
+\label{sec:conc-limitacoes}
+
+O número de eventos é a principal limitação: 55 casos no total e 11 por
+conjunto de teste tornam os intervalos de confiança largos, de modo que
+diferenças de até 0,1 na \gls{AUC} não podem ser detectadas com segurança.
+A coorte é única, sem validação externa, e cada paciente tem um único
+registro de Holter. A busca de hiperparâmetros não usou validação cruzada
+aninhada, e as redes residuais foram treinadas com uma configuração
+anterior à das redes convolucionais. Por fim, o desfecho foi tratado como
+classificação binária em quatro anos, o que descarta a informação sobre o
+tempo até o evento e exclui os pacientes vivos com seguimento mais curto.
+
+\section{Trabalhos futuros}
+\label{sec:conc-futuros}
+
+Os resultados apontam para direções em que o problema do número reduzido de
+eventos é contornado, e não apenas enfrentado com arquiteturas maiores:
+
+\begin{enumerate}
+    \item \textbf{Representações pré-treinadas.} Treinar o extrator de
+          características em bases grandes de \gls{ECG}, por aprendizado
+          auto-supervisionado ou com rótulos substitutos abundantes, e ajustar sobre
+          a coorte MUSIC apenas um classificador pequeno, como em
+          \citeonline{kim2025deep}.
+
+    \item \textbf{Rótulo substituto na própria coorte.} Usar a fração de
+          ejeção, disponível para todos os pacientes, como alvo de um primeiro
+          estágio de regressão, e empregar a representação aprendida na predição
+          de morte súbita.
+
+    \item \textbf{Marcadores da repolarização.} Incluir os marcadores que
+          \citeonline{ramirez2017sudden} identificaram como os mais informativos
+          nesta coorte --- alternância da onda T e restituição da morfologia da
+          onda T ---, que exigem delineação precisa e não foram calculados aqui.
+
+    \item \textbf{Análise de sobrevivência.} Modelar o tempo até o evento,
+          com riscos competitivos entre morte súbita e morte por falência de bomba,
+          o que aproveita todos os pacientes e todo o seguimento.
+
+    \item \textbf{Controle positivo.} Treinar as mesmas redes em uma tarefa
+          sabidamente aprendível a partir do sinal, como a predição do sexo, para
+          confirmar que o pipeline extrai informação quando ela existe.
+
+    \item \textbf{Validação externa.} Avaliar os modelos em outra coorte de
+          pacientes com insuficiência cardíaca e Holter de 24~horas, condição
+          necessária para qualquer conclusão sobre generalização.
+\end{enumerate}
+
+
+
+
+

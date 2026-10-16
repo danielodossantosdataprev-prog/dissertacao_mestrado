@@ -1,0 +1,243 @@
+
+
+======================================================================
+CNNLSTM_RES_CV1  —  22/09/2026 18:20
+======================================================================
+GPU: NVIDIA A100-SXM4-40GB
+ECG de repouso | 1000 Hz (sem reducao) | exame inteiro, 1,136,000 pontos
+
+Montando coorte caso-controle (ECG de repouso)...
+
+ERRO:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1324773/1684934478.py", line 205, in <module>
+    proc = PassandoDadosECGRes(
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu_ecg_res.py", line 322, in __init__
+    self._load_clinical_data()
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu_ecg_res.py", line 329, in _load_clinical_data
+    df = pd.read_csv(self.path_info, sep=';')
+  File "/home/jovyan/cox-models-sudden-death/meu_ambiente/lib/python3.10/site-packages/pandas/io/parsers/readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/jovyan/cox-models-sudden-death/meu_ambiente/lib/python3.10/site-packages/pandas/io/parsers/readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/jovyan/cox-models-sudden-death/meu_ambiente/lib/python3.10/site-packages/pandas/io/parsers/readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+  File "/home/jovyan/cox-models-sudden-death/meu_ambiente/lib/python3.10/site-packages/pandas/io/parsers/readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+  File "/home/jovyan/cox-models-sudden-death/meu_ambiente/lib/python3.10/site-packages/pandas/io/common.py", line 873, in get_handle
+    handle = open(
+FileNotFoundError: [Errno 2] No such file or directory: '/home/jovyan/cox-models-sudden-death/dados/subject-info.csv'
+
+
+Fim: 22/09/2026 18:20
+
+
+======================================================================
+CNNLSTM_RES_CV1  —  22/09/2026 18:22
+======================================================================
+GPU: NVIDIA A100-SXM4-40GB
+ECG de repouso | 1000 Hz (sem reducao) | exame inteiro, 1,136,000 pontos
+
+Montando coorte caso-controle (ECG de repouso)...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com ECG de repouso.................: 380
+    - CASOS (MSC)....................: 43
+    - CONTROLES (4 anos).............: 337
+  Prevalencia........................: 11.3%
+  13 exames mais curtos que 1,166,000 pontos — descartados
+
+  5-fold sobre 367 pacientes (41 casos)
+    fold 0: treino 293 (32 casos) | teste 74 (9 casos)
+    fold 1: treino 293 (33 casos) | teste 74 (8 casos)
+    fold 2: treino 294 (33 casos) | teste 73 (8 casos)
+    fold 3: treino 294 (33 casos) | teste 73 (8 casos)
+    fold 4: treino 294 (33 casos) | teste 73 (8 casos)
+
+MLflow Run: 37f1c1536a404445a47ca50af4ad632e
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 219 (24 casos) | Val 74 (8) | Teste 74 (9)
+  pos_weight: 8.12
+  Escala global do sinal (60 pacientes, 1000 Hz)...
+    X: 1.7205 | Y: 1.1313 | Z: 2.8310 mV
+  321,825 parametros | 21 passos na LSTM
+  Ep   1 | train 1.2424 | val 1.1858 | AUC 0.5473 (suave 0.5473)
+  Ep   2 | train 1.2200 | val 1.1854 | AUC 0.5549 (suave 0.5511)
+  Ep   3 | train 1.2434 | val 1.1856 | AUC 0.6051 (suave 0.5691)
+  Ep   4 | train 1.2201 | val 1.1856 | AUC 0.6884 (suave 0.6162)
+  Ep   5 | train 1.2422 | val 1.1855 | AUC 0.5511 (suave 0.6149)
+  Ep   6 | train 1.1963 | val 1.1859 | AUC 0.6903 (suave 0.6433)
+  Ep   7 | train 1.2202 | val 1.1857 | AUC 0.6534 (suave 0.6316)
+  Ep   8 | train 1.2435 | val 1.1858 | AUC 0.6856 (suave 0.6765)
+  Ep   9 | train 1.1962 | val 1.1857 | AUC 0.6098 (suave 0.6496)
+  Ep  10 | train 1.2409 | val 1.1858 | AUC 0.5862 (suave 0.6272)
+  Ep  11 | train 1.2415 | val 1.1858 | AUC 0.5104 (suave 0.5688)
+  Ep  12 | train 1.2437 | val 1.1859 | AUC 0.5161 (suave 0.5376)
+  Ep  13 | train 1.2209 | val 1.1861 | AUC 0.6023 (suave 0.5429)
+  Ep  14 | train 1.2413 | val 1.1862 | AUC 0.5473 (suave 0.5552)
+  Ep  15 | train 1.2429 | val 1.1864 | AUC 0.5682 (suave 0.5726)
+  Ep  16 | train 1.2443 | val 1.1864 | AUC 0.5663 (suave 0.5606)
+  Ep  17 | train 1.2458 | val 1.1867 | AUC 0.5701 (suave 0.5682)
+  Ep  18 | train 1.2395 | val 1.1866 | AUC 0.4801 (suave 0.5388)
+  Ep  19 | train 1.2413 | val 1.1867 | AUC 0.4744 (suave 0.5082)
+  Ep  20 | train 1.2397 | val 1.1874 | AUC 0.4527 (suave 0.4691)
+  Ep  21 | train 1.2401 | val 1.1879 | AUC 0.4754 (suave 0.4675)
+  Ep  22 | train 1.2389 | val 1.1897 | AUC 0.4261 (suave 0.4514)
+  Ep  23 | train 1.2123 | val 1.1935 | AUC 0.4148 (suave 0.4388)
+  Parada antecipada na epoca 23
+  >> FOLD 0: AUC 0.5487 | AP 0.1635 | sens 0.444 | espec 0.723
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 219 (25 casos) | Val 74 (8) | Teste 74 (8)
+  pos_weight: 7.76
+  Escala global do sinal (60 pacientes, 1000 Hz)...
+    X: 1.5063 | Y: 1.5423 | Z: 3.2724 mV
+  Ep   1 | train 1.2407 | val 1.1579 | AUC 0.4782 (suave 0.4782)
+  Ep   2 | train 1.2376 | val 1.1586 | AUC 0.5123 (suave 0.4953)
+  Ep   3 | train 1.2367 | val 1.1591 | AUC 0.5578 (suave 0.5161)
+  Ep   4 | train 1.2368 | val 1.1594 | AUC 0.6837 (suave 0.5846)
+  Ep   5 | train 1.2368 | val 1.1596 | AUC 0.6307 (suave 0.6241)
+  Ep   6 | train 1.2362 | val 1.1598 | AUC 0.6420 (suave 0.6521)
+  Ep   7 | train 1.2393 | val 1.1605 | AUC 0.6487 (suave 0.6405)
+  Ep   8 | train 1.2329 | val 1.1602 | AUC 0.5436 (suave 0.6114)
+  Ep   9 | train 1.2371 | val 1.1603 | AUC 0.4905 (suave 0.5609)
+  Ep  10 | train 1.2128 | val 1.1606 | AUC 0.4413 (suave 0.4918)
+  Ep  11 | train 1.1904 | val 1.1602 | AUC 0.3949 (suave 0.4422)
+  Ep  12 | train 1.2160 | val 1.1602 | AUC 0.3883 (suave 0.4081)
+  Ep  13 | train 1.2322 | val 1.1606 | AUC 0.3788 (suave 0.3873)
+  Ep  14 | train 1.2340 | val 1.1606 | AUC 0.3712 (suave 0.3794)
+  Ep  15 | train 1.2109 | val 1.1616 | AUC 0.3712 (suave 0.3737)
+  Ep  16 | train 1.2298 | val 1.1644 | AUC 0.3655 (suave 0.3693)
+  Ep  17 | train 1.2043 | val 1.1731 | AUC 0.3712 (suave 0.3693)
+  Ep  18 | train 1.1986 | val 1.2042 | AUC 0.3750 (suave 0.3706)
+  Ep  19 | train 1.1120 | val 1.3308 | AUC 0.3845 (suave 0.3769)
+  Ep  20 | train 1.1592 | val 1.3292 | AUC 0.4053 (suave 0.3883)
+  Ep  21 | train 1.0956 | val 1.3239 | AUC 0.4025 (suave 0.3974)
+  Parada antecipada na epoca 21
+  >> FOLD 1: AUC 0.6477 | AP 0.1851 | sens 0.625 | espec 0.606
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 220 (25 casos) | Val 74 (8) | Teste 73 (8)
+  pos_weight: 7.80
+  Escala global do sinal (60 pacientes, 1000 Hz)...
+    X: 1.6576 | Y: 1.2221 | Z: 3.2755 mV
+  Ep   1 | train 1.2386 | val 1.1654 | AUC 0.6723 (suave 0.6723)
+  Ep   2 | train 1.2352 | val 1.1643 | AUC 0.6989 (suave 0.6856)
+  Ep   3 | train 1.2184 | val 1.1652 | AUC 0.6468 (suave 0.6727)
+  Ep   4 | train 1.2394 | val 1.1645 | AUC 0.6335 (suave 0.6597)
+  Ep   5 | train 1.2193 | val 1.1642 | AUC 0.6212 (suave 0.6338)
+  Ep   6 | train 1.2163 | val 1.1642 | AUC 0.6212 (suave 0.6253)
+  Ep   7 | train 1.2403 | val 1.1650 | AUC 0.6241 (suave 0.6222)
+  Ep   8 | train 1.1929 | val 1.1641 | AUC 0.6307 (suave 0.6253)
+  Ep   9 | train 1.2405 | val 1.1644 | AUC 0.6392 (suave 0.6313)
+  Ep  10 | train 1.2394 | val 1.1645 | AUC 0.6402 (suave 0.6367)
+  Ep  11 | train 1.2399 | val 1.1650 | AUC 0.6288 (suave 0.6360)
+  Ep  12 | train 1.2406 | val 1.1644 | AUC 0.6042 (suave 0.6244)
+  Ep  13 | train 1.2401 | val 1.1654 | AUC 0.6203 (suave 0.6177)
+  Ep  14 | train 1.2336 | val 1.1641 | AUC 0.6383 (suave 0.6209)
+  Ep  15 | train 1.1934 | val 1.1635 | AUC 0.6193 (suave 0.6259)
+  Ep  16 | train 1.2263 | val 1.1621 | AUC 0.6364 (suave 0.6313)
+  Ep  17 | train 1.1860 | val 1.1580 | AUC 0.6383 (suave 0.6313)
+  Parada antecipada na epoca 17
+  >> FOLD 2: AUC 0.6163 | AP 0.1602 | sens 0.375 | espec 0.708
+
+======================================================================
+FOLD 3
+======================================================================
+  Treino 220 (25 casos) | Val 74 (8) | Teste 73 (8)
+  pos_weight: 7.80
+  Escala global do sinal (60 pacientes, 1000 Hz)...
+    X: 1.8150 | Y: 1.3441 | Z: 2.9251 mV
+  Ep   1 | train 1.2424 | val 1.1634 | AUC 0.4934 (suave 0.4934)
+  Ep   2 | train 1.2415 | val 1.1645 | AUC 0.5208 (suave 0.5071)
+  Ep   3 | train 1.2176 | val 1.1641 | AUC 0.5360 (suave 0.5167)
+  Ep   4 | train 1.2148 | val 1.1636 | AUC 0.5284 (suave 0.5284)
+  Ep   5 | train 1.2149 | val 1.1642 | AUC 0.5530 (suave 0.5391)
+  Ep   6 | train 1.2411 | val 1.1635 | AUC 0.5379 (suave 0.5398)
+  Ep   7 | train 1.1962 | val 1.1642 | AUC 0.6487 (suave 0.5799)
+  Ep   8 | train 1.2412 | val 1.1636 | AUC 0.5142 (suave 0.5669)
+  Ep   9 | train 1.2393 | val 1.1637 | AUC 0.4366 (suave 0.5331)
+  Ep  10 | train 1.2424 | val 1.1638 | AUC 0.4943 (suave 0.4817)
+  Ep  11 | train 1.2181 | val 1.1643 | AUC 0.4697 (suave 0.4669)
+  Ep  12 | train 1.2163 | val 1.1639 | AUC 0.4697 (suave 0.4779)
+  Ep  13 | train 1.2185 | val 1.1640 | AUC 0.4688 (suave 0.4694)
+  Ep  14 | train 1.2142 | val 1.1635 | AUC 0.4688 (suave 0.4691)
+  Ep  15 | train 1.2355 | val 1.1640 | AUC 0.4413 (suave 0.4596)
+  Ep  16 | train 1.2214 | val 1.1639 | AUC 0.4432 (suave 0.4511)
+  Ep  17 | train 1.2150 | val 1.1641 | AUC 0.4441 (suave 0.4429)
+  Ep  18 | train 1.2377 | val 1.1645 | AUC 0.4375 (suave 0.4416)
+  Ep  19 | train 1.2174 | val 1.1642 | AUC 0.4356 (suave 0.4391)
+  Ep  20 | train 1.2144 | val 1.1644 | AUC 0.4223 (suave 0.4318)
+  Ep  21 | train 1.2376 | val 1.1645 | AUC 0.4252 (suave 0.4277)
+  Ep  22 | train 1.2360 | val 1.1659 | AUC 0.4148 (suave 0.4208)
+  Parada antecipada na epoca 22
+  >> FOLD 3: AUC 0.5635 | AP 0.1578 | sens 0.125 | espec 0.923
+
+======================================================================
+FOLD 4
+======================================================================
+  Treino 220 (25 casos) | Val 74 (8) | Teste 73 (8)
+  pos_weight: 7.80
+  Escala global do sinal (60 pacientes, 1000 Hz)...
+    X: 1.4789 | Y: 1.3122 | Z: 2.6981 mV
+  Ep   1 | train 1.2176 | val 1.1631 | AUC 0.5634 (suave 0.5634)
+  Ep   2 | train 1.1985 | val 1.1627 | AUC 0.5019 (suave 0.5327)
+  Ep   3 | train 1.2376 | val 1.1629 | AUC 0.4934 (suave 0.5196)
+  Ep   4 | train 1.2386 | val 1.1636 | AUC 0.4754 (suave 0.4902)
+  Ep   5 | train 1.2394 | val 1.1637 | AUC 0.4896 (suave 0.4861)
+  Ep   6 | train 1.2412 | val 1.1633 | AUC 0.4858 (suave 0.4836)
+  Ep   7 | train 1.2126 | val 1.1631 | AUC 0.4915 (suave 0.4890)
+  Ep   8 | train 1.2395 | val 1.1638 | AUC 0.4886 (suave 0.4886)
+  Ep   9 | train 1.2395 | val 1.1617 | AUC 0.4763 (suave 0.4855)
+  Ep  10 | train 1.2327 | val 1.1566 | AUC 0.4773 (suave 0.4807)
+  Ep  11 | train 1.2259 | val 1.1549 | AUC 0.4659 (suave 0.4732)
+  Ep  12 | train 1.1679 | val 1.1105 | AUC 0.4678 (suave 0.4703)
+  Ep  13 | train 1.1645 | val 1.1016 | AUC 0.4678 (suave 0.4672)
+  Ep  14 | train 1.2427 | val 1.3084 | AUC 0.4659 (suave 0.4672)
+  Ep  15 | train 1.1870 | val 1.1013 | AUC 0.4744 (suave 0.4694)
+  Ep  16 | train 1.1687 | val 1.0956 | AUC 0.4763 (suave 0.4722)
+  Parada antecipada na epoca 16
+  >> FOLD 4: AUC 0.5548 | AP 0.1446 | sens 0.750 | espec 0.246
+
+======================================================================
+MEDIA ENTRE OS FOLDS
+======================================================================
+  auc             : 0.5862 +- 0.0436
+  ap              : 0.1622 +- 0.0146
+  acuracia        : 0.6211 +- 0.1972
+  sensibilidade   : 0.4639 +- 0.2403
+  especificidade  : 0.6412 +- 0.2489
+  vpp             : 0.1510 +- 0.0286
+  f1              : 0.2096 +- 0.0486
+
+======================================================================
+RESULTADO OUT-OF-FOLD
+======================================================================
+  367 pacientes | 41 casos | prevalencia 11.2%
+    AUC-ROC.......: 0.5135  IC95% [0.4245, 0.6099]
+    AUC-PR........: 0.1243   (acaso = 0.1117)
+    Sensibilidade.: 0.5366
+    Especificidade: 0.4509
+    VPP...........: 0.1095
+                    Predito 0   Predito 1
+      Real 0 (vive)     147         179
+      Real 1 (morre)     19          22
+
+  O IC inclui 0,5 — nao distinguivel do acaso.
+
+Predicoes salvas em /home/jovyan/cox-models-sudden-death/Arquitetura/logs/predicoes_oof_CNNLSTM_RES_CV1.csv
+(o script de relatorio le esse arquivo automaticamente)
+
+Fim: 22/09/2026 18:41

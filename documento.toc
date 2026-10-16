@@ -1,0 +1,166 @@
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase []{Introdução}}{20}{chapter.1}%
+\contentsline {subsection}{\numberline {1.0.1}Objetivo e visão geral}{20}{subsection.1.0.1}%
+\contentsline {subsection}{\numberline {1.0.2}Escolha dos dados e delimitação da coorte}{21}{subsection.1.0.2}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase []{fundamentação teórica}}{24}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Pré-processamento de sinais eletrocardiográficos}{24}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Fontes de interferência}{24}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Filtragem digital}{25}{subsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.2.1}Filtro de Butterworth}{25}{subsubsection.2.1.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.2.2}Filtragem de fase nula}{25}{subsubsection.2.1.2.2}%
+\contentsline {subsection}{\numberline {2.1.3}Normalização de amplitude}{26}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Amostragem em janelas e independência entre exemplos}{26}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}Redes neurais convolucionais unidimensionais}{27}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Convolução unidimensional}{27}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Função de ativação}{28}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Normalização em lote}{28}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Agrupamento}{29}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Descarte}{29}{subsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.2.6}Função de perda e desbalanceamento}{29}{subsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.2.7}Arquitetura empregada}{30}{subsection.2.2.7}%
+\contentsline {subsubsection}{\numberline {2.2.7.1}Variantes de capacidade}{30}{subsubsection.2.2.7.1}%
+\contentsline {subsubsection}{\numberline {2.2.7.2}Largura do núcleo}{32}{subsubsection.2.2.7.2}%
+\contentsline {subsubsection}{\numberline {2.2.7.3}Agrupamento combinado}{32}{subsubsection.2.2.7.3}%
+\contentsline {subsubsection}{\numberline {2.2.7.4}Ausência de conexões residuais}{32}{subsubsection.2.2.7.4}%
+\contentsline {subsubsection}{\numberline {2.2.7.5}Classificador e número de parâmetros}{33}{subsubsection.2.2.7.5}%
+\contentsline {section}{\numberline {2.3}Redes neurais residuais}{33}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Aprendizado residual}{34}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Blocos residuais}{34}{subsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.2.1}Bloco básico}{35}{subsubsection.2.3.2.1}%
+\contentsline {subsubsection}{\numberline {2.3.2.2}Bloco de gargalo}{35}{subsubsection.2.3.2.2}%
+\contentsline {subsection}{\numberline {2.3.3}Arquitetura}{36}{subsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.3.1}Configurações avaliadas}{36}{subsubsection.2.3.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.3.2}Dimensões e campo receptivo}{37}{subsubsection.2.3.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3.3}Distribuição dos parâmetros}{38}{subsubsection.2.3.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Considerações sobre o regime de dados}{38}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}Marcadores eletrocardiográficos}{38}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Intervalos RR e intervalos NN}{39}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Variabilidade da frequência cardíaca}{40}{subsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.2.1}Domínio do tempo}{40}{subsubsection.2.4.2.1}%
+\contentsline {subsubsection}{\numberline {2.4.2.2}Domínio da frequência}{40}{subsubsection.2.4.2.2}%
+\contentsline {subsubsection}{\numberline {2.4.2.3}Medidas não lineares}{41}{subsubsection.2.4.2.3}%
+\contentsline {subsection}{\numberline {2.4.3}Morfologia do batimento}{41}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Ectopia}{42}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}Duração do segmento de análise}{43}{subsection.2.4.5}%
+\contentsline {section}{\numberline {2.5}Avaliação de classificadores binários}{43}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Matriz de confusão e métricas dependentes de limiar}{44}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Curva ROC e área sob a curva}{45}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Curva precisão-revocação e precisão média}{46}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}Escolha do limiar de decisão}{46}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}Agregação por paciente}{47}{subsection.2.5.5}%
+\contentsline {subsection}{\numberline {2.5.6}Validação cruzada estratificada por paciente}{47}{subsection.2.5.6}%
+\contentsline {subsection}{\numberline {2.5.7}Intervalos de confiança e comparação entre modelos}{48}{subsection.2.5.7}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase []{siteMetodologia}}{49}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Seleção da coorte}{49}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Pré-processamento do sinal}{50}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Extração de janelas}{50}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Filtragem}{51}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Normalização}{51}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Particionamento}{52}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}Variáveis clínicas}{52}{subsection.3.2.5}%
+\contentsline {section}{\numberline {3.3}Configuração experimental}{52}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Representação do sinal}{53}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Treinamento}{54}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Desbalanceamento entre classes}{54}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Protocolo de avaliação}{55}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Métricas}{55}{subsection.3.3.5}%
+\contentsline {subsection}{\numberline {3.3.6}Experimentos com a rede convolucional}{56}{subsection.3.3.6}%
+\contentsline {subsubsection}{\numberline {3.3.6.1}Amostragem das janelas}{56}{subsubsection.3.3.6.1}%
+\contentsline {subsubsection}{\numberline {3.3.6.2}Filtragem com margem}{57}{subsubsection.3.3.6.2}%
+\contentsline {subsubsection}{\numberline {3.3.6.3}Configuração comum}{57}{subsubsection.3.3.6.3}%
+\contentsline {section}{\numberline {3.4}Redes neurais aplicadas ao sinal}{57}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Arquiteturas avaliadas}{58}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Estratégias de treinamento da rede de fusão}{59}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Protocolo de treinamento e avaliação}{59}{subsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.3.1}Divisão dos pacientes}{59}{subsubsection.3.4.3.1}%
+\contentsline {subsubsection}{\numberline {3.4.3.2}Seleção da época}{60}{subsubsection.3.4.3.2}%
+\contentsline {subsubsection}{\numberline {3.4.3.3}Avaliação no teste}{60}{subsubsection.3.4.3.3}%
+\contentsline {subsubsection}{\numberline {3.4.3.4}Consolidação das cinco rodadas}{61}{subsubsection.3.4.3.4}%
+\contentsline {section}{\numberline {3.5}Extração dos marcadores eletrocardiográficos}{61}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Protocolo A: segmentos de 5 minutos}{62}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Protocolo B: segmentos de 30 segundos}{62}{subsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.2.1}Classificação dos intervalos}{63}{subsubsection.3.5.2.1}%
+\contentsline {subsubsection}{\numberline {3.5.2.2}Marcadores calculados}{63}{subsubsection.3.5.2.2}%
+\contentsline {subsubsection}{\numberline {3.5.2.3}Controle de qualidade}{64}{subsubsection.3.5.2.3}%
+\contentsline {subsubsection}{\numberline {3.5.2.4}Resumo por paciente}{64}{subsubsection.3.5.2.4}%
+\contentsline {subsection}{\numberline {3.5.3}Número de variáveis e risco de sobreajuste}{65}{subsection.3.5.3}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase []{Resultados}}{66}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Configuração experimental}{66}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Representação do sinal}{66}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Treinamento}{67}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Desbalanceamento entre classes}{68}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Protocolo de avaliação}{68}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Métricas}{69}{subsection.4.1.5}%
+\contentsline {section}{\numberline {4.2}Rede convolucional aplicada ao sinal bruto}{69}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Protocolo}{70}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Desempenho}{70}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Comportamento durante o treinamento}{71}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}Matriz de confusão}{72}{subsection.4.2.4}%
+\contentsline {section}{\numberline {4.3}Rede residual aplicada ao sinal bruto}{72}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Desempenho}{73}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Comportamento durante o treinamento}{74}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Matriz de confusão}{75}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Efeito da capacidade do modelo}{76}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Desempenho}{76}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Comparação com a configuração reduzida}{77}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Comportamento durante o treinamento}{77}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Matriz de confusão}{78}{subsection.4.4.4}%
+\contentsline {section}{\numberline {4.5}Incorporação de mecanismo de atenção}{78}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Desempenho}{79}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Comportamento durante o treinamento}{80}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Matriz de confusão}{80}{subsection.4.5.3}%
+\contentsline {section}{\numberline {4.6}Efeito da profundidade do modelo}{81}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Desempenho}{81}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Comparação entre largura e profundidade}{82}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Comportamento durante o treinamento}{83}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.4}Matriz de confusão}{83}{subsection.4.6.4}%
+\contentsline {section}{\numberline {4.7}Rede residual de 50 camadas aplicada ao sinal bruto}{83}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Protocolo}{84}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Desempenho}{84}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Comportamento durante o treinamento}{85}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.4}Matriz de confusão}{86}{subsection.4.7.4}%
+\contentsline {section}{\numberline {4.8}Eletrocardiograma de repouso de alta resolução}{87}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}Dados e arquitetura}{87}{subsection.4.8.1}%
+\contentsline {subsection}{\numberline {4.8.2}Desempenho}{88}{subsection.4.8.2}%
+\contentsline {subsection}{\numberline {4.8.3}Comparação entre modalidades}{89}{subsection.4.8.3}%
+\contentsline {subsection}{\numberline {4.8.4}Matriz de confusão}{89}{subsection.4.8.4}%
+\contentsline {subsection}{\numberline {4.8.5}Síntese}{90}{subsection.4.8.5}%
+\contentsline {section}{\numberline {4.9}Marcadores eletrocardiográficos}{90}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Protocolo A: segmentos de 5 minutos}{90}{subsection.4.9.1}%
+\contentsline {subsubsection}{\numberline {4.9.1.1}Comparação univariada}{90}{subsubsection.4.9.1.1}%
+\contentsline {subsubsection}{\numberline {4.9.1.2}Modelos}{91}{subsubsection.4.9.1.2}%
+\contentsline {subsubsection}{\numberline {4.9.1.3}Número reduzido de marcadores e otimismo da seleção}{92}{subsubsection.4.9.1.3}%
+\contentsline {subsection}{\numberline {4.9.2}Protocolo B: segmentos de 30 segundos}{92}{subsection.4.9.2}%
+\contentsline {subsubsection}{\numberline {4.9.2.1}Pseudorreplicação}{92}{subsubsection.4.9.2.1}%
+\contentsline {subsubsection}{\numberline {4.9.2.2}Modelos treinados por segmento}{93}{subsubsection.4.9.2.2}%
+\contentsline {subsubsection}{\numberline {4.9.2.3}Modelos sobre os resumos por paciente}{93}{subsubsection.4.9.2.3}%
+\contentsline {subsection}{\numberline {4.9.3}Síntese}{94}{subsection.4.9.3}%
+\contentsline {section}{\numberline {4.10}Redes neurais sobre o sinal de Holter}{95}{section.4.10}%
+\contentsline {subsection}{\numberline {4.10.1}Redes convolucionais: capacidade e duração da janela}{95}{subsection.4.10.1}%
+\contentsline {subsection}{\numberline {4.10.2}Redes residuais: largura da ResNet-18}{96}{subsection.4.10.2}%
+\contentsline {subsection}{\numberline {4.10.3}Redes residuais: profundidade (ResNet-18, ResNet-34 e ResNet-50)}{96}{subsection.4.10.3}%
+\contentsline {subsection}{\numberline {4.10.4}ResNet-18 com mecanismo de atenção}{97}{subsection.4.10.4}%
+\contentsline {subsection}{\numberline {4.10.5}Busca de hiperparâmetros}{97}{subsection.4.10.5}%
+\contentsline {subsection}{\numberline {4.10.6}Comportamento durante o treinamento}{97}{subsection.4.10.6}%
+\contentsline {subsection}{\numberline {4.10.7}Variabilidade entre execuções}{98}{subsection.4.10.7}%
+\contentsline {subsection}{\numberline {4.10.8}Fusão da ResNet-18 com variáveis clínicas}{98}{subsection.4.10.8}%
+\contentsline {subsection}{\numberline {4.10.9}Análise de sensibilidade: ResNet-18 sem restrição ao ritmo sinusal}{99}{subsection.4.10.9}%
+\contentsline {subsection}{\numberline {4.10.10}Síntese}{99}{subsection.4.10.10}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Conclusões e Trabalhos Futuros}}{101}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Conclusões}{101}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Limitações}{102}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Trabalhos futuros}{102}{section.5.3}%
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{\MakeTextUppercase []{REFER\^ENCIAS}}{104}{section*.73}%
