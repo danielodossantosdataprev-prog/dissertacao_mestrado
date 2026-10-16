@@ -169,7 +169,7 @@ agregação das predições de suas janelas.
 \section{Redes neurais convolucionais unidimensionais}
 \label{sec:fund-cnn}
 
-As redes neurais convolucionais foram concebidas para dados com estrutura
+As redes neurais convolucionais (CNN)\glsadd{CNN}\glsunset{CNN} foram concebidas para dados com estrutura
 espacial ou temporal, nos quais elementos próximos guardam relação entre si
 \cite{lecun1998gradient}. Embora popularizadas no processamento de imagens,
 sua formulação unidimensional aplica-se diretamente a sinais fisiológicos,
@@ -522,6 +522,7 @@ parâmetros, ou 12\,869 por paciente de treinamento.
 
 \section{Redes neurais residuais}
 \label{sec:fund-resnet}
+\glsadd{ResNet}\glsunset{ResNet}%
 
 A profundidade é um dos fatores que determinam a capacidade de
 representação de uma rede neural: camadas sucessivas permitem compor padrões
@@ -1068,7 +1069,7 @@ mesma etapa inicial, a localização dos picos R.
 
 O pico R é o ponto de maior amplitude do complexo QRS e marca a
 despolarização ventricular de cada batimento. Detectados os picos, o
-intervalo $\mathrm{RR}_\ell$ é o tempo, em milissegundos, entre o
+intervalo $\mathrm{RR}_\ell$\glsadd{RR}\glsunset{RR} é o tempo, em milissegundos, entre o
 $\ell$-ésimo pico e o seguinte. A sequência de intervalos RR descreve a
 frequência cardíaca batimento a batimento e é a matéria-prima de todos os
 marcadores de ritmo.
@@ -1080,7 +1081,7 @@ intervalo com aproximadamente o dobro da duração esperada; um artefato
 detectado como pico produz dois intervalos curtos. A diretriz da
 \textit{Task Force} \cite{taskforce1996heart} estabelece, por isso, que os
 marcadores de variabilidade sejam calculados apenas sobre intervalos entre
-batimentos sinusais normais, chamados intervalos NN. Na prática, um
+batimentos sinusais normais, chamados intervalos NN\glsadd{NN}\glsunset{NN}. Na prática, um
 intervalo é considerado normal quando não se afasta mais que uma fração
 pré-definida da mediana dos intervalos vizinhos. Um único batimento
 ectópico em um segmento curto pode multiplicar o valor de alguns marcadores,
@@ -1109,8 +1110,7 @@ Holter, realizados em pacientes após infarto do miocárdio
 \subsubsection{Domínio do tempo}
 
 Os marcadores do domínio do tempo são estatísticas calculadas diretamente
-sobre a sequência de $n_{\mathrm{NN}}$ intervalos NN de um segmento. O
-desvio-padrão dos intervalos,
+sobre a sequência de $n_{\mathrm{NN}}$ intervalos NN de um segmento. O \gls{SDNN},
 
 \begin{equation}
 	\mathrm{SDNN} = \sqrt{\frac{1}{n_{\mathrm{NN}} - 1}
@@ -1122,7 +1122,7 @@ desvio-padrão dos intervalos,
 \noindent
 em que $\overline{\mathrm{NN}}$ é a média dos intervalos, reflete a
 variabilidade total do segmento, somando as componentes rápidas e lentas.
-A raiz quadrática média das diferenças sucessivas,
+A \gls{RMSSD},
 
 \begin{equation}
 	\mathrm{RMSSD} = \sqrt{\frac{1}{n_{\mathrm{NN}} - 1}
@@ -1133,7 +1133,7 @@ A raiz quadrática média das diferenças sucessivas,
 \end{equation}
 
 \noindent
-e o percentual de diferenças sucessivas superiores a 50\,ms, o pNN50,
+e o \gls{pNN50},
 isolam as variações de um batimento para o seguinte e são, por isso,
 associados predominantemente à modulação vagal. A diferença
 $\Delta \mathrm{NN}_\ell$ só tem significado quando os dois intervalos são
@@ -1145,11 +1145,9 @@ cálculo.
 
 A análise espectral decompõe a variância dos intervalos em faixas de
 frequência associadas a mecanismos distintos \cite{taskforce1996heart}. A
-faixa de alta frequência (HF, de 0,15 a 0,4\,Hz) corresponde à arritmia
-sinusal respiratória e à modulação vagal; a de baixa frequência (LF, de
-0,04 a 0,15\,Hz), a uma combinação de influências simpáticas e vagais
-ligadas ao barorreflexo; a de muito baixa frequência (VLF, abaixo de
-0,04\,Hz), a mecanismos mais lentos, como a termorregulação. A razão LF/HF
+faixa de \gls{HF}, de 0,15 a 0,4\,Hz, corresponde à arritmia
+sinusal respiratória e à modulação vagal; a de \gls{LF}, de 0,04 a 0,15\,Hz, a uma combinação de influências simpáticas e vagais
+ligadas ao barorreflexo; a de \gls{VLF}, abaixo de 0,04\,Hz, a mecanismos mais lentos, como a termorregulação. A razão LF/HF
 é frequentemente interpretada como índice do balanço simpatovagal, embora
 essa leitura seja controversa.
 
@@ -1163,8 +1161,8 @@ curta duração \cite{taskforce1996heart}.
 \subsubsection{Medidas não lineares}
 
 O gráfico de Poincaré representa cada intervalo NN contra o seguinte. A
-dispersão dos pontos perpendicularmente à diagonal, SD1, mede a
-variabilidade de curto prazo; a dispersão ao longo da diagonal, SD2, a de
+dispersão dos pontos perpendicularmente à diagonal, SD1\glsadd{SD1}\glsunset{SD1}, mede a
+variabilidade de curto prazo; a dispersão ao longo da diagonal, SD2\glsadd{SD2}\glsunset{SD2}, a de
 longo prazo \cite{brennan2001poincare}. Ambas podem ser obtidas das
 variâncias já definidas:
 
@@ -1197,7 +1195,7 @@ isto é, localizar o início, o pico e o fim das ondas P, QRS e T.
 A \textit{duração do QRS} mede o tempo de despolarização dos ventrículos.
 Seu prolongamento indica condução intraventricular lenta, como nos bloqueios
 de ramo, e está associado a pior prognóstico na insuficiência cardíaca. O
-\textit{intervalo QT}, do início do QRS ao fim da onda T, abrange a
+\textit{intervalo QT}\glsadd{QT}\glsunset{QT}, do início do QRS ao fim da onda T, abrange a
 despolarização e a repolarização ventriculares. Como o QT encurta
 naturalmente quando a frequência cardíaca aumenta, ele é comparado entre
 pacientes após correção pela frequência. A correção de Bazett
@@ -1210,7 +1208,7 @@ expresso em segundos:
 \end{equation}
 
 \noindent
-O prolongamento do QTc reflete repolarização ventricular lenta ou
+O prolongamento do QTc\glsadd{QTc}\glsunset{QTc} reflete repolarização ventricular lenta ou
 heterogênea, substrato conhecido para arritmias ventriculares.
 
 A delineação automática é a etapa menos robusta da extração. As fronteiras
@@ -1394,7 +1392,7 @@ esse motivo, a métrica principal deste trabalho é independente de limiar.
 \subsection{Curva ROC e área sob a curva}
 \label{subsec:fund-roc}
 
-A curva ROC (\textit{Receiver Operating Characteristic}) representa o
+A curva ROC\glsadd{ROC}\glsunset{ROC} (\textit{Receiver Operating Characteristic}) representa o
 classificador em todos os limiares possíveis simultaneamente: para cada
 $\delta$, marca-se a taxa de verdadeiros positivos (sensibilidade) contra a
 taxa de falsos positivos ($1 -$ especificidade) \cite{fawcett2006introduction}.

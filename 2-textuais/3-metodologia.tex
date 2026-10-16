@@ -95,12 +95,16 @@ foram descartados, por concentrarem artefatos de calibração do equipamento,
 de acomodação do paciente e de retirada dos eletrodos.
 
 As posições das janelas foram definidas de modo distinto no treinamento e na
-avaliação. No treinamento, cada uma das 250 janelas por paciente teve sua
+avaliação. Nas redes residuais e de fusão, cada uma das 250 janelas de
+treinamento por paciente teve sua
 posição sorteada a cada época, de forma independente, ao longo do trecho
 útil do registro. O procedimento expõe o modelo a recortes diferentes a cada
 passagem pelos dados e admite sobreposição entre janelas. Na avaliação, as
 100 janelas por paciente foram posicionadas em grade regular, igualmente
-espaçadas ao longo do registro, o que torna as métricas reprodutíveis.
+espaçadas ao longo do registro, o que torna as métricas reprodutíveis. Nas
+redes convolucionais, implementadas posteriormente, a amostragem foi
+refinada para 350 janelas de treinamento sem sobreposição e 200 de
+avaliação, conforme a \autoref{subsec:met-cnn-experimentos}.
 
 \subsection{Filtragem}
 \label{subsec:met-filtragem}
@@ -170,7 +174,7 @@ sem ajuste adicional.
 
 Nos experimentos que combinam o sinal a variáveis clínicas, foram empregadas
 seis: idade, gênero, classe funcional \gls{NYHA}, presença de ondas Q de necrose,
-taquicardia ventricular não sustentada e taquiarritmia supraventricular
+taquicardia ventricular não sustentada (TVNS)\glsadd{TVNS}\glsunset{TVNS} e taquiarritmia supraventricular
 paroxística. As variáveis contínuas --- idade --- e as ordinais foram
 padronizadas pela média e pelo desvio-padrão do conjunto de treinamento de
 cada partição.
@@ -207,8 +211,11 @@ As arquiteturas avaliadas nas seções seguintes compartilham o mesmo
 protocolo de preparação dos dados, treinamento e avaliação. Essa
 uniformidade é condição para que a comparação entre elas isole o efeito da
 arquitetura, e não o de escolhas acessórias de configuração. Os valores
-adotados resultaram de ensaios preliminares e são apresentados a seguir,
-acompanhados da justificativa correspondente.
+adotados foram fixados a partir das primeiras execuções e mantidos ao longo
+dos experimentos; são apresentados a seguir, acompanhados da justificativa
+correspondente. Duas configurações foram empregadas: a das redes residuais,
+de atenção e de fusão, e a das redes convolucionais, que estendeu o número
+de épocas e de janelas. As diferenças entre elas são indicadas nas tabelas.
 
 \subsection{Representação do sinal}
 \label{subsec:config-sinal}
@@ -231,8 +238,8 @@ A \autoref{tab:config-sinal} reúne os parâmetros de representação.
 			Parâmetro                        & Valor                      & Justificativa                        \\
 			\midrule \midrule
 			Comprimento da janela            & 24\,000 amostras           & 2 min, cerca de 140 ciclos cardíacos \\
-			Janelas por paciente (treino)    & 250                        & posições sorteadas a cada época      \\
-			Janelas por paciente (avaliação) & 100                        & posições em grade fixa               \\
+			Janelas por paciente (treino)    & 250 / 350 & posições sorteadas a cada época      \\
+			Janelas por paciente (avaliação) & 100 / 200 & posições em grade fixa               \\
 			Margem descartada                & 5 min                      & calibração do equipamento            \\
 			Filtro passa-banda               & 0,5--40\,Hz                & remove deriva e ruído muscular       \\
 			Normalização                     & percentil 99 por derivação & preserva amplitude relativa          \\
@@ -240,7 +247,9 @@ A \autoref{tab:config-sinal} reúne os parâmetros de representação.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). Nota: quando há dois valores, o primeiro
+			refere-se às redes residuais, de atenção e de fusão, e o segundo, às redes
+			convolucionais.}
 	}
 \end{table}
 
@@ -271,7 +280,7 @@ eliminaria essa informação.
 \label{subsec:config-treino}
 
 A \autoref{tab:config-treino} apresenta os hiperparâmetros de otimização,
-mantidos constantes em todas as arquiteturas.
+comuns a todas as arquiteturas, salvo o número de épocas e a paciência.
 
 % ---- TABELA: hiperparâmetros de treino ----
 \begin{table}[h!]
@@ -287,14 +296,16 @@ mantidos constantes em todas as arquiteturas.
 			Regularização ($\lambda$) & $1{,}0 \times 10^{-2}$ & limite superior usual                  \\
 			Descarte                  & 0,6                    & compensa a razão parâmetros/eventos    \\
 			Tamanho do lote           & 256\footnotemark[1]    &                                        \\
-			Épocas máximas            & 20                     & melhor época ocorreu antes da quinta   \\
-			Paciência                 & 10 épocas              & sobre média móvel de três              \\
+			Épocas máximas            & 20 / 30 & melhor época ocorreu cedo            \\
+			Paciência                 & 10 / 15 & sobre média móvel de três            \\
 			Agrupamento               & média e máximo         & estado típico e instante extremo       \\
 			Precisão                  & mista (fp16)           & reduz consumo de memória               \\
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). Nota: em épocas e paciência, o primeiro valor
+			refere-se às redes residuais, de atenção e de fusão, e o segundo, às redes
+			convolucionais.}
 	}
 \end{table}
 
@@ -304,14 +315,15 @@ mantidos constantes em todas as arquiteturas.
 Os valores de regularização e descarte situam-se no extremo superior das
 faixas habituais. A escolha decorre da razão entre o número de parâmetros e
 o de eventos disponíveis: mesmo a arquitetura mais enxuta avaliada dispõe de
-$109\,361$ parâmetros para 37 casos positivos no conjunto de treinamento. Em
-ensaios preliminares, valores menores de regularização produziram perdas de
-treinamento próximas de zero já na terceira época.
+$14\,425$ parâmetros para 33 casos positivos no conjunto de treinamento de
+cada partição, e as redes residuais, de milhões. Nas primeiras execuções,
+valores menores de regularização produziram perdas de treinamento próximas
+de zero já na terceira época.
 
-O limite de 20 épocas acompanha a observação, recorrente em todas as
+O limite de 20 ou 30 épocas acompanha a observação, recorrente em todas as
 arquiteturas, de que o melhor valor de \gls{AUC} sobre o conjunto de
 validação ocorre nas primeiras épocas. O critério de parada emprega média
-móvel de três épocas em lugar do valor pontual: com sete a onze eventos no
+móvel de três épocas em lugar do valor pontual: com apenas 11 eventos no
 conjunto de validação, a métrica de uma única época oscila substancialmente
 sem que o modelo tenha se alterado de forma apreciável, e a suavização evita
 que se selecione o pico do ruído.
@@ -325,7 +337,7 @@ sensibilidade nula. Para evitar a convergência a esse ótimo local, a função
 de perda de entropia cruzada binária foi ponderada pelo fator
 
 \begin{equation}
-	w_{+} = \frac{N_0}{N_1} \approx 8{,}5,
+	w_{+} = \frac{N_0}{N_1} \approx 8{,}4,
 	\label{eq:pos-weight}
 \end{equation}
 
@@ -333,7 +345,7 @@ de perda de entropia cruzada binária foi ponderada pelo fator
 em que $N_0$ e $N_1$ denotam, respectivamente, o número de controles e de
 casos no conjunto de treinamento de cada partição. O fator multiplica a
 contribuição dos casos positivos ao gradiente, sendo equivalente a replicar
-cada evento 8,5 vezes sem descartar controles.
+cada evento cerca de 8,4 vezes sem descartar controles.
 
 Técnicas de subamostragem da classe majoritária foram descartadas: o
 equilíbrio entre classes seria obtido às custas de reduzir a coorte de 517
@@ -365,7 +377,8 @@ correspondesse a cem observações independentes --- o que estreitaria
 artificialmente os intervalos de confiança.
 
 Os intervalos de confiança de 95\,\% foram estimados por reamostragem
-\textit{bootstrap} com 2\,000 repetições, sorteando pacientes com reposição.
+\textit{bootstrap}, sorteando pacientes com reposição: 1\,000 repetições
+para as redes neurais e 2\,000 para os modelos sobre os marcadores.
 Comparações entre modelos empregaram reamostragem pareada: a mesma amostra
 avalia ambos os modelos, de modo a isolar a incerteza da diferença.
 
@@ -970,7 +983,7 @@ ajustadas no conjunto de treinamento de cada partição:
 	\item \textit{regressão logística com penalização L1} ($C = 0{,}1$), que
 	anula os coeficientes das variáveis menos úteis e realiza, assim, uma
 	seleção de variáveis dentro de cada partição;
-	\item \textit{análise de componentes principais seguida de regressão
+	\item \textit{análise de componentes principais}\glsadd{PCA}\glsunset{PCA} \textit{seguida de regressão
 	logística}, que substitui os marcadores, fortemente correlacionados entre
 	si, por poucas combinações lineares não correlacionadas, ajustadas sem
 	uso do desfecho;

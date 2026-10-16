@@ -72,7 +72,7 @@ em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
 	\IBGEtab{}{
 		\begin{tabular}{lrcrr}
 			\toprule
-			Modelo                          & \multicolumn{1}{c}{Variáveis} & \gls{AUC} [IC 95\,\%] &
+			Modelo                          & \multicolumn{1}{c}{Variáveis} & \gls{AUC} [\glsadd{IC}IC 95\,\%] &
 			\multicolumn{1}{c}{Partições}   & \multicolumn{1}{c}{\gls{AP}}                                                      \\
 			\midrule \midrule
 			Clínicas (referência)           & 6                             & 0,661 [0,577--0,741]  & 0,673 $\pm$ 0,114 & 0,233 \\
@@ -527,8 +527,7 @@ interpretada como evidência de superioridade de uma sobre as outras.
 \label{subsec:res-redes-fusao}
 
 A rede de fusão combina o extrator da ResNet-18 com um ramo que recebe seis
-variáveis clínicas --- idade, sexo, classe funcional da \gls{NYHA}, ondas Q,
-taquicardia ventricular não sustentada e fibrilação atrial paroxística ---,
+variáveis clínicas --- idade, sexo, classe funcional da \gls{NYHA}, ondas Q, taquicardia ventricular não sustentada e taquiarritmia supraventricular paroxística ---,
 totalizando 3\,987\,041 parâmetros, dos quais 10\,656
 pertencem ao ramo clínico. A \autoref{tab:res-fusao} compara as três
 estratégias de treinamento descritas na \autoref{subsec:met-fusao}.
