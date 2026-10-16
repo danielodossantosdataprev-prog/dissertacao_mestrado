@@ -2077,8 +2077,8 @@ alcançaram entre 0,537 e 0,576.
 % RESULTADOS — Redes neurais sobre o sinal de Holter
 % Fontes: logs classificacao_*.log, optuna_*.log (rodada final em 5 partições).
 % Todos os valores verificados nos logs. Coorte: 517 pacientes, 55 casos.
-% [pendente] = CNN média de 2 min: a execução falhou (checkpoint sobrescrito pela
-% execução simultânea da CNN simples, mesmo nome_do_ensaio); refazer.
+% CNN média de 2 min: execução refeita em 16/10/2026 (a primeira falhou por
+% checkpoint compartilhado com a CNN simples).
 % Configuração das ResNets (20 épocas, paciência 10, 250 janelas de treino e
 % 100 de avaliação por paciente) difere da das CNNs (30 épocas, paciência 15,
 % 350 e 200 janelas) — declarado no texto.
@@ -2116,7 +2116,7 @@ rede e a duração da janela de entrada.
 			\midrule \midrule
 			Mínima              & 2 min                                  & 14\,425                        & 0,543 $\pm$ 0,059 & 0,523 [0,440--0,612] \\
 			Simples             & 2 min                                  & 109\,361                       & 0,500 $\pm$ 0,067 & 0,486 [0,402--0,578] \\
-			Média               & 2 min                                  & 418\,145                       & [pendente]        & [pendente]           \\
+			Média               & 2 min                                  & 418\,145                       & 0,494 $\pm$ 0,119 & 0,485 [0,400--0,574] \\
 			\midrule
 			Mínima              & 10 s                                   & 14\,425                        & 0,589 $\pm$ 0,090 & 0,554 [0,467--0,634] \\
 			Simples             & 10 s                                   & 109\,361                       & 0,509 $\pm$ 0,051 & 0,491 [0,411--0,578] \\
@@ -2130,9 +2130,9 @@ rede e a duração da janela de entrada.
 
 Nenhuma configuração se distinguiu do acaso: todos os intervalos de
 confiança incluem 0,5. A rede mínima obteve os maiores valores nas duas
-durações de janela. Com a janela de 10~segundos, o desempenho caiu à medida
-que a capacidade aumentou (0,554, 0,491 e 0,485), e com a de 2~minutos a
-rede simples ficou abaixo da mínima (0,486 contra 0,523). A diferença entre a rede
+durações de janela. Nas duas durações, o desempenho caiu à medida que a
+capacidade aumentou: 0,523, 0,486 e 0,485 com a janela de 2~minutos e
+0,554, 0,491 e 0,485 com a de 10~segundos. A diferença entre a rede
 mínima e a média, no entanto, é menor que a largura de qualquer um dos
 intervalos e não permite afirmar uma relação entre capacidade e desempenho.
 O mesmo vale para a duração da janela: a rede mínima obteve 0,523 com
@@ -2360,10 +2360,78 @@ ritmo sinusal. O resultado mostra que o pipeline aprende quando há um padrão
 reconhecível no sinal e justifica a restrição adotada na
 \autoref{sec:intro-dados}, que remove essa fonte de confundimento.
 
+\subsection{Métricas dependentes de limiar}
+\label{subsec:res-redes-limiar}
+
+A \autoref{tab:res-redes-limiar} reúne, para todas as redes do protocolo
+principal, as métricas calculadas sobre as predições fora da partição após a
+aplicação do limiar de decisão escolhido na validação interna.
+
+\begin{table}[h!]
+	\captionsetup{width=16cm}
+	\Caption{\label{tab:res-redes-limiar} Métricas dependentes de limiar das
+	redes neurais, calculadas sobre as predições fora da partição dos 517
+	pacientes}
+	\IBGEtab{}{
+		\footnotesize
+		\setlength{\tabcolsep}{4pt}
+		\begin{tabular}{llcccccccc}
+			\toprule
+			Rede & Janela & \gls{AUC} & \gls{AP} & Sens. & Espec. & \gls{VPP} & \gls{VPN} & F1 & Acurácia \\
+			\midrule \midrule
+			CNN mínima & 2 min & 0,523 & 0,139 & 0,582 & 0,448 & 0,111 & 0,900 & 0,187 & 0,462 \\
+			CNN simples & 2 min & 0,486 & 0,121 & 0,364 & 0,645 & 0,109 & 0,895 & 0,167 & 0,615 \\
+			CNN média & 2 min & 0,485 & 0,126 & 0,309 & 0,688 & 0,106 & 0,893 & 0,157 & 0,648 \\
+			CNN mínima & 10 s & 0,554 & 0,132 & 0,691 & 0,346 & 0,112 & 0,904 & 0,192 & 0,383 \\
+			CNN simples & 10 s & 0,491 & 0,119 & 0,400 & 0,530 & 0,092 & 0,881 & 0,150 & 0,516 \\
+			CNN média & 10 s & 0,485 & 0,110 & 0,455 & 0,485 & 0,095 & 0,882 & 0,157 & 0,482 \\
+			\midrule
+			ResNet-18 mínima & 5,12 s & 0,562 & 0,160 & 0,455 & 0,654 & 0,135 & 0,910 & 0,208 & 0,632 \\
+			ResNet-18 reduzida & 2 min & 0,504 & 0,117 & 0,582 & 0,437 & 0,110 & 0,898 & 0,184 & 0,453 \\
+			ResNet-18 completa & 2 min & 0,508 & 0,121 & 0,455 & 0,461 & 0,091 & 0,877 & 0,152 & 0,460 \\
+			ResNet-18 completa & 5,12 s & 0,492 & 0,129 & 0,582 & 0,442 & 0,110 & 0,899 & 0,186 & 0,456 \\
+			ResNet-34 & 2 min & 0,514 & 0,122 & 0,509 & 0,517 & 0,112 & 0,898 & 0,183 & 0,516 \\
+			ResNet-50 & 2 min & 0,536 & 0,137 & 0,455 & 0,511 & 0,100 & 0,887 & 0,163 & 0,505 \\
+			ResNet-18 + Transformer & 2 min & 0,493 & 0,134 & 0,291 & 0,703 & 0,105 & 0,893 & 0,154 & 0,660 \\
+			\midrule
+			Convolucional, busca & 1 min & 0,556 & 0,189 & 0,509 & 0,552 & 0,119 & 0,904 & 0,193 & 0,547 \\
+			Residual, busca & 1 min & 0,496 & 0,122 & 0,455 & 0,565 & 0,111 & 0,897 & 0,178 & 0,553 \\
+			\midrule
+			Fusão, treino conjunto & 2 min & 0,516 & 0,141 & 0,418 & 0,548 & 0,099 & 0,888 & 0,160 & 0,534 \\
+			Fusão, taxa reduzida & 2 min & 0,579 & 0,180 & 0,455 & 0,673 & 0,142 & 0,912 & 0,216 & 0,650 \\
+			Fusão, extrator congelado & 2 min & 0,577 & 0,146 & 0,727 & 0,424 & 0,131 & 0,929 & 0,222 & 0,456 \\
+			Fusão, treino conjunto & 10 s & 0,491 & 0,113 & 0,400 & 0,569 & 0,100 & 0,889 & 0,159 & 0,551 \\
+			\bottomrule
+		\end{tabular}
+	}{
+	\Fonte{elaborado pelo autor (2026). Limiar de decisão escolhido pelo índice
+	de Youden na validação interna de cada partição. Referência sob
+	classificação aleatória: \gls{AP} e \gls{VPP} iguais à prevalência
+	(0,106); \gls{VPN} igual a 0,894.}
+}
+\end{table}
+
+
+As métricas dependentes de limiar confirmam o quadro da \gls{AUC}. O
+\gls{VPP} ficou entre 0,09 e 0,14 em todas as redes, próximo da prevalência
+de 0,106, ou seja, entre os pacientes classificados como de alto risco a
+proporção de casos foi praticamente a mesma da coorte. O \gls{VPN}, entre
+0,88 e 0,93, também se manteve próximo do valor de 0,894 que se obteria
+classificando todos os pacientes como controles. A sensibilidade e a
+especificidade variaram em sentidos opostos entre as redes --- de 0,29 a
+0,73 e de 0,35 a 0,70, respectivamente ---, o que reflete apenas a posição
+do limiar, e não uma capacidade de separação: as redes de maior
+sensibilidade são as de menor especificidade. A acurácia, entre 0,38 e 0,66,
+fica sempre abaixo dos 0,894 obtidos pela classificação trivial de todos os
+pacientes como controles, o que ilustra por que ela não é adequada com
+classes desbalanceadas. A rede de fusão com extrator congelado obteve a
+maior sensibilidade (0,727) com \gls{VPN} de 0,929, mas à custa de
+especificidade de 0,424.
+
 \subsection{Síntese}
 \label{subsec:res-redes-sintese}
 
-Em 18 configurações avaliadas no protocolo principal, nenhuma rede treinada
+Em 19 configurações avaliadas no protocolo principal, nenhuma rede treinada
 sobre o sinal do Holter discriminou casos e controles de forma distinguível
 do acaso. Os valores de \gls{AUC} fora da partição ficaram entre 0,48 e
 0,56, sem relação com a capacidade da rede, com a duração da janela ou com a
