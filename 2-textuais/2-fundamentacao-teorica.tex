@@ -796,6 +796,246 @@ desempenho deveria variar com ela.
 % Siglas: \gls{VFC} (já definida), \gls{ECG}, \gls{MSC}.
 % ==============================================================================
 
+% ==============================================================================
+% FUNDAMENTAÇÃO TEÓRICA — Mecanismo de atenção
+% Baseado na classe ResNetTransformer (resnet_classificacao.py)
+%
+% Configuração verificada pela contagem de parâmetros (1.491.553, idêntica à
+% registrada no log de execução):
+%   corpo     ResNet-18 reduzida, sem a cabeça         963.936
+%   atenção   1 camada, d=256, 4 cabeças, ff=512       527.104
+%   cabeça    Dropout + Linear(512 -> 1)                   513
+%
+% ⚠️ CONFERIR: o texto afirma que não há codificação posicional, conforme a
+%    versão do código escrita durante o projeto. Se ela tiver sido
+%    acrescentada depois, ajustar a subseção correspondente.
+% ==============================================================================
+
+\section{Mecanismo de atenção}
+\label{sec:fund-atencao}
+
+As arquiteturas descritas nas seções anteriores relacionam instantes do
+sinal por meio de operações locais. Cada convolução combina apenas $\kappa$
+posições vizinhas, e a relação entre instantes distantes só se estabelece
+indiretamente, pelo empilhamento de camadas --- daí o campo receptivo de
+2,2\,s ao final da ResNet-18, inferior à janela de dois minutos analisada.
+
+O mecanismo de atenção adota princípio distinto: cada posição da sequência
+pode ser relacionada diretamente a qualquer outra, em uma única operação,
+com intensidade aprendida a partir dos próprios dados. Proposto no contexto
+da tradução automática \cite{vaswani2017attention}, tornou-se o componente
+central das arquiteturas denominadas \textit{Transformer}.
+
+\subsection{Autoatenção}
+\label{subsec:fund-autoatencao}
+
+Seja $\mathbf{X} \in \mathbb{R}^{L \times d}$ uma sequência de $L$ posições,
+cada uma representada por um vetor de dimensão $d$. A autoatenção projeta
+essa sequência em três matrizes, por meio de transformações lineares
+aprendidas:
+
+\begin{equation}
+	\mathbf{Q} = \mathbf{X}\mathbf{U}_Q, \qquad
+	\mathbf{K} = \mathbf{X}\mathbf{U}_K, \qquad
+	\mathbf{V} = \mathbf{X}\mathbf{U}_V,
+	\label{eq:qkv}
+\end{equation}
+
+\noindent
+denominadas consultas, chaves e valores. A saída é obtida ponderando os
+valores pela similaridade entre consultas e chaves:
+
+\begin{equation}
+	\mathrm{Atenção}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) =
+	\mathrm{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}\right)
+	\mathbf{V},
+	\label{eq:atencao}
+\end{equation}
+
+\noindent
+em que $d_k$ é a dimensão das consultas e chaves. O produto
+$\mathbf{Q}\mathbf{K}^{\top}$ resulta em matriz $L \times L$ cujo elemento
+$(t, s)$ mede o quanto a posição $t$ deve considerar a posição $s$. A função
+\textit{softmax}, aplicada a cada linha, converte essas similaridades em
+pesos não negativos que somam um. A divisão por $\sqrt{d_k}$ evita que, em
+dimensões elevadas, os produtos internos assumam magnitudes que saturariam a
+\textit{softmax} e anulariam seus gradientes.
+
+Cada posição da saída é, portanto, uma média ponderada das representações
+de todas as posições da sequência, com pesos que dependem do conteúdo. No
+contexto do \gls{ECG}, isso permite, em princípio, que a representação de um
+batimento incorpore informação de batimentos distantes cujo padrão seja
+relevante --- uma extrassístole e a pausa que a sucede, por exemplo.
+
+\subsubsection{Atenção com múltiplas cabeças}
+\label{subsubsec:fund-multicabeca}
+
+Em vez de uma única operação de atenção, a formulação usual executa $h$
+operações em paralelo, cada uma com projeções próprias de dimensão
+$d_k = d/h$, e concatena os resultados:
+
+\begin{equation}
+	\mathrm{MultiCabeça}(\mathbf{X}) =
+	\big[\mathrm{cabeça}_1; \ldots; \mathrm{cabeça}_h\big]\,\mathbf{U}_O,
+	\qquad
+	\mathrm{cabeça}_i = \mathrm{Atenção}\big(\mathbf{X}\mathbf{U}_Q^{(i)},
+	\mathbf{X}\mathbf{U}_K^{(i)}, \mathbf{X}\mathbf{U}_V^{(i)}\big).
+	\label{eq:multicabeca}
+\end{equation}
+
+Cada cabeça pode especializar-se em um tipo de relação --- uma em vizinhança
+imediata, outra em padrões periódicos, por exemplo ---, sem que o custo total
+seja superior ao de uma única cabeça de dimensão $d$.
+
+\subsection{Camada codificadora}
+\label{subsec:fund-codificador}
+
+A camada codificadora do \textit{Transformer} combina a atenção com
+múltiplas cabeças e uma rede totalmente conectada aplicada a cada posição
+separadamente, ambas envolvidas por conexões residuais e normalização:
+
+\begin{align}
+	\mathbf{X}' &= \mathrm{LN}\big(\mathbf{X} + \mathrm{MultiCabeça}(\mathbf{X})\big),
+	\label{eq:codificador-1} \\
+	\mathbf{Y} &= \mathrm{LN}\big(\mathbf{X}' + \mathrm{FFN}(\mathbf{X}')\big),
+	\label{eq:codificador-2}
+\end{align}
+
+\noindent
+em que $\mathrm{FFN}$ é composta por duas camadas lineares com ativação
+intermediária, a primeira expandindo a dimensão de $d$ para $d_{\mathrm{ff}}$
+e a segunda restaurando-a. As conexões residuais desempenham o mesmo papel
+discutido na \autoref{subsec:fund-residual}.
+
+A normalização empregada é a normalização de camada \cite{ba2016layer},
+que padroniza cada vetor individualmente, ao longo de suas $d$ dimensões, em
+lugar de cada canal ao longo do lote como na
+\autoref{eq:batchnorm}. A escolha torna a operação independente do tamanho
+do lote e do comprimento da sequência.
+
+\subsection{Custo computacional}
+\label{subsec:fund-atencao-custo}
+
+A matriz de atenção possui $L^2$ elementos por cabeça, e o custo da operação
+cresce com o quadrado do comprimento da sequência. Esse aspecto determina
+onde a atenção pode ser inserida em arquiteturas para sinais longos.
+
+Aplicada diretamente à janela de 24\,000 amostras, a atenção exigiria matriz
+de $576$ milhões de elementos por cabeça e por exemplo --- volume
+incompatível com o processamento em lote. Aplicada após o corpo
+convolucional, que reduz a sequência a 750 posições, a matriz passa a ter
+$562\,500$ elementos, redução de aproximadamente mil vezes. A combinação de
+camadas convolucionais seguidas de atenção explora essa complementaridade:
+as convoluções extraem padrões locais e comprimem a sequência, e a atenção
+relaciona os padrões resultantes ao longo de toda a janela.
+
+\subsection{Arquitetura empregada}
+\label{subsec:fund-atencao-arquitetura}
+
+A arquitetura avaliada mantém integralmente o corpo da ResNet-18 reduzida
+(\autoref{tab:resnet-configuracoes}), que produz sequência de 750 posições
+com 256 canais, e insere entre ele e o agrupamento global uma camada
+codificadora com os parâmetros da \autoref{tab:atencao-config}.
+
+% ---- TABELA: configuração ----
+\begin{table}[h!]
+	\captionsetup{width=12cm}
+	\Caption{\label{tab:atencao-config} Configuração da camada de atenção}
+	\IBGEtab{}{
+		\begin{tabular}{ll}
+			\toprule
+			Parâmetro & Valor \\
+			\midrule \midrule
+			Comprimento da sequência ($L$) & 750 posições \\
+			Dimensão do modelo ($d$) & 256 \\
+			Número de cabeças ($h$) & 4 \\
+			Dimensão por cabeça ($d_k$) & 64 \\
+			Dimensão da rede interna ($d_{\mathrm{ff}}$) & 512 \\
+			Número de camadas & 1 \\
+			Descarte & 0,3 \\
+			\bottomrule
+		\end{tabular}
+	}{
+	\Fonte{elaborado pelo autor (2026).}
+}
+\end{table}
+
+A saída do codificador, com as mesmas dimensões da entrada, passa pelo
+agrupamento global combinado de média e máximo, resultando em vetor de 512
+dimensões. Diferentemente das demais redes, o classificador consiste em uma
+única camada linear precedida de descarte, sem camada intermediária: a
+capacidade adicional introduzida pela atenção dispensa a não linearidade
+extra no classificador.
+
+A \autoref{tab:atencao-parametros} decompõe os parâmetros.
+
+% ---- TABELA: parâmetros ----
+\begin{table}[h!]
+	\captionsetup{width=12.5cm}
+	\Caption{\label{tab:atencao-parametros} Distribuição dos parâmetros da
+	ResNet-18 reduzida com camada de atenção}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			Componente & \multicolumn{1}{c}{Parâmetros} &
+			\multicolumn{1}{c}{Fração} \\
+			\midrule \midrule
+			Corpo residual & 963\,936 & 64,6\,\% \\
+			Atenção com múltiplas cabeças & 263\,168 & 17,6\,\% \\
+			Rede interna (FFN) & 262\,912 & 17,6\,\% \\
+			Normalização de camada & 1\,024 & 0,1\,\% \\
+			Classificador & 513 & $<$\,0,1\,\% \\
+			\midrule
+			Total & 1\,491\,553 & 100,0\,\% \\
+			\bottomrule
+		\end{tabular}
+	}{
+	\Fonte{elaborado pelo autor (2026).}
+}
+\end{table}
+
+A camada de atenção acrescenta $527\,104$ parâmetros, cerca de metade do
+corpo convolucional e 35\,\% do total.
+
+\subsubsection{Ausência de codificação posicional}
+\label{subsubsec:fund-posicional}
+
+A operação da \autoref{eq:atencao} é invariante à ordem das posições: se a
+sequência de entrada for permutada, a saída é permutada da mesma forma. Em
+aplicações nas quais a ordem é essencial, como a linguagem, acrescenta-se à
+entrada uma \textit{codificação posicional} que identifica cada posição
+\cite{vaswani2017attention}.
+
+A arquitetura empregada não utiliza codificação posicional. Duas razões
+sustentam a escolha. A primeira é que as representações produzidas pelo
+corpo convolucional já carregam informação local de ordem, pois cada posição
+resume um trecho contíguo do sinal. A segunda é que a saída do codificador é
+submetida ao agrupamento global, operação também invariante à ordem: a
+posição absoluta de um padrão dentro da janela de dois minutos não altera a
+representação final. O que a atenção acrescenta, nesse arranjo, é a
+possibilidade de cada posição ser representada em função do conteúdo das
+demais, e não a modelagem da ordem temporal propriamente dita.
+
+\subsection{Considerações sobre o regime de dados}
+\label{subsec:fund-atencao-regime}
+
+As arquiteturas baseadas em atenção apresentam menos vieses indutivos que
+as convolucionais. Uma convolução pressupõe, por construção, que padrões
+relevantes são locais e podem ocorrer em qualquer posição; a atenção não
+pressupõe localidade e precisa aprender, a partir dos dados, quais relações
+são relevantes. \citeonline{dosovitskiy2021image} mostraram que essa
+flexibilidade só se converte em vantagem quando o conjunto de treinamento é
+suficientemente grande: em conjuntos de pequeno porte, modelos baseados em
+atenção apresentaram desempenho inferior ao de redes convolucionais de
+capacidade semelhante.
+
+A arquitetura híbrida aqui empregada atenua esse problema ao preservar o
+corpo convolucional e restringir a atenção a uma única camada sobre
+representações já comprimidas. Ainda assim, com 33 casos positivos por
+partição de treinamento, a estimativa dos $527\,104$ parâmetros adicionais
+encontra-se no regime em que a literatura reporta menor eficácia do
+mecanismo.
+
 \section{Marcadores eletrocardiográficos}
 \label{sec:fund-marcadores}
 
