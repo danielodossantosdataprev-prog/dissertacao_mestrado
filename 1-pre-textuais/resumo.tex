@@ -1,39 +1,37 @@
 Este trabalho investiga a predição de morte súbita cardíaca em pacientes com
-insuficiência cardíaca crônica a partir de eletrocardiograma (ECG) Holter de
+insuficiência cardíaca crônica a partir do eletrocardiograma (ECG) Holter de
 24~horas. Os dados provêm da base MUSIC, disponível na plataforma PhysioNet, e
 compreendem sinais de três derivações ortogonais (X, Y e Z) amostrados a
-200~Hz, além de variáveis clínicas e demográficas de 992 pacientes
-acompanhados em hospitais universitários espanhóis entre 2003 e 2008. Adotou-se
-um desenho caso-controle em que os casos correspondem a óbitos por morte súbita
-cardíaca documentada e os controles, a sobreviventes com seguimento completo de
-quatro anos, restrito a pacientes em ritmo sinusal, totalizando 517 indivíduos
-e 55 eventos. Três estratégias de modelagem foram comparadas sob o mesmo
-protocolo de avaliação. A primeira aplica aprendizado profundo diretamente ao
-sinal bruto, abrangendo onze configurações entre redes convolucionais,
-residuais, recorrentes e baseadas em atenção, com capacidade variando de
-109~mil a 16~milhões de parâmetros, incluindo busca bayesiana de
-hiperparâmetros. A segunda extrai marcadores do sinal por processamento
-digital --- variabilidade da frequência cardíaca, análise espectral e medidas
-morfológicas --- com amostra em janelas de dois minutos a cada hora de
-registro, o que permite caracterizar também a variação desses marcadores ao
-longo do dia. A terceira utiliza apenas variáveis clínicas. Todos os modelos
-foram avaliados por validação cruzada estratificada em cinco partições, com
-divisão realizada no nível do paciente para evitar que segmentos de um mesmo
-indivíduo ocorram simultaneamente em treinamento e teste, limiar de decisão
-definido na partição de validação e intervalos de confiança estimados por
-reamostragem \textit{bootstrap}. Os modelos aplicados ao sinal bruto
-apresentaram área sob a curva ROC entre 0,48 e 0,56, com intervalos de
-confiança compatíveis com o acaso em todas as configurações avaliadas. Os
-marcadores extraídos alcançaram 0,62 (IC~95\%: 0,54--0,71) quando reduzidos por
-análise de componentes principais, procedimento que não utiliza informação do
-desfecho, e o melhor desempenho global foi obtido pela combinação de seis
-variáveis clínicas com dois marcadores de variabilidade da frequência cardíaca
-(0,69; IC~95\%: 0,61--0,77). O ganho incremental do ECG sobre as variáveis
-clínicas isoladas não se mostrou estatisticamente demonstrável. Os resultados
-indicam que, em coortes com número reduzido de eventos, a extração de
-marcadores por processamento de sinal supera o aprendizado de representação a
-partir do sinal bruto, e que o poder estatístico disponível limita a detecção
-de efeitos de magnitude clinicamente realista.
+200~Hz, além de variáveis clínicas de 992 pacientes acompanhados em hospitais
+universitários espanhóis. Adotou-se um desenho caso-controle restrito a
+pacientes em ritmo sinusal, em que os casos correspondem a óbitos por morte
+súbita cardíaca em até quatro anos e os controles, a sobreviventes com
+seguimento completo de quatro anos, totalizando 517 indivíduos e 55 eventos.
+Três abordagens foram comparadas sob o mesmo protocolo de validação cruzada
+estratificada em cinco partições, com divisão no nível do paciente, limiar de
+decisão definido na validação interna e intervalos de confiança por
+reamostragem \textit{bootstrap}. A primeira aplica redes neurais profundas
+diretamente ao sinal --- redes convolucionais, residuais de 18 a 50 camadas,
+com mecanismo de atenção, de fusão com variáveis clínicas e configuradas por
+busca bayesiana de hiperparâmetros ---, em dezoito configurações com 14~mil a
+16,5~milhões de parâmetros. A segunda extrai marcadores do sinal ---
+variabilidade da frequência cardíaca, morfologia do batimento e ectopia ---
+em segmentos de 5~minutos a cada hora e de 30~segundos a cada 2~minutos. A
+terceira utiliza apenas variáveis clínicas. As redes neurais obtiveram área
+sob a curva ROC (AUC) entre 0,48 e 0,56, com intervalos compatíveis com o
+acaso em todas as configurações e variação entre execuções da mesma rede
+comparável à variação entre arquiteturas. Os marcadores alcançaram AUC entre
+0,59 e 0,62, e as variáveis clínicas, 0,66 (IC~95\,\%: 0,58--0,74). A
+combinação das variáveis clínicas com os marcadores, com seleção feita dentro
+de cada partição, chegou a 0,68 (IC~95\,\%: 0,60--0,76), valor próximo ao
+relatado na literatura para a mesma base, mas o ganho sobre as variáveis
+clínicas isoladas não foi estatisticamente significativo. Os resultados
+indicam que, com o número de eventos disponível, não foi possível aprender
+do sinal bruto um padrão preditivo de morte súbita, e que estimativas mais
+altas dependem de escolhas de avaliação --- seleção de variáveis sobre a
+coorte inteira, divisões únicas dos dados, tratamento de segmentos como
+observações independentes e inclusão de ritmos não sinusais ---, cujos
+efeitos este trabalho quantifica sobre os mesmos pacientes.
 
 \textbf{Palavras-chave:} Morte Súbita Cardíaca. ECG Holter. Aprendizado
 Profundo. Variabilidade da Frequência Cardíaca. Insuficiência Cardíaca.

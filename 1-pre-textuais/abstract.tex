@@ -1,36 +1,36 @@
-
 This work investigates the prediction of sudden cardiac death in patients with
 chronic heart failure from 24-hour Holter electrocardiography (ECG). Data were
 obtained from the MUSIC database, available on the PhysioNet platform,
-comprising three orthogonal lead signals (X, Y and Z) sampled at 200~Hz, along
-with clinical and demographic variables from 992 patients followed at Spanish
-university hospitals between 2003 and 2008. A case-control design was adopted,
-in which cases correspond to documented sudden cardiac death and controls to
-survivors with complete four-year follow-up, restricted to patients in sinus
-rhythm, totalling 517 individuals and 55 events. Three modelling strategies
-were compared under the same evaluation protocol. The first applies deep
-learning directly to the raw signal, covering eleven configurations across
-convolutional, residual, recurrent and attention-based networks, with capacity
-ranging from 109 thousand to 16 million parameters, including Bayesian
-hyperparameter search. The second extracts signal-derived markers --- heart
-rate variability, spectral analysis and morphological measures --- sampled in
-five-minute windows at hourly intervals, which also allows characterising how
-these markers vary throughout the day. The third uses clinical variables only.
-All models were evaluated by five-fold stratified cross-validation with
-patient-level partitioning, decision thresholds defined on the validation
-split, and confidence intervals estimated by bootstrap resampling. Models
-applied to the raw signal achieved areas under the ROC curve between 0.48 and
-0.56, with confidence intervals compatible with chance in every configuration.
-Extracted markers reached 0.62 (95\% CI: 0.54--0.71) when reduced by principal
-component analysis, a procedure that does not use outcome information, and the
-best overall performance was obtained by combining six clinical variables with
-two heart rate variability markers (0.69; 95\% CI: 0.61--0.77). The incremental
-gain of ECG over clinical variables alone was not statistically demonstrable.
-The results indicate that, in cohorts with a small number of events,
-signal-processing feature extraction outperforms representation learning from
-raw signals, and that the available statistical power limits the detection of
-clinically realistic effect sizes.
-
+comprising three orthogonal lead signals (X, Y and Z) sampled at 200~Hz and
+clinical variables from 992 patients followed at Spanish university
+hospitals. A case-control design restricted to patients in sinus rhythm was
+adopted, in which cases are deaths from sudden cardiac death within four
+years and controls are survivors with complete four-year follow-up, for a
+total of 517 individuals and 55 events. Three approaches were compared under
+the same protocol of stratified five-fold cross-validation, with
+patient-level splits, decision threshold set on internal validation and
+bootstrap confidence intervals. The first applies deep neural networks
+directly to the signal --- convolutional networks, residual networks with 18
+to 50 layers, attention-based networks, fusion with clinical variables and
+networks configured by Bayesian hyperparameter search ---, in eighteen
+configurations with 14 thousand to 16.5 million parameters. The second
+extracts markers from the signal --- heart rate variability, beat morphology
+and ectopy --- from 5-minute segments every hour and 30-second segments every
+2 minutes. The third uses clinical variables only. The neural networks
+achieved areas under the ROC curve (AUC) between 0.48 and 0.56, with
+confidence intervals compatible with chance in every configuration and
+run-to-run variation of the same network comparable to the variation across
+architectures. The markers reached AUC between 0.59 and 0.62, and the clinical
+variables 0.66 (95\,\% CI: 0.58--0.74). Combining clinical variables with
+markers, with selection performed within each fold, reached 0.68 (95\,\% CI:
+0.60--0.76), close to values reported in the literature for the same
+database, but the gain over clinical variables alone was not statistically
+significant. The results indicate that, with the available number of events,
+no predictive pattern of sudden cardiac death could be learned from the raw
+signal, and that higher estimates depend on evaluation choices --- variable
+selection on the whole cohort, single data splits, treating segments as
+independent observations and inclusion of non-sinus rhythms ---, whose
+effects this work quantifies on the same patients.
 
 \textbf{Keywords:} Sudden Cardiac Death. Holter ECG. Deep Learning. Heart Rate
 Variability. Heart Failure. Risk Stratification.

@@ -2077,7 +2077,8 @@ alcançaram entre 0,537 e 0,576.
 % RESULTADOS — Redes neurais sobre o sinal de Holter
 % Fontes: logs classificacao_*.log, optuna_*.log (rodada final em 5 partições).
 % Todos os valores verificados nos logs. Coorte: 517 pacientes, 55 casos.
-% [pendente] = CNN simples e CNN média de 2 min, em execução.
+% [pendente] = CNN média de 2 min: a execução falhou (checkpoint sobrescrito pela
+% execução simultânea da CNN simples, mesmo nome_do_ensaio); refazer.
 % Configuração das ResNets (20 épocas, paciência 10, 250 janelas de treino e
 % 100 de avaliação por paciente) difere da das CNNs (30 épocas, paciência 15,
 % 350 e 200 janelas) — declarado no texto.
@@ -2114,7 +2115,7 @@ rede e a duração da janela de entrada.
 			\gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%]                                                                             \\
 			\midrule \midrule
 			Mínima              & 2 min                                  & 14\,425                        & 0,543 $\pm$ 0,059 & 0,523 [0,440--0,612] \\
-			Simples             & 2 min                                  & 109\,361                       & [pendente]        & [pendente]           \\
+			Simples             & 2 min                                  & 109\,361                       & 0,500 $\pm$ 0,067 & 0,486 [0,402--0,578] \\
 			Média               & 2 min                                  & 418\,145                       & [pendente]        & [pendente]           \\
 			\midrule
 			Mínima              & 10 s                                   & 14\,425                        & 0,589 $\pm$ 0,090 & 0,554 [0,467--0,634] \\
@@ -2129,8 +2130,9 @@ rede e a duração da janela de entrada.
 
 Nenhuma configuração se distinguiu do acaso: todos os intervalos de
 confiança incluem 0,5. A rede mínima obteve os maiores valores nas duas
-durações de janela, e, na janela de 10~segundos, o desempenho caiu à medida
-que a capacidade aumentou (0,554, 0,491 e 0,485). A diferença entre a rede
+durações de janela. Com a janela de 10~segundos, o desempenho caiu à medida
+que a capacidade aumentou (0,554, 0,491 e 0,485), e com a de 2~minutos a
+rede simples ficou abaixo da mínima (0,486 contra 0,523). A diferença entre a rede
 mínima e a média, no entanto, é menor que a largura de qualquer um dos
 intervalos e não permite afirmar uma relação entre capacidade e desempenho.
 O mesmo vale para a duração da janela: a rede mínima obteve 0,523 com
@@ -2361,7 +2363,7 @@ reconhecível no sinal e justifica a restrição adotada na
 \subsection{Síntese}
 \label{subsec:res-redes-sintese}
 
-Em 17 configurações avaliadas no protocolo principal, nenhuma rede treinada
+Em 18 configurações avaliadas no protocolo principal, nenhuma rede treinada
 sobre o sinal do Holter discriminou casos e controles de forma distinguível
 do acaso. Os valores de \gls{AUC} fora da partição ficaram entre 0,48 e
 0,56, sem relação com a capacidade da rede, com a duração da janela ou com a
