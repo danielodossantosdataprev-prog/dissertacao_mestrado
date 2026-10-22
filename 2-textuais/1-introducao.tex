@@ -53,7 +53,10 @@
 % tamanho da amostra e ao desbalanceamento entre as classes: com apenas 55
 % eventos, modelos com milhões de parâmetros não encontram exemplos
 % suficientes para aprender padrões que generalizem, enquanto modelos com
-% poucas variáveis bem definidas se ajustam com menor variância.
+% poucas variáveis bem definidas se ajustam com menor variância. Quando a
+rede foi orientada por atributos clínicos, sua representação do sinal
+alcançou \gls{AUC} de 0,682, equivalente às variáveis clínicas, mas não
+acrescentou informação aos exames já medidos.
 
 % Mais do que propor um classificador, o trabalho contribui com uma avaliação
 % controlada dos limites dessas abordagens em uma coorte real e pequena. O
@@ -196,13 +199,17 @@ A comparação foi conduzida em validação cruzada estratificada por paciente,
 com a \gls{AUC} como métrica principal e intervalos de confiança estimados
 por \textit{bootstrap}. Entre as redes avaliadas estão uma rede convolucional
 simples, redes residuais de profundidades crescentes, uma rede residual
-seguida de um codificador \textit{Transformer}, uma rede convolucional com
-camada recorrente (\textit{Long Short-Term Memory}) e um codificador
-pré-treinado em outra base de Holter.
+seguida de um codificador \textit{Transformer} e redes de fusão com as
+variáveis clínicas, além de uma rede convolucional com camada recorrente
+(\textit{Long Short-Term Memory}) aplicada ao \gls{ECG} de repouso. Por fim,
+avaliou-se uma estratégia em que a rede aprende primeiro a prever atributos
+clínicos disponíveis para todos os pacientes --- medidas do ecocardiograma,
+do \gls{ECG} e do laboratório --- e sua representação é depois usada na
+predição da morte súbita.
 
 O resultado central é que a complexidade do modelo não se converteu em
-desempenho. Nenhuma das redes alimentadas com o sinal bruto se distinguiu do
-acaso, com \gls{AUC} entre 0,49 e 0,54. Os modelos mais simples alcançaram os
+desempenho. Nenhuma das redes treinadas diretamente para o desfecho se distinguiu do
+acaso, com \gls{AUC} entre 0,48 e 0,56. Os modelos mais simples alcançaram os
 melhores valores: as seis variáveis clínicas, em regressão logística,
 atingiram \gls{AUC} de 0,661 [0,577--0,741], e os marcadores extraídos do
 \gls{ECG}, isoladamente, valores entre 0,58 e 0,65. Acrescentar os
