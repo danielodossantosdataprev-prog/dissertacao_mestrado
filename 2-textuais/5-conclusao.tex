@@ -25,7 +25,9 @@ Sobre os 517 pacientes da coorte MUSIC, com 55 casos, foram comparadas três
 abordagens no mesmo protocolo de validação cruzada por paciente: redes
 neurais treinadas diretamente sobre o sinal das três derivações, modelos
 sobre marcadores eletrocardiográficos extraídos do Holter e modelos sobre
-variáveis clínicas.
+variáveis clínicas. Por fim, avaliou-se uma quarta via, em que a rede aprende
+primeiro a prever atributos clínicos disponíveis para todos os pacientes e
+sua representação é depois usada na predição da morte súbita.
 
 \section{Conclusões}
 \label{sec:conc-conclusoes}
@@ -59,6 +61,19 @@ forma direta: com o extrator de sinal congelado, ela obteve o mesmo
 desempenho que com o extrator treinado com taxa reduzida, e o desempenho
 caiu quando o extrator foi treinado livremente.
 
+A estratégia de rótulos substitutos mudou o resultado para o sinal. Treinada
+para prever 45 atributos do ecocardiograma, do \gls{ECG} de repouso, do
+Holter e do laboratório, uma ResNet-18 produziu uma representação que, sem
+nenhuma variável clínica, alcançou \gls{AUC} de 0,682, equivalente à das
+variáveis clínicas, contra 0,508 da rede treinada diretamente para o
+desfecho. Essa representação, contudo, não acrescentou informação aos exames
+medidos (diferença de $-0{,}005$), e os atributos de maior valor
+prognóstico --- tamanho do átrio esquerdo, Pro-BNP e \gls{FEVE} --- foram os
+que a rede aprendeu pior. Sem nenhum rótulo, o aprendizado autossupervisionado
+encontrou apenas padrões fracos (\gls{AUC} de 0,590 no método contrastivo).
+O melhor modelo do trabalho combinou as variáveis clínicas com os exames do
+estudo, em especial o ecocardiograma (\gls{AUC} de 0,733).
+
 Dois resultados complementares ajudam a interpretar o quadro. Quando a
 restrição ao ritmo sinusal foi removida, a mesma rede residual passou a
 discriminar acima do acaso, o que mostra que o pipeline aprende quando há
@@ -70,7 +85,10 @@ obtidos aqui.
 
 A conclusão central é, portanto, que, com 33 casos de treinamento por
 partição, não foi possível aprender do sinal do Holter um padrão preditivo
-de morte súbita nesta população, e que as estimativas otimistas descritas
+de morte súbita quando a rede foi treinada diretamente para o desfecho; que o
+sinal contém informação prognóstica comparável à das variáveis clínicas,
+acessível quando o aprendizado é orientado por atributos clínicos, mas que
+essa informação coincide com a dos exames já disponíveis; e que as estimativas otimistas descritas
 na literatura e observadas em etapas iniciais deste trabalho decorrem, em
 boa parte, de escolhas de avaliação: seleção de variáveis sobre a coorte
 inteira, divisões únicas com poucos casos no teste, tratamento de segmentos
@@ -91,6 +109,9 @@ aninhada, e as redes residuais foram treinadas com uma configuração
 anterior à das redes convolucionais. Por fim, o desfecho foi tratado como
 classificação binária em quatro anos, o que descarta a informação sobre o
 tempo até o evento e exclui os pacientes vivos com seguimento mais curto.
+A rede multitarefa foi treinada com uma única semente, e os pacientes de
+treinamento da segunda etapa foram vistos pela rede na primeira, ainda que
+sem o rótulo de morte súbita.
 
 \section{Trabalhos futuros}
 \label{sec:conc-futuros}
@@ -105,10 +126,10 @@ eventos é contornado, e não apenas enfrentado com arquiteturas maiores:
           a coorte MUSIC apenas um classificador pequeno, como em
           \citeonline{kim2025deep}.
 
-    \item \textbf{Rótulo substituto na própria coorte.} Usar a fração de
-          ejeção, disponível para todos os pacientes, como alvo de um primeiro
-          estágio de regressão, e empregar a representação aprendida na predição
-          de morte súbita.
+    \item \textbf{Foco nos atributos prognósticos.} Na rede multitarefa,
+          dar maior peso ao tamanho do átrio esquerdo, ao Pro-BNP e à
+          \gls{FEVE}, e usar janelas mais longas ou batimentos médios, que
+          preservam melhor a onda P, ligada ao aumento do átrio esquerdo.
 
     \item \textbf{Marcadores da repolarização.} Incluir os marcadores que
           \citeonline{ramirez2017sudden} identificaram como os mais informativos
@@ -118,10 +139,6 @@ eventos é contornado, e não apenas enfrentado com arquiteturas maiores:
     \item \textbf{Análise de sobrevivência.} Modelar o tempo até o evento,
           com riscos competitivos entre morte súbita e morte por falência de bomba,
           o que aproveita todos os pacientes e todo o seguimento.
-
-    \item \textbf{Controle positivo.} Treinar as mesmas redes em uma tarefa
-          sabidamente aprendível a partir do sinal, como a predição do sexo, para
-          confirmar que o pipeline extrai informação quando ela existe.
 
     \item \textbf{Validação externa.} Avaliar os modelos em outra coorte de
           pacientes com insuficiência cardíaca e Holter de 24~horas, condição

@@ -724,6 +724,166 @@ Holter, em ritmo sinusal, que antecipe a morte súbita nesta coorte.
 %    isso impõe à comparação.
 % ==============================================================================
 
+\section{Representações aprendidas com rótulos substitutos}
+\label{sec:res-substitutos}
+
+Esta seção apresenta os modelos descritos na \autoref{sec:met-substitutos},
+avaliados nas mesmas cinco partições. A \autoref{fig:res-substitutos} reúne
+as \gls{AUC} fora da partição dos principais modelos, e a
+\autoref{tab:res-substitutos}, as métricas dependentes de limiar.
+
+\begin{figure}[h!]
+	\captionsetup{width=16cm}
+	\Caption{\label{fig:res-substitutos} \gls{AUC} fora da partição, com
+		intervalo de confiança de 95\,\%, dos modelos sobre o sinal sem rótulos
+		clínicos, orientados por conhecimento clínico, das variáveis do estudo
+		MUSIC e de suas combinações}
+	\UFCfig{}{
+		\includegraphics[width=15cm]{figuras/resultados_rotulos_substitutos.pdf}
+	}{
+		\Fonte{elaborado pelo autor (2026). Linha tracejada: acaso; linha
+			pontilhada: seis variáveis clínicas.}
+	}
+\end{figure}
+
+\subsection{Marcadores pré-especificados}
+\label{subsec:res-pre-especificados}
+
+Os dois marcadores pré-especificados --- variação da frequência cardíaca
+média ao longo do dia e carga de ectopia --- alcançaram, sozinhos, \gls{AUC}
+entre 0,635 e 0,660 conforme a derivação, próximas das seis variáveis
+clínicas. Com elas, a \gls{AUC} ficou entre 0,679 e 0,683 nas quatro versões
+(derivações X, Y e Z e a derivação de melhor qualidade), com ganho de 0,014 a
+0,017 sobre as variáveis clínicas, não significativo. Os casos apresentaram
+menor variação da frequência ao longo do dia (desvio-padrão de 7,0 contra
+8,5\,bpm) e maior carga de ectopia. Quando todos os marcadores foram usados com
+seleção L1, o desempenho caiu à medida que o número de colunas cresceu: de
+0,68 com 8 a 10 colunas para 0,57 com 138, efeito do sobreajuste com 33 casos
+de treinamento.
+
+\subsection{Rede multitarefa}
+\label{subsec:res-multitarefa}
+
+A rede aprendeu parte dos atributos a partir de janelas de 30~segundos. Nos
+pacientes de teste, distinguiu QRS acima de 120\,ms com \gls{AUC} de 0,92,
+\gls{TVNS} com 0,81, ondas Q com 0,78 e hipertrofia ventricular com 0,74, e
+explicou 59\,\% da variância da duração do QRS e 20\,\% da \gls{FEVE}. Não
+aprendeu a classe \gls{NYHA}, o tamanho do átrio esquerdo nem as medidas do
+ventrículo direito.
+
+Sem nenhuma variável clínica, a representação aprendida alcançou \gls{AUC} de
+0,682, equivalente à das seis variáveis clínicas
+(\autoref{tab:res-substitutos}). Uma ResNet-18 treinada diretamente
+para a morte súbita havia obtido 0,508
+(\autoref{sec:res-redes}). Com as variáveis clínicas, a representação
+chegou a 0,702, valor igual ao das variáveis clínicas acrescidas da
+\gls{FEVE} e do Pro-BNP medidos (0,705). Quando todos os exames medidos já
+estavam no modelo, a representação não acrescentou informação: diferença de
+$-0{,}005$ [$-0{,}042$; $+0{,}029$], $p = 0{,}75$. Os valores previstos dos
+atributos tiveram desempenho inferior ao da representação (0,646 com as
+variáveis clínicas).
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-substitutos} Desempenho dos modelos com
+		representações aprendidas e com os exames do estudo}
+	\IBGEtab{}{
+		\begin{tabular}{lccc}
+			\toprule
+			Modelo                                  & \gls{AUC} [\gls{IC} 95\,\%] & Sensib. & Especif. \\
+			\midrule \midrule
+			Seis variáveis clínicas                 & 0,661 [0,580--0,743] & 0,58 & 0,67 \\
+			\midrule
+			Rede multitarefa                        & 0,682 [0,600--0,763] & 0,51 & 0,80 \\
+			Rede multitarefa + clínicas             & 0,702 [0,621--0,780] & 0,55 & 0,74 \\
+			Valores previstos + clínicas            & 0,646 [0,557--0,726] & 0,49 & 0,72 \\
+			Contrastivo                             & 0,590 [0,501--0,677] & 0,64 & 0,45 \\
+			Contrastivo + clínicas                  & 0,634 [0,551--0,727] & 0,64 & 0,57 \\
+			\midrule
+			Clínicas + \gls{FEVE} + Pro-BNP         & 0,705 [0,617--0,780] & 0,64 & 0,68 \\
+			Clínicas + ecocardiograma               & 0,720 [0,640--0,789] & 0,65 & 0,64 \\
+			Clínicas + todos os exames              & 0,733 [0,656--0,804] & 0,71 & 0,64 \\
+			Clínicas + todos os exames + rede       & 0,728 [0,652--0,798] & 0,73 & 0,64 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). Limiar de Youden escolhido por
+			validação cruzada interna ao treinamento de cada partição.
+			Prevalência de morte súbita: 10,6\,\%.}
+	}
+\end{table}
+
+\subsection{Aprendizado autossupervisionado}
+\label{subsec:res-autossupervisionado}
+
+Sem rótulos, os padrões encontrados foram fracos. O método contrastivo
+aprendeu a reconhecer janelas do mesmo paciente, com queda contínua da perda
+de validação, e superou o extrator aleatório (0,590 contra 0,529), mas ficou
+abaixo da rede multitarefa. No autoencoder e no método mascarado, a perda de
+reconstrução permaneceu praticamente constante desde a primeira época, e o
+desempenho (0,494 e 0,555) ficou no nível do extrator aleatório. Com as
+variáveis clínicas, nenhum dos três diferiu delas.
+
+\subsection{Variáveis do estudo e atributos aprendidos}
+\label{subsec:res-variaveis}
+
+Entre os exames do estudo, o ecocardiograma foi o grupo mais informativo:
+sozinho, alcançou \gls{AUC} de 0,714 e, somado às variáveis clínicas, 0,720
+(diferença de $+0{,}058$, $p = 0{,}072$). O Pro-BNP acrescentou $+0{,}047$
+($p = 0{,}054$), enquanto o \gls{ECG} de repouso ($+0{,}022$) e os resumos do
+Holter ($+0{,}012$) pouco acrescentaram. O conjunto de todos os exames,
+sem as variáveis clínicas, alcançou 0,738.
+
+A \autoref{tab:res-variaveis} compara, para cada atributo, sua capacidade de
+discriminar a morte súbita e o quanto a rede o aprendeu. Os atributos mais
+associados ao desfecho --- tamanho do átrio esquerdo, Pro-BNP, \gls{FEVE} e
+diâmetros do ventrículo esquerdo --- foram os menos aprendidos; os mais bem
+aprendidos --- QRS largo, hipertrofia, ondas Q --- pouco discriminaram o
+desfecho. A ordenação é exploratória, por usar a coorte inteira.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-variaveis} Discriminação da morte súbita por
+		atributo isolado e aprendizado do atributo pela rede multitarefa}
+	\IBGEtab{}{
+		\begin{tabular}{llcc}
+			\toprule
+			Atributo                                & Exame          & \gls{AUC} para \gls{MSC} & Aprendido pela rede \\
+			\midrule \midrule
+			Tamanho do átrio esquerdo               & ecocardiograma & 0,701 & $R^2 = 0{,}02$ \\
+			Pro-BNP                                 & laboratório    & 0,682 & $R^2 = 0{,}11$ \\
+			\gls{FEVE}                              & ecocardiograma & 0,650 & $R^2 = 0{,}20$ \\
+			Dupletes ventriculares                  & Holter         & 0,639 & $R^2 = 0{,}28$ \\
+			Diâmetro sistólico do VE                & ecocardiograma & 0,631 & $R^2 = 0{,}19$ \\
+			Diâmetro diastólico do VE               & ecocardiograma & 0,629 & $R^2 = 0{,}17$ \\
+			Extrassístoles ventriculares em 24\,h   & Holter         & 0,620 & $R^2 = 0{,}27$ \\
+			\midrule
+			Ondas Q                                 & \gls{ECG}      & 0,567 & \gls{AUC} = 0,78 \\
+			\gls{TVNS}                              & Holter         & 0,550 & \gls{AUC} = 0,81 \\
+			Hipertrofia ventricular esquerda        & \gls{ECG}      & 0,517 & \gls{AUC} = 0,74 \\
+			QRS acima de 120\,ms                    & \gls{ECG}      & 0,495 & \gls{AUC} = 0,92 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} de regressão logística com
+			o atributo isolado, fora da partição; aprendizado medido nos pacientes
+			de teste. VE: ventrículo esquerdo.}
+	}
+\end{table}
+
+\subsection{Síntese}
+\label{subsec:res-substitutos-sintese}
+
+Treinada para prever atributos clínicos em vez do desfecho, a rede extraiu
+do Holter uma representação com o mesmo poder discriminativo das variáveis
+clínicas, sem usar nenhuma delas. Essa representação, porém, corresponde em
+grande parte à informação já medida pelos exames: não acrescentou valor
+quando eles estavam disponíveis, e os atributos com maior valor prognóstico,
+de natureza estrutural, foram justamente os que a rede aprendeu pior. Sem
+nenhum rótulo, o aprendizado autossupervisionado não encontrou padrões
+comparáveis.
+
+
 \section{Eletrocardiograma de repouso de alta resolução}
 \label{sec:resultados-cnnlstm-repouso}
 

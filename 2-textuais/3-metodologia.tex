@@ -1030,3 +1030,77 @@ resumos por paciente, os três conjuntos de variáveis A, B e C da
 resulta em doze configurações. Como a melhor delas é escolhida após a
 observação dos resultados, todas as doze são reportadas.
 
+
+
+\section{Representações aprendidas com rótulos substitutos}
+\label{sec:met-substitutos}
+
+Os experimentos das seções anteriores treinaram as redes diretamente para a
+morte súbita, com apenas 33 casos por partição. Esta seção descreve uma
+estratégia alternativa: aprender primeiro uma representação do sinal a
+partir de rótulos disponíveis para todos os pacientes e, depois, usar essa
+representação em um modelo pequeno ajustado ao desfecho. Todos os modelos
+desta seção usam as mesmas cinco partições estratificadas, e nenhuma etapa
+utiliza os pacientes de teste da rodada.
+
+\subsection{Marcadores pré-especificados nas três derivações}
+\label{subsec:met-pre-especificados}
+
+Os marcadores do protocolo B foram recalculados em cada uma das três
+derivações. Em cada segmento, os marcadores de uma derivação foram descartados
+quando menos de 80\,\% de seus intervalos RR foram classificados como
+\gls{NN}, e os marcadores de ritmo foram tomados também da derivação com a
+maior fração de intervalos \gls{NN}. Para evitar a seleção de variáveis sobre
+os dados, definiu-se, com base na literatura, um modelo com dois marcadores:
+o desvio-padrão da frequência cardíaca média entre os segmentos, que mede sua
+variação ao longo do dia, e a carga de ectopia. O modelo foi ajustado por
+regressão logística com penalização L2, sem seleção, sozinho e com as
+variáveis clínicas.
+
+\subsection{Rede multitarefa}
+\label{subsec:met-multitarefa}
+
+Uma ResNet-18 unidimensional com cerca de 2,3 milhões de parâmetros foi
+treinada em regime multitarefa \cite{caruana1997multitask} para prever, a partir de janelas de 30~segundos, 45 atributos dos
+pacientes: medidas do ecocardiograma (\gls{FEVE}, diâmetros e espessuras do
+ventrículo esquerdo, átrio esquerdo, ventrículo direito), do
+\gls{ECG} de repouso (intervalos PR, QRS e QT, ondas Q, hipertrofia),
+resumos do Holter calculados no estudo original (extrassístoles, \gls{TVNS},
+\gls{SDNN}), o Pro-BNP, a classe \gls{NYHA}, a idade, o sexo e doze
+marcadores extraídos neste trabalho. Variáveis de desfecho e de seguimento
+foram excluídas. Os atributos contínuos foram padronizados com o treinamento
+de cada partição e ajustados por erro quadrático; os binários, por entropia
+cruzada; valores ausentes foram ignorados na perda.
+
+Como esses atributos não dependem do desfecho, o treinamento da rede incluiu,
+além dos pacientes de treinamento da coorte, 381 pacientes do MUSIC fora da
+coorte do estudo, com fibrilação atrial, outras causas de morte ou
+seguimento incompleto, totalizando cerca de 780 pacientes por rodada. Cada
+paciente foi representado por 100 janelas em grade uniforme ao longo do
+registro, descartada 1~hora em cada extremidade. O treinamento usou AdamW
+com taxa de aprendizado de $3 \times 10^{-4}$, até 40 épocas e parada
+antecipada pela perda em 15\,\% dos pacientes reservados para validação.
+
+Na segunda etapa, a representação de cada paciente --- a média, sobre suas
+100 janelas, dos 128 valores da penúltima camada --- foi reduzida a oito
+componentes principais e usada em uma regressão logística com penalização L2,
+sozinha e com as variáveis clínicas. A análise de componentes principais e o
+modelo foram ajustados apenas com os pacientes de treinamento da rodada. O
+limiar de decisão foi escolhido pelo índice de Youden em validação cruzada
+interna ao treinamento. Para verificar se a rede acrescenta informação aos
+exames já disponíveis, os mesmos modelos foram ajustados com os valores
+medidos dos atributos, sem a rede, e as diferenças de \gls{AUC} foram
+estimadas por \textit{bootstrap} pareado (\autoref{eq:delta-auc}).
+
+\subsection{Aprendizado autossupervisionado}
+\label{subsec:met-autossupervisionado}
+
+Para avaliar se a rede encontra padrões úteis sem nenhum rótulo, o mesmo
+extrator foi treinado em três tarefas geradas pelo próprio sinal:
+\textit{contrastiva}, em que duas janelas do mesmo paciente, em horários
+diferentes, devem ter representações próximas e as de pacientes diferentes,
+distantes \cite{chen2020simple, kiyasseh2021clocs}; \textit{autoencoder}, em que a janela é
+comprimida em 128 valores e reconstruída; e \textit{mascarada}, em que
+25\,\% do sinal é apagado em trechos de 0,5~s e reconstruído. Como controle,
+usou-se o mesmo extrator com pesos aleatórios, sem treinamento. A segunda
+etapa foi idêntica à da rede multitarefa.
