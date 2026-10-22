@@ -1277,6 +1277,60 @@ resumo pode descrever o nível típico de cada marcador, por exemplo pela
 mediana, e também sua variação ao longo do registro, que reflete a
 modulação circadiana e a instabilidade do controle autonômico.
 
+A \autoref{tab:fund-biomarcadores} reúne os marcadores extraídos neste
+trabalho, com sua definição, unidade e significado fisiológico. Cada um é
+calculado em cada segmento e depois resumido por paciente de duas formas: a
+média entre os segmentos, que representa o nível típico do marcador, e o
+desvio-padrão entre os segmentos, que representa quanto ele varia ao longo
+do dia. Assim, o desvio-padrão da frequência cardíaca média, por exemplo, não
+mede a variação batimento a batimento, mas a diferença de frequência entre os
+períodos do registro, incluindo o ciclo dia--noite.
+
+\begin{table}[h!]
+	\captionsetup{width=16cm}
+	\Caption{\label{tab:fund-biomarcadores} Marcadores eletrocardiográficos
+		extraídos: definição e significado}
+	\IBGEtab{}{
+		\footnotesize
+		\begin{tabular}{p{3.3cm}p{5.6cm}p{1.1cm}p{5.2cm}}
+			\toprule
+			Marcador & Definição & Unidade & Significado \\
+			\midrule \midrule
+			\multicolumn{4}{l}{\textit{Ritmo e variabilidade (sobre intervalos NN)}} \\
+			Frequência cardíaca média & 60\,000 dividido pela média dos intervalos NN & bpm & Nível de ativação do ritmo \\
+			Intervalo RR médio & Média dos intervalos NN & ms & Inverso da frequência \\
+			\gls{SDNN} & Desvio-padrão dos intervalos NN (\autoref{eq:sdnn}) & ms & Variabilidade total do segmento \\
+			\gls{RMSSD} & Raiz da média dos quadrados das diferenças sucessivas (\autoref{eq:rmssd}) & ms & Variação batimento a batimento; tônus vagal \\
+			\gls{pNN50} & Porcentagem de diferenças sucessivas maiores que 50\,ms & \% & Tônus vagal \\
+			SD1 e SD2 & Dispersões do gráfico de Poincaré (\autoref{eq:poincare}) & ms & Variabilidade de curto e de longo prazo \\
+			SD1/SD2 & Razão entre as duas dispersões & --- & Forma da nuvem de Poincaré \\
+			\gls{VLF}, \gls{LF}, \gls{HF}, LF/HF & Potência espectral por faixa (só em 5~minutos) & ms$^2$ & Modulação autonômica por mecanismo \\
+			Entropia amostral & Regularidade da sequência de intervalos (só em 5~minutos) & --- & Complexidade do ritmo \\
+			\midrule
+			\multicolumn{4}{l}{\textit{Ectopia e pausas (pelo ritmo, sem distinguir a origem)}} \\
+			Batimentos precoces & Intervalos RR menores que 80\,\% da mediana local & contagem & Batimentos fora do ritmo sinusal \\
+			Extrassístoles & Precoce seguido de intervalo maior que 115\,\% da mediana local & contagem & Batimento ectópico com pausa compensatória \\
+			Dupletes & Dois intervalos precoces consecutivos & contagem & Ectopia repetitiva; instabilidade elétrica \\
+			Carga de ectopia & Porcentagem de intervalos precoces & \% & Frequência global de ectopia \\
+			Intervalos irregulares & Porcentagem de intervalos plausíveis que não são NN & \% & Irregularidade do ritmo \\
+			Maior pausa & Maior intervalo RR plausível do segmento & ms & Pausas e bradiarritmias \\
+			Pausas acima de 2\,s & Intervalos RR maiores que 2\,000\,ms & contagem & Pausas prolongadas \\
+			\midrule
+			\multicolumn{4}{l}{\textit{Morfologia (mediana dos batimentos delineados)}} \\
+			Duração do QRS & Do início ao fim do complexo QRS & ms & Condução ventricular; bloqueios de ramo \\
+			Intervalo \gls{QT} & Do início do QRS ao fim da onda T & ms & Despolarização e repolarização ventriculares \\
+			\gls{QTc} & QT corrigido pela frequência (\autoref{eq:bazett}) & ms & Repolarização prolongada; risco arrítmico \\
+			Ondas P e T identificadas & Fração dos batimentos com cada onda delineada & --- & Qualidade do sinal e da delineação \\
+			Amplitude & Percentil 99 do valor absoluto do sinal filtrado, por derivação & mV & Massa ventricular ativa e geometria \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026), com base em
+			\citeonline{taskforce1996heart}.}
+	}
+\end{table}
+
+
 
 
 % ==============================================================================
@@ -1299,6 +1353,98 @@ modulação circadiana e a instabilidade do controle autonômico.
 % Siglas já definidas: AUC, AP, VPP, MSC, ECG.
 % Siglas novas usadas por extenso: VPN, ROC (acrescentar \newacronym se preferir).
 % ==============================================================================
+
+\section{Modelos tabulares e aprendizado de representações}
+\label{sec:fund-tabulares}
+
+Os marcadores e as variáveis clínicas formam uma tabela, com uma linha por
+paciente e uma coluna por variável. Esta seção descreve os modelos ajustados
+sobre essas tabelas e duas formas de obter, a partir do sinal, colunas
+adicionais aprendidas por uma rede neural.
+
+\subsection{Regressão logística regularizada}
+\label{subsec:fund-logistica}
+
+A regressão logística estima a probabilidade de evento de um paciente com
+variáveis $\mathbf{x}$ como
+
+\begin{equation}
+	p(\mathbf{x}) = \sigma\!\left(\beta_0 + \boldsymbol{\beta}^{\top}\mathbf{x}\right),
+	\label{eq:reg-logistica}
+\end{equation}
+
+\noindent
+em que $\sigma$ é a função logística (\autoref{eq:logistica}). Com as
+variáveis padronizadas, $e^{\beta_j}$ é a razão de chances associada ao
+aumento de um desvio-padrão na variável $j$. Os coeficientes são obtidos
+minimizando a entropia cruzada acrescida de uma penalização: a penalização
+L2, $\lambda \lVert \boldsymbol{\beta} \rVert_2^2$, encolhe todos os
+coeficientes sem anulá-los; a penalização L1,
+$\lambda \lVert \boldsymbol{\beta} \rVert_1$, anula parte deles e realiza,
+portanto, seleção de variáveis. Com poucos eventos, a penalização reduz o
+sobreajuste, mas não o elimina: a regra usual de dez eventos por variável
+\cite{peduzzi1996simulation} indica que, com 33 casos de treinamento, um
+modelo confiável comporta poucas variáveis, o que favorece conjuntos
+pequenos definidos antes de olhar os dados.
+
+\subsection{Análise de componentes principais}
+\label{subsec:fund-pca}
+
+Quando há muitas variáveis correlacionadas, a \gls{PCA} as substitui por
+poucas combinações lineares não correlacionadas, ordenadas pela variância
+que explicam. As direções são estimadas apenas com os pacientes de
+treinamento e aplicadas, sem alteração, aos de teste. Neste trabalho, a
+\gls{PCA} reduz os 128 valores da representação de uma rede a oito
+componentes antes da regressão logística.
+
+\subsection{Aprendizado multitarefa com rótulos substitutos}
+\label{subsec:fund-multitarefa}
+
+Quando o desfecho de interesse é raro, uma rede pode ser treinada em outras
+tarefas, com rótulos abundantes e relacionados ao problema, chamados rótulos
+substitutos. No aprendizado multitarefa \cite{caruana1997multitask}, um
+mesmo extrator $f_{\theta}$ alimenta $K$ saídas, uma por tarefa, e a perda
+total é a média das perdas individuais:
+
+\begin{equation}
+	\mathcal{L} = \frac{1}{\sum_k w_k m_k} \sum_{k=1}^{K} w_k\, m_k\, \ell_k\!\left(\hat{y}_k, y_k\right),
+	\label{eq:multitarefa}
+\end{equation}
+
+\noindent
+em que $\ell_k$ é o erro quadrático para tarefas contínuas ou a entropia
+cruzada para tarefas binárias, $w_k$ é o peso da tarefa e $m_k$ vale zero
+quando o rótulo está ausente. Para prever bem todas as tarefas, o extrator
+precisa produzir uma \textit{representação}
+$\mathbf{z} = f_{\theta}(\mathbf{s})$ --- o vetor da penúltima camada --- que
+resuma o que há de comum entre elas. Essa representação é depois usada como
+variável de um modelo pequeno, ajustado ao desfecho raro.
+
+\subsection{Aprendizado autossupervisionado}
+\label{subsec:fund-autossupervisionado}
+
+No aprendizado autossupervisionado, os rótulos são gerados a partir do
+próprio sinal, sem nenhuma anotação externa. No aprendizado contrastivo
+\cite{chen2020simple}, duas visões de um mesmo objeto formam um par positivo,
+e as demais visões do lote, pares negativos. Para \gls{ECG},
+\citeonline{kiyasseh2021clocs} propuseram usar como par positivo dois
+trechos do mesmo paciente. Com representações normalizadas
+$\mathbf{u}_i$ e $\mathbf{u}_j$ de um par positivo, a perda é
+
+\begin{equation}
+	\ell_{ij} = -\log \frac{\exp(\mathbf{u}_i^{\top}\mathbf{u}_j/\tau)}
+	{\sum_{k \neq i} \exp(\mathbf{u}_i^{\top}\mathbf{u}_k/\tau)},
+	\label{eq:nt-xent}
+\end{equation}
+
+\noindent
+em que $\tau$ é a temperatura. Alternativamente, um \textit{autoencoder}
+comprime o sinal em uma representação de dimensão reduzida e o reconstrói,
+minimizando o erro quadrático; na variante mascarada, parte do sinal é
+apagada e a rede precisa reconstruí-la a partir do contexto. Em todos os
+casos, nada garante que os padrões aprendidos tenham relação com o desfecho:
+a rede tende a capturar as fontes de variação mais fortes do sinal, que
+podem ser alheias ao risco.
 
 \section{Avaliação de classificadores binários}
 \label{sec:fund-metricas}
