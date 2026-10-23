@@ -1,0 +1,1862 @@
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 02:07:03
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+
+ERRO FATAL:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1378662/325111846.py", line 392, in <module>
+    proc = PassandoDadosClassificacao(**config)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 301, in __init__
+    self._load_clinical_data()
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 348, in _load_clinical_data
+    mapa.update({
+NameError: name 'mapa' is not defined. Did you mean: 'map'?
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 02:17:39
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 02:19:27
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+Patch AMP aplicado.
+GPUs visiveis: 1
+   GPU 0: NVIDIA A100-SXM4-40GB
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Inicio: 04/10/2026 02:21:05
+======================================================================Inicio: 04/10/2026 02:21:05
+======================================================================
+
+
+======================================================================
+======================================================================
+
+so_clinicas — validacao cruzada 5-foldso_clinicas — validacao cruzada 5-fold
+
+============================================================================================================================================
+
+{{'batch_size''batch_size': : 256256,
+ ,
+ 'data_folder_path''data_folder_path': : '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ ,
+ 'dropout_rate''dropout_rate': : 0.60.6,
+ ,
+ 'learning_rate''learning_rate': : 0.00010.0001,
+ ,
+ 'n_folds''n_folds': : 55,
+ ,
+ 'nome_do_ensaio''nome_do_ensaio': : 'so_clinicas''so_clinicas',
+ ,
+ 'nome_do_experiment''nome_do_experiment': : 'Resnet_Classificacao''Resnet_Classificacao',
+ ,
+ 'num_epochs''num_epochs': : 2020,
+ ,
+ 'num_workers''num_workers': : 88,
+ ,
+ 'patience_early_stop''patience_early_stop': : 1010,
+ ,
+ 'pooling''pooling': : 'both''both',
+ ,
+ 'rede_pequena''rede_pequena': : FalseFalse,
+ ,
+ 'samples_patient_eval''samples_patient_eval': : 100100,
+ ,
+ 'samples_patient_train''samples_patient_train': : 250250,
+ ,
+ 'weight_decay''weight_decay': : 0.010.01,
+ ,
+ 'window_size''window_size': : 2400024000}}
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+  Casos + controles..................: 782  Casos + controles..................: 782
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+  Casos + controles..................: 782  Casos + controles..................: 782
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+  5-fold estratificado sobre 703 pacientes (85 casos)
+
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+
+
+======================================================================
+======================================================================
+
+FOLD 0FOLD 0
+
+============================================================================================================================================
+
+  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)
+
+  pos_weight: 7.25  pos_weight: 7.25
+
+
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+
+  - idade: mu=63.25, sigma=11.46  - idade: mu=63.25, sigma=11.46
+
+  - paroxysmal: mu=2.56, sigma=3.79  - paroxysmal: mu=2.56, sigma=3.79
+
+  - nyha: mu=2.19, sigma=0.39  - nyha: mu=2.19, sigma=0.39
+
+
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+
+   Escala X: 1.3683 mV   Escala X: 1.3683 mV
+
+   Escala Y: 1.2713 mV   Escala Y: 1.2713 mV
+
+   Escala Z: 2.5381 mV   Escala Z: 2.5381 mV
+
+{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 02:21:26
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)
+  pos_weight: 7.25
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=63.25, sigma=11.46
+  - paroxysmal: mu=2.56, sigma=3.79
+  - nyha: mu=2.19, sigma=0.39
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3683 mV
+   Escala Y: 1.2713 mV
+   Escala Z: 2.5381 mV
+{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}
+Patch AMP aplicado.
+GPUs visiveis: 1
+   GPU 0: NVIDIA A100-SXM4-40GB
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Inicio: 04/10/2026 02:21:51
+======================================================================Inicio: 04/10/2026 02:21:51
+======================================================================
+
+
+======================================================================
+======================================================================
+
+so_clinicas — validacao cruzada 5-foldso_clinicas — validacao cruzada 5-fold
+
+============================================================================================================================================
+
+{{'batch_size''batch_size': : 256256,
+ ,
+ 'data_folder_path''data_folder_path': : '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ ,
+ 'dropout_rate''dropout_rate': : 0.60.6,
+ ,
+ 'learning_rate''learning_rate': : 0.00010.0001,
+ ,
+ 'n_folds''n_folds': : 55,
+ ,
+ 'nome_do_ensaio''nome_do_ensaio': : 'so_clinicas''so_clinicas',
+ ,
+ 'nome_do_experiment''nome_do_experiment': : 'Resnet_Classificacao''Resnet_Classificacao',
+ ,
+ 'num_epochs''num_epochs': : 2020,
+ ,
+ 'num_workers''num_workers': : 88,
+ ,
+ 'patience_early_stop''patience_early_stop': : 1010,
+ ,
+ 'pooling''pooling': : 'both''both',
+ ,
+ 'rede_pequena''rede_pequena': : FalseFalse,
+ ,
+ 'samples_patient_eval''samples_patient_eval': : 100100,
+ ,
+ 'samples_patient_train''samples_patient_train': : 250250,
+ ,
+ 'weight_decay''weight_decay': : 0.010.01,
+ ,
+ 'window_size''window_size': : 2400024000}}
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+  Casos + controles..................: 782  Casos + controles..................: 782
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+  Casos + controles..................: 782  Casos + controles..................: 782
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+  5-fold estratificado sobre 703 pacientes (85 casos)
+
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+
+
+======================================================================
+======================================================================
+
+FOLD 0FOLD 0
+
+============================================================================================================================================
+
+  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)
+
+  pos_weight: 7.25  pos_weight: 7.25
+
+
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+
+  - idade: mu=63.25, sigma=11.46  - idade: mu=63.25, sigma=11.46
+
+  - paroxysmal: mu=2.56, sigma=3.79  - paroxysmal: mu=2.56, sigma=3.79
+
+  - nyha: mu=2.19, sigma=0.39  - nyha: mu=2.19, sigma=0.39
+
+
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+
+   Escala X: 1.3683 mV   Escala X: 1.3683 mV
+
+   Escala Y: 1.2713 mV   Escala Y: 1.2713 mV
+
+   Escala Z: 2.5381 mV   Escala Z: 2.5381 mV
+
+{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}
+
+generogenero  [0, 1][0, 1]
+
+nyhanyha  [2, 3][2, 3]
+
+q_wavesq_waves  [0, 1][0, 1]
+
+nsvtnsvt  [0.0, 1.0][0.0, 1.0]
+
+paroxysmalparoxysmal  [0.0, 1.0, 2.0, 3.0, 9.0][0.0, 1.0, 2.0, 3.0, 9.0]
+
+Patch AMP aplicado.Patch AMP aplicado.
+
+GPUs visiveis: 1GPUs visiveis: 1
+
+   GPU 0: NVIDIA A100-SXM4-40GB   GPU 0: NVIDIA A100-SXM4-40GB
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+
+Inicio: 04/10/2026 02:22:24
+======================================================================Inicio: 04/10/2026 02:22:24
+======================================================================Inicio: 04/10/2026 02:22:24
+======================================================================
+
+
+
+======================================================================
+======================================================================
+======================================================================
+
+
+so_clinicas — validacao cruzada 5-foldso_clinicas — validacao cruzada 5-foldso_clinicas — validacao cruzada 5-fold
+
+
+==================================================================================================================================================================================================================
+
+
+{{{'batch_size''batch_size''batch_size': : : 256256256,
+ ,
+ ,
+ 'data_folder_path''data_folder_path''data_folder_path': : : '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ ,
+ ,
+ 'dropout_rate''dropout_rate''dropout_rate': : : 0.60.60.6,
+ ,
+ ,
+ 'learning_rate''learning_rate''learning_rate': : : 0.00010.00010.0001,
+ ,
+ ,
+ 'n_folds''n_folds''n_folds': : : 555,
+ ,
+ ,
+ 'nome_do_ensaio''nome_do_ensaio''nome_do_ensaio': : : 'so_clinicas''so_clinicas''so_clinicas',
+ ,
+ ,
+ 'nome_do_experiment''nome_do_experiment''nome_do_experiment': : : 'Resnet_Classificacao''Resnet_Classificacao''Resnet_Classificacao',
+ ,
+ ,
+ 'num_epochs''num_epochs''num_epochs': : : 202020,
+ ,
+ ,
+ 'num_workers''num_workers''num_workers': : : 888,
+ ,
+ ,
+ 'patience_early_stop''patience_early_stop''patience_early_stop': : : 101010,
+ ,
+ ,
+ 'pooling''pooling''pooling': : : 'both''both''both',
+ ,
+ ,
+ 'rede_pequena''rede_pequena''rede_pequena': : : FalseFalseFalse,
+ ,
+ ,
+ 'samples_patient_eval''samples_patient_eval''samples_patient_eval': : : 100100100,
+ ,
+ ,
+ 'samples_patient_train''samples_patient_train''samples_patient_train': : : 250250250,
+ ,
+ ,
+ 'weight_decay''weight_decay''weight_decay': : : 0.010.010.01,
+ ,
+ ,
+ 'window_size''window_size''window_size': : : 240002400024000}}}
+
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+
+  Casos + controles..................: 782  Casos + controles..................: 782  Casos + controles..................: 782
+
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+
+  Casos + controles..................: 782  Casos + controles..................: 782  Casos + controles..................: 782
+
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+  5-fold estratificado sobre 703 pacientes (85 casos)
+  5-fold estratificado sobre 703 pacientes (85 casos)
+
+
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)    fold 0: treino 562 (68 casos) | teste 141 (17 casos)    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+
+
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)    fold 1: treino 562 (68 casos) | teste 141 (17 casos)    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+
+
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)    fold 2: treino 562 (68 casos) | teste 141 (17 casos)    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+
+
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)    fold 3: treino 563 (68 casos) | teste 140 (17 casos)    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+
+
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)    fold 4: treino 563 (68 casos) | teste 140 (17 casos)    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+
+
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+
+
+
+======================================================================
+======================================================================
+======================================================================
+
+
+FOLD 0FOLD 0FOLD 0
+
+
+==================================================================================================================================================================================================================
+
+
+  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)
+
+
+  pos_weight: 7.25  pos_weight: 7.25  pos_weight: 7.25
+
+
+
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+
+
+  - idade: mu=63.25, sigma=11.46  - idade: mu=63.25, sigma=11.46  - idade: mu=63.25, sigma=11.46
+
+
+  - paroxysmal: mu=2.56, sigma=3.79  - paroxysmal: mu=2.56, sigma=3.79  - paroxysmal: mu=2.56, sigma=3.79
+
+
+  - nyha: mu=2.19, sigma=0.39  - nyha: mu=2.19, sigma=0.39  - nyha: mu=2.19, sigma=0.39
+
+
+
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+
+
+   Escala X: 1.3683 mV   Escala X: 1.3683 mV   Escala X: 1.3683 mV
+
+
+   Escala Y: 1.2713 mV   Escala Y: 1.2713 mV   Escala Y: 1.2713 mV
+
+
+   Escala Z: 2.5381 mV   Escala Z: 2.5381 mV   Escala Z: 2.5381 mV
+
+
+{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}
+
+
+generogenerogenero   [0, 1][0, 1][0, 1]
+
+
+nyhanyhanyha   [2, 3][2, 3][2, 3]
+
+
+q_wavesq_wavesq_waves   [0, 1][0, 1][0, 1]
+
+
+nsvtnsvtnsvt   [0.0, 1.0][0.0, 1.0][0.0, 1.0]
+
+
+paroxysmalparoxysmalparoxysmal   [0.0, 1.0, 2.0, 3.0, 9.0][0.0, 1.0, 2.0, 3.0, 9.0][0.0, 1.0, 2.0, 3.0, 9.0]
+
+
+269,569 parâmetros | 4 sub-janelas269,569 parâmetros | 4 sub-janelas269,569 parâmetros | 4 sub-janelas
+
+
+saída:saída:saída:   torch.Size([2])torch.Size([2])torch.Size([2])
+
+
+Patch AMP aplicado.Patch AMP aplicado.Patch AMP aplicado.
+
+
+GPUs visiveis: 1GPUs visiveis: 1GPUs visiveis: 1
+
+
+   GPU 0: NVIDIA A100-SXM4-40GB   GPU 0: NVIDIA A100-SXM4-40GB   GPU 0: NVIDIA A100-SXM4-40GB
+
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+
+
+
+Inicio: 04/10/2026 02:22:54
+======================================================================Inicio: 04/10/2026 02:22:54
+======================================================================Inicio: 04/10/2026 02:22:54
+======================================================================Inicio: 04/10/2026 02:22:54
+======================================================================
+
+
+
+
+======================================================================
+======================================================================
+======================================================================
+======================================================================
+
+
+
+so_clinicas — validacao cruzada 5-foldso_clinicas — validacao cruzada 5-foldso_clinicas — validacao cruzada 5-foldso_clinicas — validacao cruzada 5-fold
+
+
+
+========================================================================================================================================================================================================================================================================================
+
+
+
+{{{{'batch_size''batch_size''batch_size''batch_size': : : : 256256256256,
+ ,
+ ,
+ ,
+ 'data_folder_path''data_folder_path''data_folder_path''data_folder_path': : : : '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ ,
+ ,
+ ,
+ 'dropout_rate''dropout_rate''dropout_rate''dropout_rate': : : : 0.60.60.60.6,
+ ,
+ ,
+ ,
+ 'learning_rate''learning_rate''learning_rate''learning_rate': : : : 0.00010.00010.00010.0001,
+ ,
+ ,
+ ,
+ 'n_folds''n_folds''n_folds''n_folds': : : : 5555,
+ ,
+ ,
+ ,
+ 'nome_do_ensaio''nome_do_ensaio''nome_do_ensaio''nome_do_ensaio': : : : 'so_clinicas''so_clinicas''so_clinicas''so_clinicas',
+ ,
+ ,
+ ,
+ 'nome_do_experiment''nome_do_experiment''nome_do_experiment''nome_do_experiment': : : : 'Resnet_Classificacao''Resnet_Classificacao''Resnet_Classificacao''Resnet_Classificacao',
+ ,
+ ,
+ ,
+ 'num_epochs''num_epochs''num_epochs''num_epochs': : : : 20202020,
+ ,
+ ,
+ ,
+ 'num_workers''num_workers''num_workers''num_workers': : : : 8888,
+ ,
+ ,
+ ,
+ 'patience_early_stop''patience_early_stop''patience_early_stop''patience_early_stop': : : : 10101010,
+ ,
+ ,
+ ,
+ 'pooling''pooling''pooling''pooling': : : : 'both''both''both''both',
+ ,
+ ,
+ ,
+ 'rede_pequena''rede_pequena''rede_pequena''rede_pequena': : : : FalseFalseFalseFalse,
+ ,
+ ,
+ ,
+ 'samples_patient_eval''samples_patient_eval''samples_patient_eval''samples_patient_eval': : : : 100100100100,
+ ,
+ ,
+ ,
+ 'samples_patient_train''samples_patient_train''samples_patient_train''samples_patient_train': : : : 250250250250,
+ ,
+ ,
+ ,
+ 'weight_decay''weight_decay''weight_decay''weight_decay': : : : 0.010.010.010.01,
+ ,
+ ,
+ ,
+ 'window_size''window_size''window_size''window_size': : : : 24000240002400024000}}}}
+
+
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+
+
+  Casos + controles..................: 782  Casos + controles..................: 782  Casos + controles..................: 782  Casos + controles..................: 782
+
+
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+
+
+  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo  Sem filtro.........................: Sem filtro de ritmo
+
+
+
+  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None  Apos ritmo sinusal.................: None
+
+
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+
+
+    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61    - morte nao cardiaca (cod. 1)....: 61
+
+
+
+    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111    - falencia de bomba (cod. 6, 7)..: 111
+
+
+
+    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38    - vivos com < 4 anos.............: 38
+
+
+
+  Casos + controles..................: 782  Casos + controles..................: 782  Casos + controles..................: 782  Casos + controles..................: 782
+
+
+
+  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703  Com as 3 derivacoes................: 703
+
+
+
+    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85    - CASOS (MSC)....................: 85
+
+
+
+    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618    - CONTROLES (4 anos).............: 618
+
+
+
+  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%  Prevalencia........................: 12.1%
+
+
+
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+  5-fold estratificado sobre 703 pacientes (85 casos)
+  5-fold estratificado sobre 703 pacientes (85 casos)
+  5-fold estratificado sobre 703 pacientes (85 casos)
+
+
+
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)    fold 0: treino 562 (68 casos) | teste 141 (17 casos)    fold 0: treino 562 (68 casos) | teste 141 (17 casos)    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+
+
+
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)    fold 1: treino 562 (68 casos) | teste 141 (17 casos)    fold 1: treino 562 (68 casos) | teste 141 (17 casos)    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+
+
+
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)    fold 2: treino 562 (68 casos) | teste 141 (17 casos)    fold 2: treino 562 (68 casos) | teste 141 (17 casos)    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+
+
+
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)    fold 3: treino 563 (68 casos) | teste 140 (17 casos)    fold 3: treino 563 (68 casos) | teste 140 (17 casos)    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+
+
+
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)    fold 4: treino 563 (68 casos) | teste 140 (17 casos)    fold 4: treino 563 (68 casos) | teste 140 (17 casos)    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+
+
+
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+
+
+
+
+======================================================================
+======================================================================
+======================================================================
+======================================================================
+
+
+
+FOLD 0FOLD 0FOLD 0FOLD 0
+
+
+
+========================================================================================================================================================================================================================================================================================
+
+
+
+  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)
+
+
+
+  pos_weight: 7.25  pos_weight: 7.25  pos_weight: 7.25  pos_weight: 7.25
+
+
+
+
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+
+
+
+  - idade: mu=63.25, sigma=11.46  - idade: mu=63.25, sigma=11.46  - idade: mu=63.25, sigma=11.46  - idade: mu=63.25, sigma=11.46
+
+
+
+  - paroxysmal: mu=2.56, sigma=3.79  - paroxysmal: mu=2.56, sigma=3.79  - paroxysmal: mu=2.56, sigma=3.79  - paroxysmal: mu=2.56, sigma=3.79
+
+
+
+  - nyha: mu=2.19, sigma=0.39  - nyha: mu=2.19, sigma=0.39  - nyha: mu=2.19, sigma=0.39  - nyha: mu=2.19, sigma=0.39
+
+
+
+
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+
+
+
+   Escala X: 1.3683 mV   Escala X: 1.3683 mV   Escala X: 1.3683 mV   Escala X: 1.3683 mV
+
+
+
+   Escala Y: 1.2713 mV   Escala Y: 1.2713 mV   Escala Y: 1.2713 mV   Escala Y: 1.2713 mV
+
+
+
+   Escala Z: 2.5381 mV   Escala Z: 2.5381 mV   Escala Z: 2.5381 mV   Escala Z: 2.5381 mV
+
+
+
+{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}
+
+
+
+generogenerogenerogenero    [0, 1][0, 1][0, 1][0, 1]
+
+
+
+nyhanyhanyhanyha    [2, 3][2, 3][2, 3][2, 3]
+
+
+
+q_wavesq_wavesq_wavesq_waves    [0, 1][0, 1][0, 1][0, 1]
+
+
+
+nsvtnsvtnsvtnsvt    [0.0, 1.0][0.0, 1.0][0.0, 1.0][0.0, 1.0]
+
+
+
+paroxysmalparoxysmalparoxysmalparoxysmal    [0.0, 1.0, 2.0, 3.0, 9.0][0.0, 1.0, 2.0, 3.0, 9.0][0.0, 1.0, 2.0, 3.0, 9.0][0.0, 1.0, 2.0, 3.0, 9.0]
+
+
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 02:23:09
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Sem filtro.........................: Sem filtro de ritmo
+  Apos ritmo sinusal.................: None
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 61
+    - falencia de bomba (cod. 6, 7)..: 111
+    - vivos com < 4 anos.............: 38
+  Casos + controles..................: 782
+  Com as 3 derivacoes................: 703
+    - CASOS (MSC)....................: 85
+    - CONTROLES (4 anos).............: 618
+  Prevalencia........................: 12.1%
+
+  5-fold estratificado sobre 703 pacientes (85 casos)
+    fold 0: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 1: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 2: treino 562 (68 casos) | teste 141 (17 casos)
+    fold 3: treino 563 (68 casos) | teste 140 (17 casos)
+    fold 4: treino 563 (68 casos) | teste 140 (17 casos)
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0016   72.0       1     3        1   1.0         9.0       1
+3       P0018   57.0       1     2        1   0.0         0.0       1
+4       P0028   76.0       1     3        0   0.0         9.0       1
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 421 (51 casos) | Val 141 (17) | Teste 141 (17)
+  pos_weight: 7.25
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=63.25, sigma=11.46
+  - paroxysmal: mu=2.56, sigma=3.79
+  - nyha: mu=2.19, sigma=0.39
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3683 mV
+   Escala Y: 1.2713 mV
+   Escala Z: 2.5381 mV
+{'idade': {'mean': 63.2541567695962, 'std': 11.464832898669412}, 'paroxysmal': {'mean': 2.5558194774346794, 'std': 3.7928310328202692}, 'nyha': {'mean': 2.1852731591448933, 'std': 0.38898125057856225}}
+genero [0, 1]
+nyha [2, 3]
+q_waves [0, 1]
+nsvt [0.0, 1.0]
+paroxysmal [0.0, 1.0, 2.0, 3.0, 9.0]
+paroxysmal
+0.0    360
+1.0    162
+2.0      3
+3.0      1
+9.0    177
+Name: count, dtype: int64
+paroxysmal
+0.0    360
+1.0    162
+2.0      3
+3.0      1
+9.0    177
+Name: count, dtype: int64
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 02:33:48
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0018   57.0       1     2        1   0.0         0.0       1
+3       P0043   63.0       1     2        1   1.0         0.0       1
+4       P0051   52.0       1     3        0   0.0         0.0       1
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+{'idade': {'mean': 61.724919093851135, 'std': 11.165755004246757}, 'paroxysmal': {'mean': 0.3042071197411003, 'std': 0.4814902823807206}, 'nyha': {'mean': 2.145631067961165, 'std': 0.3533081228630313}}
+genero [0, 1]
+nyha [2, 3]
+q_waves [0, 1]
+nsvt [0.0, 1.0]
+paroxysmal [0.0, 1.0, 2.0]
+paroxysmal
+0.0    357
+1.0    157
+2.0      3
+Name: count, dtype: int64
+paroxysmal
+0.0    357
+1.0    157
+2.0      3
+Name: count, dtype: int64
+269,569 parâmetros | 4 sub-janelas
+saída: torch.Size([2])
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 03:04:14
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+  id_paciente  idade  genero  nyha  q_waves  nsvt  paroxysmal  target
+0       P0008   44.0       1     2        0   0.0         0.0       1
+1       P0012   70.0       1     3        1   0.0         1.0       1
+2       P0018   57.0       1     2        1   0.0         0.0       1
+3       P0043   63.0       1     2        1   1.0         0.0       1
+4       P0051   52.0       1     3        0   0.0         0.0       1
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+{'idade': {'mean': 61.724919093851135, 'std': 11.165755004246757}, 'paroxysmal': {'mean': 0.3042071197411003, 'std': 0.4814902823807206}, 'nyha': {'mean': 2.145631067961165, 'std': 0.3533081228630313}}
+genero [0, 1]
+nyha [2, 3]
+q_waves [0, 1]
+nsvt [0.0, 1.0]
+paroxysmal [0.0, 1.0, 2.0]
+paroxysmal
+0.0    357
+1.0    157
+2.0      3
+Name: count, dtype: int64
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_so_clinicas.log
+Inicio: 04/10/2026 03:06:39
+======================================================================
+
+======================================================================
+so_clinicas — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'so_clinicas',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 100,
+ 'samples_patient_train': 250,
+ 'weight_decay': 0.01,
+ 'window_size': 24000}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 001d0b4c5ab9466e98b8452463c7b263
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_so_clinicas at 0x7f657efce950>
+  3,987,041 parametros | 12,903 por paciente de treino
+  Ep   1 | train 1.2435 | val 1.2195 | AUC 0.5606 (suave 0.5606) | sens 0.273 | espec 0.968
+  Ep   2 | train 1.2028 | val 1.2324 | AUC 0.5753 (suave 0.5679) | sens 0.455 | espec 0.817
+  Ep   3 | train 1.1787 | val 1.2242 | AUC 0.5831 (suave 0.5730) | sens 0.364 | espec 0.903
+  Ep   4 | train 1.1589 | val 1.2307 | AUC 0.5733 (suave 0.5772) | sens 0.455 | espec 0.806
+  Ep   5 | train 1.1457 | val 1.2144 | AUC 0.5987 (suave 0.5850) | sens 0.455 | espec 0.817
+  Ep   6 | train 1.1322 | val 1.2105 | AUC 0.5978 (suave 0.5899) | sens 0.455 | espec 0.828
+  Ep   7 | train 1.1225 | val 1.2006 | AUC 0.6046 (suave 0.6004) | sens 0.455 | espec 0.828
+  Ep   8 | train 1.1101 | val 1.1998 | AUC 0.6065 (suave 0.6030) | sens 0.455 | espec 0.828
+  Ep   9 | train 1.1062 | val 1.1953 | AUC 0.6124 (suave 0.6079) | sens 0.455 | espec 0.828
+  Ep  10 | train 1.0957 | val 1.1960 | AUC 0.6124 (suave 0.6105) | sens 0.455 | espec 0.828
+  Ep  11 | train 1.0957 | val 1.1916 | AUC 0.6193 (suave 0.6147) | sens 0.455 | espec 0.828
+  Ep  12 | train 1.0911 | val 1.1840 | AUC 0.6241 (suave 0.6186) | sens 0.455 | espec 0.828
+  Ep  13 | train 1.0852 | val 1.1790 | AUC 0.6369 (suave 0.6268) | sens 0.455 | espec 0.828
+  Ep  14 | train 1.0807 | val 1.1797 | AUC 0.6388 (suave 0.6333) | sens 0.455 | espec 0.828
+  Ep  15 | train 1.0777 | val 1.1781 | AUC 0.6432 (suave 0.6396) | sens 0.455 | espec 0.828
+  Ep  16 | train 1.0769 | val 1.1811 | AUC 0.6427 (suave 0.6416) | sens 0.455 | espec 0.828
+  Ep  17 | train 1.0727 | val 1.1767 | AUC 0.6476 (suave 0.6445) | sens 0.455 | espec 0.828
+  Ep  18 | train 1.0732 | val 1.1795 | AUC 0.6476 (suave 0.6460) | sens 0.455 | espec 0.828
+  Ep  19 | train 1.0779 | val 1.1777 | AUC 0.6476 (suave 0.6476) | sens 0.455 | espec 0.828
+  Ep  20 | train 1.0752 | val 1.1761 | AUC 0.6496 (suave 0.6483) | sens 0.455 | espec 0.828
+
+  >> FOLD 0: AUC 0.6637 | AP 0.2440 | sens 0.455 | espec 0.796
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.97, sigma=11.88
+  - paroxysmal: mu=0.33, sigma=0.48
+  - nyha: mu=2.14, sigma=0.34
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5294 mV
+   Escala Y: 1.3044 mV
+   Escala Z: 2.5272 mV
+Tipo de Rede: <function resnet18_so_clinicas at 0x7f657efce950>
+  Ep   1 | train 1.2156 | val 1.3190 | AUC 0.5318 (suave 0.5318) | sens 0.455 | espec 0.774
+  Ep   2 | train 1.1527 | val 1.3756 | AUC 0.5538 (suave 0.5428) | sens 0.545 | espec 0.699
+  Ep   3 | train 1.1254 | val 1.4229 | AUC 0.5787 (suave 0.5547) | sens 0.545 | espec 0.785
+  Ep   4 | train 1.1099 | val 1.4836 | AUC 0.5792 (suave 0.5705) | sens 0.545 | espec 0.720
+  Ep   5 | train 1.0906 | val 1.5140 | AUC 0.5816 (suave 0.5798) | sens 0.727 | espec 0.559
+  Ep   6 | train 1.0757 | val 1.5574 | AUC 0.5875 (suave 0.5828) | sens 0.636 | espec 0.656
+  Ep   7 | train 1.0654 | val 1.5874 | AUC 0.5968 (suave 0.5886) | sens 0.636 | espec 0.699
+  Ep   8 | train 1.0512 | val 1.6273 | AUC 0.6012 (suave 0.5951) | sens 0.636 | espec 0.710
+  Ep   9 | train 1.0432 | val 1.6669 | AUC 0.6031 (suave 0.6004) | sens 0.636 | espec 0.731
+  Ep  10 | train 1.0329 | val 1.6882 | AUC 0.6237 (suave 0.6093) | sens 0.636 | espec 0.753
+  Ep  11 | train 1.0239 | val 1.7408 | AUC 0.6266 (suave 0.6178) | sens 0.636 | espec 0.774
+  Ep  12 | train 1.0212 | val 1.7272 | AUC 0.6305 (suave 0.6269) | sens 0.636 | espec 0.796
+  Ep  13 | train 1.0148 | val 1.7484 | AUC 0.6354 (suave 0.6308) | sens 0.636 | espec 0.817
+  Ep  14 | train 1.0121 | val 1.7604 | AUC 0.6344 (suave 0.6334) | sens 0.636 | espec 0.817
+  Ep  15 | train 1.0081 | val 1.7829 | AUC 0.6344 (suave 0.6347) | sens 0.636 | espec 0.806
+  Ep  16 | train 1.0038 | val 1.8002 | AUC 0.6344 (suave 0.6344) | sens 0.636 | espec 0.806
+  Ep  17 | train 1.0033 | val 1.7870 | AUC 0.6315 (suave 0.6334) | sens 0.636 | espec 0.806
+  Ep  18 | train 1.0019 | val 1.8254 | AUC 0.6378 (suave 0.6346) | sens 0.636 | espec 0.817
+  Ep  19 | train 0.9983 | val 1.8015 | AUC 0.6354 (suave 0.6349) | sens 0.636 | espec 0.806
+  Ep  20 | train 1.0057 | val 1.7931 | AUC 0.6344 (suave 0.6359) | sens 0.636 | espec 0.806
+
+  >> FOLD 1: AUC 0.6241 | AP 0.3617 | sens 0.455 | espec 0.753
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.27, sigma=11.76
+  - paroxysmal: mu=0.31, sigma=0.48
+  - nyha: mu=2.14, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4195 mV
+   Escala Y: 1.0943 mV
+   Escala Z: 2.6359 mV
+Tipo de Rede: <function resnet18_so_clinicas at 0x7f657efce950>
+  Ep   1 | train 1.1170 | val 1.3875 | AUC 0.4863 (suave 0.4863) | sens 0.818 | espec 0.355
+  Ep   2 | train 1.0370 | val 1.4853 | AUC 0.4892 (suave 0.4878) | sens 0.727 | espec 0.409
+  Ep   3 | train 0.9957 | val 1.5658 | AUC 0.4951 (suave 0.4902) | sens 0.545 | espec 0.591
+  Ep   4 | train 0.9681 | val 1.6388 | AUC 0.5010 (suave 0.4951) | sens 0.545 | espec 0.602
+  Ep   5 | train 0.9431 | val 1.7354 | AUC 0.5029 (suave 0.4997) | sens 0.636 | espec 0.516
+  Ep   6 | train 0.9295 | val 1.8019 | AUC 0.5078 (suave 0.5039) | sens 0.636 | espec 0.516
+  Ep   7 | train 0.9143 | val 1.8555 | AUC 0.5088 (suave 0.5065) | sens 0.636 | espec 0.516
+  Ep   8 | train 0.9038 | val 1.9077 | AUC 0.5127 (suave 0.5098) | sens 0.545 | espec 0.624
+  Ep   9 | train 0.8959 | val 1.9476 | AUC 0.5196 (suave 0.5137) | sens 0.545 | espec 0.645
+  Ep  10 | train 0.8904 | val 2.0207 | AUC 0.5264 (suave 0.5196) | sens 0.545 | espec 0.656
+  Ep  11 | train 0.8817 | val 2.0551 | AUC 0.5254 (suave 0.5238) | sens 0.545 | espec 0.645
+  Ep  12 | train 0.8733 | val 2.0886 | AUC 0.5303 (suave 0.5274) | sens 0.545 | espec 0.656
+  Ep  13 | train 0.8687 | val 2.1012 | AUC 0.5283 (suave 0.5280) | sens 0.636 | espec 0.559
+  Ep  14 | train 0.8688 | val 2.1549 | AUC 0.5303 (suave 0.5297) | sens 0.545 | espec 0.656
+  Ep  15 | train 0.8682 | val 2.2131 | AUC 0.5313 (suave 0.5300) | sens 0.545 | espec 0.656
+  Ep  16 | train 0.8604 | val 2.1511 | AUC 0.5313 (suave 0.5310) | sens 0.636 | espec 0.559
+  Ep  17 | train 0.8624 | val 2.1900 | AUC 0.5342 (suave 0.5323) | sens 0.545 | espec 0.667
+  Ep  18 | train 0.8636 | val 2.1913 | AUC 0.5342 (suave 0.5332) | sens 0.545 | espec 0.667
+  Ep  19 | train 0.8589 | val 2.2004 | AUC 0.5352 (suave 0.5345) | sens 0.545 | espec 0.667
+  Ep  20 | train 0.8603 | val 2.1778 | AUC 0.5323 (suave 0.5339) | sens 0.545 | espec 0.656
+
+  >> FOLD 2: AUC 0.5430 | AP 0.1346 | sens 0.455 | espec 0.717
+
+======================================================================
+FOLD 3
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=62.18, sigma=11.65
+  - paroxysmal: mu=0.32, sigma=0.49
+  - nyha: mu=2.16, sigma=0.37
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5358 mV
+   Escala Y: 1.1305 mV
+   Escala Z: 2.6929 mV
+Tipo de Rede: <function resnet18_so_clinicas at 0x7f657efce950>
+  Ep   1 | train 1.2222 | val 1.2948 | AUC 0.5684 (suave 0.5684) | sens 0.545 | espec 0.710
+  Ep   2 | train 1.1519 | val 1.3825 | AUC 0.5381 (suave 0.5533) | sens 0.636 | espec 0.624
+  Ep   3 | train 1.1181 | val 1.4379 | AUC 0.5401 (suave 0.5489) | sens 0.636 | espec 0.645
+  Ep   4 | train 1.0934 | val 1.4767 | AUC 0.5528 (suave 0.5437) | sens 0.636 | espec 0.688
+  Ep   5 | train 1.0760 | val 1.5086 | AUC 0.5596 (suave 0.5508) | sens 0.636 | espec 0.677
+  Ep   6 | train 1.0665 | val 1.5434 | AUC 0.5684 (suave 0.5603) | sens 0.636 | espec 0.688
+  Ep   7 | train 1.0481 | val 1.5697 | AUC 0.5684 (suave 0.5655) | sens 0.636 | espec 0.677
+  Ep   8 | train 1.0460 | val 1.5791 | AUC 0.5758 (suave 0.5709) | sens 0.636 | espec 0.720
+  Ep   9 | train 1.0292 | val 1.6075 | AUC 0.5802 (suave 0.5748) | sens 0.636 | espec 0.731
+  Ep  10 | train 1.0259 | val 1.6446 | AUC 0.5802 (suave 0.5787) | sens 0.636 | espec 0.731
+  Ep  11 | train 1.0213 | val 1.6482 | AUC 0.5811 (suave 0.5805) | sens 0.636 | espec 0.731
+  Ep  12 | train 1.0176 | val 1.6561 | AUC 0.5821 (suave 0.5811) | sens 0.636 | espec 0.731
+  Ep  13 | train 1.0160 | val 1.6974 | AUC 0.5821 (suave 0.5818) | sens 0.636 | espec 0.731
+  Ep  14 | train 1.0123 | val 1.6887 | AUC 0.5841 (suave 0.5828) | sens 0.636 | espec 0.731
+  Ep  15 | train 1.0091 | val 1.7097 | AUC 0.5831 (suave 0.5831) | sens 0.636 | espec 0.731
+  Ep  16 | train 1.0070 | val 1.7077 | AUC 0.5831 (suave 0.5834) | sens 0.636 | espec 0.731
+  Ep  17 | train 1.0042 | val 1.7197 | AUC 0.5841 (suave 0.5834) | sens 0.636 | espec 0.731
+  Ep  18 | train 1.0051 | val 1.7240 | AUC 0.5841 (suave 0.5837) | sens 0.636 | espec 0.731
+  Ep  19 | train 1.0060 | val 1.7139 | AUC 0.5841 (suave 0.5841) | sens 0.636 | espec 0.731
+  Ep  20 | train 1.0056 | val 1.7147 | AUC 0.5841 (suave 0.5841) | sens 0.636 | espec 0.731
+
+  >> FOLD 3: AUC 0.6581 | AP 0.3304 | sens 0.545 | espec 0.696
+
+======================================================================
+FOLD 4
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.33, sigma=11.78
+  - paroxysmal: mu=0.30, sigma=0.46
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4604 mV
+   Escala Y: 1.2672 mV
+   Escala Z: 2.4316 mV
+Tipo de Rede: <function resnet18_so_clinicas at 0x7f657efce950>
+  Ep   1 | train 1.2596 | val 1.1760 | AUC 0.5938 (suave 0.5938) | sens 0.364 | espec 0.925
+  Ep   2 | train 1.2034 | val 1.1535 | AUC 0.6369 (suave 0.6153) | sens 0.364 | espec 0.978
+  Ep   3 | train 1.1753 | val 1.1551 | AUC 0.6305 (suave 0.6204) | sens 0.364 | espec 0.935
+  Ep   4 | train 1.1477 | val 1.1457 | AUC 0.6486 (suave 0.6386) | sens 0.364 | espec 0.914
+  Ep   5 | train 1.1378 | val 1.1309 | AUC 0.6588 (suave 0.6460) | sens 0.636 | espec 0.645
+  Ep   6 | train 1.1174 | val 1.1198 | AUC 0.6598 (suave 0.6558) | sens 0.636 | espec 0.645
+  Ep   7 | train 1.0994 | val 1.1231 | AUC 0.6510 (suave 0.6566) | sens 0.636 | espec 0.645
+  Ep   8 | train 1.0890 | val 1.1221 | AUC 0.6452 (suave 0.6520) | sens 1.000 | espec 0.290
+  Ep   9 | train 1.0708 | val 1.1240 | AUC 0.6373 (suave 0.6445) | sens 1.000 | espec 0.290
+  Ep  10 | train 1.0665 | val 1.1187 | AUC 0.6364 (suave 0.6396) | sens 0.909 | espec 0.430
+  Ep  11 | train 1.0580 | val 1.1216 | AUC 0.6334 (suave 0.6357) | sens 0.909 | espec 0.430
+  Ep  12 | train 1.0489 | val 1.1316 | AUC 0.6227 (suave 0.6308) | sens 1.000 | espec 0.301
+  Ep  13 | train 1.0443 | val 1.1340 | AUC 0.6202 (suave 0.6254) | sens 1.000 | espec 0.301
+  Ep  14 | train 1.0438 | val 1.1207 | AUC 0.6344 (suave 0.6258) | sens 0.909 | espec 0.441
+  Ep  15 | train 1.0395 | val 1.1336 | AUC 0.6285 (suave 0.6277) | sens 1.000 | espec 0.312
+  Ep  16 | train 1.0375 | val 1.1394 | AUC 0.6178 (suave 0.6269) | sens 1.000 | espec 0.323
+  Ep  17 | train 1.0333 | val 1.1286 | AUC 0.6325 (suave 0.6263) | sens 1.000 | espec 0.312
+  Parada antecipada na epoca 17
+
+  >> FOLD 4: AUC 0.5543 | AP 0.1631 | sens 0.455 | espec 0.652
+
+
+======================================================================
+RESULTADO 1 — MEDIA ENTRE OS FOLDS
+======================================================================
+      auc      ap  acuracia  sensibilidade  especificidade     vpp      f1
+0  0.6637  0.2440    0.7596         0.4545          0.7957  0.2083  0.2857
+1  0.6241  0.3617    0.7212         0.4545          0.7527  0.1786  0.2564
+2  0.5430  0.1346    0.6893         0.4545          0.7174  0.1613  0.2381
+3  0.6581  0.3304    0.6796         0.5455          0.6957  0.1765  0.2667
+4  0.5543  0.1631    0.6311         0.4545          0.6522  0.1351  0.2083
+----------------------------------------------------------------------
+  auc             : 0.6087 +- 0.0570
+  ap              : 0.2468 +- 0.0997
+  acuracia        : 0.6962 +- 0.0480
+  sensibilidade   : 0.4727 +- 0.0407
+  especificidade  : 0.7227 +- 0.0547
+  vpp             : 0.1720 +- 0.0267
+  f1              : 0.2510 +- 0.0294
+
+======================================================================
+RESULTADO 2 — OUT-OF-FOLD AGRUPADO
+======================================================================
+  517 pacientes | 55 casos | prevalencia 10.6%
+
+  Todos os pacientes, cada um predito fora do seu fold
+  ------------------------------------------------------
+    AUC-ROC..........: 0.6156
+    AUC-PR (AP)......: 0.2265
+    Limiar...........: 0.5552
+    Acuracia.........: 0.7041   (enganosa se desbalanceado)
+    Sensibilidade....: 0.4727   (recall)
+    Especificidade...: 0.7316
+    VPP (precisao)...: 0.1733
+    VPN..............: 0.9210
+    F1...............: 0.2537
+  ------------------------------------------------------
+                    Predito 0   Predito 1
+      Real 0 (vive)     338         124   <- FP (falso alarme)
+      Real 1 (morre)     29          26
+                        ^ FN (morte nao detectada)
+
+  AUC = 0.6156  IC95% [0.5359, 0.6995]
+  O IC exclui 0,5 — discriminacao acima do acaso.
+
+  Agregacao por MAX das janelas: AUC 0.6156 | AP 0.2265
+
+======================================================================
+COMO REPORTAR NA DISSERTACAO
+======================================================================
+
+  AUC-ROC: 0.609 +- 0.057 (media dos 5 folds)
+  AUC out-of-fold: 0.616 (IC95% 0.536-0.700, bootstrap)
+
+  Um desvio entre folds acima de ~0.08 indica que o resultado depende de
+  quais pacientes cairam em cada particao — reporte-o sempre junto da media.
+
+  Desvio observado: 0.0570
+

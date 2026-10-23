@@ -358,3 +358,67 @@ Tipo de Rede: <function resnet50_1d at 0x7f0a2d1f3400>
   Ep   8 | train 0.0193 | val 5.0562 | AUC 0.5239 (suave 0.5125) | sens 1.000 | espec 0.290
   Ep   9 | train 0.0152 | val 6.1880 | AUC 0.4585 (suave 0.4875) | sens 1.000 | espec 0.140
   Ep  10 | train 0.0184 | val 5.3748 | AUC 0.5249 (suave 0.5024) | sens 1.000 | espec 0.161
+  Ep  11 | train 0.0120 | val 5.7778 | AUC 0.4594 (suave 0.4809) | sens 1.000 | espec 0.172
+  Parada antecipada na epoca 11
+
+  >> FOLD 4: AUC 0.5623 | AP 0.1789 | sens 0.727 | espec 0.391
+
+
+======================================================================
+RESULTADO 1 — MEDIA ENTRE OS FOLDS
+======================================================================
+      auc      ap  acuracia  sensibilidade  especificidade     vpp      f1
+0  0.4868  0.1879    0.3173         0.8182          0.2581  0.1154  0.2022
+1  0.7283  0.2896    0.7788         0.6364          0.7957  0.2692  0.3784
+2  0.4921  0.1083    0.7573         0.0000          0.8478  0.0000  0.0000
+3  0.5751  0.1709    0.5825         0.6364          0.5761  0.1522  0.2456
+4  0.5623  0.1789    0.4272         0.7273          0.3913  0.1250  0.2133
+----------------------------------------------------------------------
+  auc             : 0.5689 +- 0.0976
+  ap              : 0.1871 +- 0.0653
+  acuracia        : 0.5726 +- 0.2019
+  sensibilidade   : 0.5636 +- 0.3240
+  especificidade  : 0.5738 +- 0.2536
+  vpp             : 0.1324 +- 0.0962
+  f1              : 0.2079 +- 0.1358
+
+======================================================================
+RESULTADO 2 — OUT-OF-FOLD AGRUPADO
+======================================================================
+  517 pacientes | 55 casos | prevalencia 10.6%
+
+  Todos os pacientes, cada um predito fora do seu fold
+  ------------------------------------------------------
+    AUC-ROC..........: 0.5358
+    AUC-PR (AP)......: 0.1374
+    Limiar...........: 0.0318
+    Acuracia.........: 0.5048   (enganosa se desbalanceado)
+    Sensibilidade....: 0.4545   (recall)
+    Especificidade...: 0.5108
+    VPP (precisao)...: 0.0996
+    VPN..............: 0.8872
+    F1...............: 0.1634
+  ------------------------------------------------------
+                    Predito 0   Predito 1
+      Real 0 (vive)     236         226   <- FP (falso alarme)
+      Real 1 (morre)     30          25
+                        ^ FN (morte nao detectada)
+
+  AUC = 0.5358  IC95% [0.4478, 0.6177]
+  ATENCAO: o IC inclui 0,5 — nao distinguivel do acaso.
+
+  Agregacao por MAX das janelas: AUC 0.5366 | AP 0.1355
+
+======================================================================
+COMO REPORTAR NA DISSERTACAO
+======================================================================
+
+  AUC-ROC: 0.569 +- 0.098 (media dos 5 folds)
+  AUC out-of-fold: 0.536 (IC95% 0.448-0.618, bootstrap)
+
+  Um desvio entre folds acima de ~0.08 indica que o resultado depende de
+  quais pacientes cairam em cada particao — reporte-o sempre junto da media.
+
+  Desvio observado: 0.0976
+
+daniel

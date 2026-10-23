@@ -1,0 +1,535 @@
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_cnn_simples_10s.log
+Inicio: 13/10/2026 19:26:03
+======================================================================
+
+======================================================================
+cnn_simples_10s — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 2000,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'cnn_simples_10s',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 30,
+ 'num_workers': 6,
+ 'patience_early_stop': 15,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 200,
+ 'samples_patient_train': 350,
+ 'weight_decay': 0.01,
+ 'window_size': 256}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 5a88127d720b4593890caf8d6b63c242
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+  109,361 parametros | 354 por paciente de treino
+  Ep   1 | train 1.3086 | val 1.2756 | AUC 0.4751 (suave 0.4751) | sens 0.364 | espec 0.806
+  Ep   2 | train 1.2896 | val 1.2774 | AUC 0.4848 (suave 0.4800) | sens 0.364 | espec 0.817
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_cnn_simples_10s.log
+Inicio: 13/10/2026 19:42:02
+======================================================================
+
+======================================================================
+cnn_simples_10s — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'cnn_simples_10s',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 30,
+ 'num_workers': 6,
+ 'patience_early_stop': 15,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 200,
+ 'samples_patient_train': 350,
+ 'weight_decay': 0.01,
+ 'window_size': 2000}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 6bab80fbd1c7446d8807416eedd7b347
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+  109,361 parametros | 354 por paciente de treino
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_cnn_simples_10s.log
+Inicio: 13/10/2026 19:43:10
+======================================================================
+
+======================================================================
+cnn_simples_10s — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 256,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'cnn_simples_10s',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 30,
+ 'num_workers': 6,
+ 'patience_early_stop': 15,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 200,
+ 'samples_patient_train': 350,
+ 'weight_decay': 0.01,
+ 'window_size': 2000}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 1103df1911234dacb011969534d3744d
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+  109,361 parametros | 354 por paciente de treino
+  Ep   1 | train 1.2566 | val 1.2093 | AUC 0.6315 (suave 0.6315) | sens 0.909 | espec 0.398
+  Ep   2 | train 1.0638 | val 1.1850 | AUC 0.6940 (suave 0.6628) | sens 1.000 | espec 0.452
+  Ep   3 | train 0.8229 | val 1.3431 | AUC 0.6510 (suave 0.6588) | sens 0.909 | espec 0.462
+  Ep   4 | train 0.6254 | val 1.5533 | AUC 0.5894 (suave 0.6448) | sens 0.727 | espec 0.527
+  Ep   5 | train 0.4725 | val 1.9856 | AUC 0.5943 (suave 0.6116) | sens 0.727 | espec 0.624
+  Ep   6 | train 0.3696 | val 1.9134 | AUC 0.5992 (suave 0.5943) | sens 0.727 | espec 0.645
+  Ep   7 | train 0.2918 | val 2.0468 | AUC 0.5670 (suave 0.5868) | sens 0.727 | espec 0.570
+  Ep   8 | train 0.2480 | val 2.4830 | AUC 0.5728 (suave 0.5797) | sens 0.818 | espec 0.462
+  Ep   9 | train 0.2055 | val 3.2724 | AUC 0.5494 (suave 0.5630) | sens 0.818 | espec 0.452
+  Ep  10 | train 0.1875 | val 3.2370 | AUC 0.5601 (suave 0.5608) | sens 0.818 | espec 0.441
+  Ep  11 | train 0.1695 | val 2.8463 | AUC 0.5953 (suave 0.5683) | sens 0.818 | espec 0.441
+  Ep  12 | train 0.1569 | val 2.6783 | AUC 0.6022 (suave 0.5859) | sens 0.727 | espec 0.559
+  Ep  13 | train 0.1357 | val 3.2576 | AUC 0.5758 (suave 0.5911) | sens 0.818 | espec 0.419
+  Ep  14 | train 0.1230 | val 3.6197 | AUC 0.5709 (suave 0.5829) | sens 0.818 | espec 0.452
+  Ep  15 | train 0.1223 | val 3.3149 | AUC 0.5748 (suave 0.5738) | sens 0.818 | espec 0.441
+  Ep  16 | train 0.1065 | val 3.2839 | AUC 0.5953 (suave 0.5803) | sens 0.818 | espec 0.452
+  Ep  17 | train 0.1046 | val 3.8593 | AUC 0.5670 (suave 0.5790) | sens 0.727 | espec 0.473
+  Parada antecipada na epoca 17
+
+  >> FOLD 0: AUC 0.5787 | AP 0.2526 | sens 0.727 | espec 0.366
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.97, sigma=11.88
+  - paroxysmal: mu=0.33, sigma=0.48
+  - nyha: mu=2.14, sigma=0.34
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5294 mV
+   Escala Y: 1.3044 mV
+   Escala Z: 2.5272 mV
+  Ep   1 | train 1.2493 | val 1.2442 | AUC 0.5406 (suave 0.5406) | sens 0.545 | espec 0.624
+  Ep   2 | train 1.0671 | val 1.4266 | AUC 0.5953 (suave 0.5679) | sens 0.727 | espec 0.548
+  Ep   3 | train 0.8584 | val 1.5294 | AUC 0.6012 (suave 0.5790) | sens 0.727 | espec 0.645
+  Ep   4 | train 0.6808 | val 1.4984 | AUC 0.6403 (suave 0.6123) | sens 0.727 | espec 0.634
+  Ep   5 | train 0.5380 | val 1.6881 | AUC 0.6442 (suave 0.6285) | sens 0.909 | espec 0.473
+  Ep   6 | train 0.4248 | val 2.1061 | AUC 0.6149 (suave 0.6331) | sens 0.818 | espec 0.495
+  Ep   7 | train 0.3569 | val 2.1751 | AUC 0.6559 (suave 0.6383) | sens 0.909 | espec 0.484
+  Ep   8 | train 0.2933 | val 2.7486 | AUC 0.6237 (suave 0.6315) | sens 0.727 | espec 0.516
+  Ep   9 | train 0.2514 | val 3.1481 | AUC 0.6334 (suave 0.6377) | sens 0.455 | espec 0.817
+  Ep  10 | train 0.2125 | val 2.6412 | AUC 0.6559 (suave 0.6377) | sens 0.909 | espec 0.484
+  Ep  11 | train 0.1895 | val 2.7227 | AUC 0.6696 (suave 0.6530) | sens 0.909 | espec 0.516
+  Ep  12 | train 0.1688 | val 3.2706 | AUC 0.6530 (suave 0.6595) | sens 0.455 | espec 0.871
+  Ep  13 | train 0.1532 | val 3.0673 | AUC 0.6383 (suave 0.6536) | sens 0.455 | espec 0.828
+  Ep  14 | train 0.1422 | val 3.6675 | AUC 0.6413 (suave 0.6442) | sens 0.455 | espec 0.849
+  Ep  15 | train 0.1294 | val 3.3672 | AUC 0.6657 (suave 0.6484) | sens 0.909 | espec 0.473
+  Ep  16 | train 0.1207 | val 3.6836 | AUC 0.6452 (suave 0.6507) | sens 0.909 | espec 0.452
+  Ep  17 | train 0.1136 | val 3.8713 | AUC 0.6256 (suave 0.6455) | sens 0.455 | espec 0.839
+  Ep  18 | train 0.1098 | val 3.9626 | AUC 0.6481 (suave 0.6396) | sens 0.455 | espec 0.860
+  Ep  19 | train 0.1077 | val 4.1744 | AUC 0.6393 (suave 0.6377) | sens 0.455 | espec 0.871
+  Ep  20 | train 0.0968 | val 3.9066 | AUC 0.6452 (suave 0.6442) | sens 0.455 | espec 0.882
+  Ep  21 | train 0.0932 | val 3.9305 | AUC 0.6276 (suave 0.6373) | sens 0.455 | espec 0.839
+  Ep  22 | train 0.0927 | val 3.7211 | AUC 0.6667 (suave 0.6465) | sens 0.455 | espec 0.892
+  Ep  23 | train 0.0883 | val 3.9845 | AUC 0.6500 (suave 0.6481) | sens 0.909 | espec 0.441
+  Ep  24 | train 0.0875 | val 4.1855 | AUC 0.6354 (suave 0.6507) | sens 0.455 | espec 0.839
+  Ep  25 | train 0.0876 | val 4.0810 | AUC 0.6393 (suave 0.6416) | sens 0.455 | espec 0.860
+  Ep  26 | train 0.0911 | val 4.1877 | AUC 0.6403 (suave 0.6383) | sens 0.455 | espec 0.849
+  Ep  27 | train 0.0852 | val 4.1667 | AUC 0.6364 (suave 0.6386) | sens 0.455 | espec 0.839
+  Parada antecipada na epoca 27
+
+  >> FOLD 1: AUC 0.5161 | AP 0.1226 | sens 0.182 | espec 0.796
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.27, sigma=11.76
+  - paroxysmal: mu=0.31, sigma=0.48
+  - nyha: mu=2.14, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4195 mV
+   Escala Y: 1.0943 mV
+   Escala Z: 2.6359 mV
+  Ep   1 | train 1.2178 | val 1.3985 | AUC 0.4585 (suave 0.4585) | sens 0.455 | espec 0.699
+  Ep   2 | train 0.9374 | val 1.8600 | AUC 0.4057 (suave 0.4321) | sens 1.000 | espec 0.043
+  Ep   3 | train 0.6613 | val 2.1502 | AUC 0.4516 (suave 0.4386) | sens 0.909 | espec 0.290
+  Ep   4 | train 0.4750 | val 2.4916 | AUC 0.4829 (suave 0.4467) | sens 0.727 | espec 0.430
+  Ep   5 | train 0.3573 | val 2.8457 | AUC 0.5093 (suave 0.4813) | sens 1.000 | espec 0.237
+  Ep   6 | train 0.2795 | val 3.2961 | AUC 0.4907 (suave 0.4943) | sens 0.636 | espec 0.559
+  Ep   7 | train 0.2272 | val 3.5803 | AUC 0.4976 (suave 0.4992) | sens 1.000 | espec 0.183
+  Ep   8 | train 0.1891 | val 3.9214 | AUC 0.4917 (suave 0.4933) | sens 1.000 | espec 0.204
+  Ep   9 | train 0.1564 | val 3.8769 | AUC 0.4800 (suave 0.4897) | sens 0.818 | espec 0.398
+  Ep  10 | train 0.1410 | val 4.0558 | AUC 0.4800 (suave 0.4839) | sens 1.000 | espec 0.183
+  Ep  11 | train 0.1282 | val 4.4510 | AUC 0.4770 (suave 0.4790) | sens 1.000 | espec 0.215
+  Ep  12 | train 0.1115 | val 4.5932 | AUC 0.4360 (suave 0.4643) | sens 1.000 | espec 0.226
+  Ep  13 | train 0.1031 | val 4.8661 | AUC 0.4848 (suave 0.4659) | sens 1.000 | espec 0.194
+  Ep  14 | train 0.0963 | val 4.9733 | AUC 0.4829 (suave 0.4679) | sens 1.000 | espec 0.215
+  Ep  15 | train 0.0915 | val 4.8827 | AUC 0.4409 (suave 0.4695) | sens 1.000 | espec 0.161
+  Ep  16 | train 0.0861 | val 5.0573 | AUC 0.4565 (suave 0.4601) | sens 1.000 | espec 0.183
+  Ep  17 | train 0.0769 | val 5.3203 | AUC 0.4692 (suave 0.4555) | sens 1.000 | espec 0.161
+  Ep  18 | train 0.0763 | val 5.1714 | AUC 0.4457 (suave 0.4572) | sens 1.000 | espec 0.161
+  Ep  19 | train 0.0711 | val 5.5325 | AUC 0.4457 (suave 0.4536) | sens 1.000 | espec 0.183
+  Ep  20 | train 0.0681 | val 5.4741 | AUC 0.4565 (suave 0.4493) | sens 1.000 | espec 0.183
+  Ep  21 | train 0.0665 | val 5.4286 | AUC 0.4438 (suave 0.4487) | sens 1.000 | espec 0.204
+  Ep  22 | train 0.0677 | val 5.2769 | AUC 0.4594 (suave 0.4532) | sens 1.000 | espec 0.204
+  Parada antecipada na epoca 22
+
+  >> FOLD 2: AUC 0.4496 | AP 0.1036 | sens 0.909 | espec 0.163
+
+======================================================================
+FOLD 3
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=62.18, sigma=11.65
+  - paroxysmal: mu=0.32, sigma=0.49
+  - nyha: mu=2.16, sigma=0.37
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5358 mV
+   Escala Y: 1.1305 mV
+   Escala Z: 2.6929 mV
+  Ep   1 | train 1.2602 | val 1.3150 | AUC 0.5181 (suave 0.5181) | sens 0.636 | espec 0.602
+  Ep   2 | train 1.0700 | val 1.4387 | AUC 0.5024 (suave 0.5103) | sens 0.545 | espec 0.656
+  Ep   3 | train 0.7907 | val 1.6490 | AUC 0.5181 (suave 0.5129) | sens 0.182 | espec 0.989
+  Ep   4 | train 0.5818 | val 2.1890 | AUC 0.5474 (suave 0.5226) | sens 1.000 | espec 0.226
+  Ep   5 | train 0.4523 | val 2.1887 | AUC 0.5777 (suave 0.5477) | sens 1.000 | espec 0.226
+  Ep   6 | train 0.3619 | val 2.3991 | AUC 0.5484 (suave 0.5578) | sens 0.909 | espec 0.333
+  Ep   7 | train 0.3016 | val 2.3120 | AUC 0.5787 (suave 0.5683) | sens 0.909 | espec 0.333
+  Ep   8 | train 0.2518 | val 2.6440 | AUC 0.5494 (suave 0.5588) | sens 0.364 | espec 0.871
+  Ep   9 | train 0.2204 | val 2.9271 | AUC 0.5484 (suave 0.5588) | sens 0.273 | espec 0.903
+  Ep  10 | train 0.1901 | val 3.0679 | AUC 0.5523 (suave 0.5500) | sens 0.273 | espec 0.914
+  Ep  11 | train 0.1685 | val 3.3478 | AUC 0.5425 (suave 0.5477) | sens 0.273 | espec 0.925
+  Ep  12 | train 0.1515 | val 3.2190 | AUC 0.5562 (suave 0.5503) | sens 0.273 | espec 0.946
+  Ep  13 | train 0.1464 | val 3.5104 | AUC 0.5347 (suave 0.5445) | sens 0.273 | espec 0.903
+  Ep  14 | train 0.1287 | val 3.5192 | AUC 0.5464 (suave 0.5458) | sens 0.273 | espec 0.903
+  Ep  15 | train 0.1229 | val 4.1504 | AUC 0.5513 (suave 0.5442) | sens 1.000 | espec 0.215
+  Ep  16 | train 0.1179 | val 4.1876 | AUC 0.5239 (suave 0.5406) | sens 0.909 | espec 0.269
+  Ep  17 | train 0.1095 | val 3.7347 | AUC 0.5406 (suave 0.5386) | sens 0.273 | espec 0.914
+  Ep  18 | train 0.1019 | val 4.1694 | AUC 0.5220 (suave 0.5288) | sens 0.182 | espec 0.989
+  Ep  19 | train 0.1000 | val 3.9997 | AUC 0.5308 (suave 0.5311) | sens 0.182 | espec 0.989
+  Ep  20 | train 0.0965 | val 4.0032 | AUC 0.5445 (suave 0.5324) | sens 0.273 | espec 0.892
+  Ep  21 | train 0.0963 | val 3.9605 | AUC 0.5455 (suave 0.5402) | sens 0.273 | espec 0.935
+  Ep  22 | train 0.0882 | val 4.2786 | AUC 0.5308 (suave 0.5402) | sens 0.273 | espec 0.892
+  Parada antecipada na epoca 22
+
+  >> FOLD 3: AUC 0.4723 | AP 0.1400 | sens 0.636 | espec 0.359
+
+======================================================================
+FOLD 4
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.33, sigma=11.78
+  - paroxysmal: mu=0.30, sigma=0.46
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4604 mV
+   Escala Y: 1.2672 mV
+   Escala Z: 2.4316 mV
+  Ep   1 | train 1.2621 | val 1.3477 | AUC 0.4614 (suave 0.4614) | sens 0.364 | espec 0.785
+  Ep   2 | train 1.1165 | val 1.3407 | AUC 0.6422 (suave 0.5518) | sens 0.818 | espec 0.645
+  Ep   3 | train 0.8655 | val 1.4294 | AUC 0.6442 (suave 0.5826) | sens 0.636 | espec 0.710
+  Ep   4 | train 0.6357 | val 1.5470 | AUC 0.6139 (suave 0.6334) | sens 0.818 | espec 0.516
+  Ep   5 | train 0.4787 | val 1.7326 | AUC 0.5738 (suave 0.6106) | sens 0.727 | espec 0.495
+  Ep   6 | train 0.3699 | val 2.0889 | AUC 0.5298 (suave 0.5725) | sens 0.273 | espec 0.892
+  Ep   7 | train 0.3059 | val 2.2778 | AUC 0.5386 (suave 0.5474) | sens 0.273 | espec 0.903
+  Ep   8 | train 0.2506 | val 2.2011 | AUC 0.5503 (suave 0.5396) | sens 0.273 | espec 0.968
+  Ep   9 | train 0.2152 | val 2.6925 | AUC 0.5093 (suave 0.5327) | sens 0.273 | espec 0.882
+  Ep  10 | train 0.1924 | val 2.5840 | AUC 0.5533 (suave 0.5376) | sens 0.273 | espec 0.914
+  Ep  11 | train 0.1696 | val 2.9352 | AUC 0.5396 (suave 0.5341) | sens 0.364 | espec 0.806
+  Ep  12 | train 0.1527 | val 3.0343 | AUC 0.5435 (suave 0.5455) | sens 0.273 | espec 0.903
+  Ep  13 | train 0.1353 | val 3.3831 | AUC 0.4976 (suave 0.5269) | sens 0.273 | espec 0.882
+  Ep  14 | train 0.1282 | val 3.0846 | AUC 0.5376 (suave 0.5262) | sens 0.727 | espec 0.505
+  Ep  15 | train 0.1219 | val 3.7939 | AUC 0.5015 (suave 0.5122) | sens 0.909 | espec 0.226
+  Ep  16 | train 0.1168 | val 3.3796 | AUC 0.5220 (suave 0.5204) | sens 0.273 | espec 0.871
+  Ep  17 | train 0.1099 | val 3.5825 | AUC 0.5132 (suave 0.5122) | sens 0.273 | espec 0.871
+  Ep  18 | train 0.1056 | val 3.6086 | AUC 0.5279 (suave 0.5210) | sens 0.273 | espec 0.871
+  Ep  19 | train 0.0987 | val 3.7046 | AUC 0.5015 (suave 0.5142) | sens 0.273 | espec 0.871
+  Parada antecipada na epoca 19
+
+  >> FOLD 4: AUC 0.5306 | AP 0.1708 | sens 0.455 | espec 0.533
+
+
+======================================================================
+RESULTADO 1 — MEDIA ENTRE OS FOLDS
+======================================================================
+      auc      ap  acuracia  sensibilidade  especificidade     vpp      f1
+0  0.5787  0.2526    0.4038         0.7273          0.3656  0.1194  0.2051
+1  0.5161  0.1226    0.7308         0.1818          0.7957  0.0952  0.1250
+2  0.4496  0.1036    0.2427         0.9091          0.1630  0.1149  0.2041
+3  0.4723  0.1400    0.3883         0.6364          0.3587  0.1061  0.1818
+4  0.5306  0.1708    0.5243         0.4545          0.5326  0.1042  0.1695
+----------------------------------------------------------------------
+  auc             : 0.5095 +- 0.0506
+  ap              : 0.1579 +- 0.0584
+  acuracia        : 0.4580 +- 0.1823
+  sensibilidade   : 0.5818 +- 0.2772
+  especificidade  : 0.4431 +- 0.2366
+  vpp             : 0.1080 +- 0.0095
+  f1              : 0.1771 +- 0.0328
+
+======================================================================
+RESULTADO 2 — OUT-OF-FOLD AGRUPADO
+======================================================================
+  517 pacientes | 55 casos | prevalencia 10.6%
+
+  Todos os pacientes, cada um predito fora do seu fold
+  ------------------------------------------------------
+    AUC-ROC..........: 0.4910
+    AUC-PR (AP)......: 0.1190
+    Limiar...........: 0.2456
+    Acuracia.........: 0.5164   (enganosa se desbalanceado)
+    Sensibilidade....: 0.4000   (recall)
+    Especificidade...: 0.5303
+    VPP (precisao)...: 0.0921
+    VPN..............: 0.8813
+    F1...............: 0.1497
+  ------------------------------------------------------
+                    Predito 0   Predito 1
+      Real 0 (vive)     245         217   <- FP (falso alarme)
+      Real 1 (morre)     33          22
+                        ^ FN (morte nao detectada)
+
+  AUC = 0.4910  IC95% [0.4113, 0.5777]
+  ATENCAO: o IC inclui 0,5 — nao distinguivel do acaso.
+
+  Agregacao por MAX das janelas: AUC 0.4983 | AP 0.1098
+
+======================================================================
+COMO REPORTAR NA DISSERTACAO
+======================================================================
+
+  AUC-ROC: 0.509 +- 0.051 (media dos 5 folds)
+  AUC out-of-fold: 0.491 (IC95% 0.411-0.578, bootstrap)
+
+  Um desvio entre folds acima de ~0.08 indica que o resultado depende de
+  quais pacientes cairam em cada particao — reporte-o sempre junto da media.
+
+  Desvio observado: 0.0506
+

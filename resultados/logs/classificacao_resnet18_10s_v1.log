@@ -1,0 +1,1239 @@
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+Inicio: 06/10/2026 00:18:46
+======================================================================
+
+======================================================================
+resnet18_10s_v1 — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 512,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'resnet18_10s_v1',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 250,
+ 'samples_patient_train': 500,
+ 'weight_decay': 0.01,
+ 'window_size': 10}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): bd52ff1cf71c49f39ae16f836d35b36d
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7f775ab1f910>
+  3,976,385 parametros | 12,869 por paciente de treino
+  congelados: 0 | treinaveis: 3,976,385
+
+ERRO FATAL:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1390524/1374685390.py", line 447, in <module>
+    ag, m, lim = treinar_fold(proc, k, run_pai_id)
+  File "/tmp/ipykernel_1390524/1374685390.py", line 355, in treinar_fold
+    tr_loss = train_epoch(model, train_loader, optimizer, DEVICE, scaler, criterio)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/arquiteturacnn_RESNET.py", line 442, in train_epoch
+    for batch in tqdm(loader, desc="Treino", leave=False, ncols=90):
+  File "/opt/conda/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "/opt/conda/lib/python3.10/site-packages/torch/_utils.py", line 722, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 254, in __getitem__
+    sinal = self._preprocess(raw)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 228, in _preprocess
+    cleaned = sosfiltfilt(SOS_BP, cleaned, axis=1)
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4452, in sosfiltfilt
+    edge, ext = _validate_pad(padtype, padlen, x, axis,
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4221, in _validate_pad
+    raise ValueError("The length of the input vector x must be greater "
+ValueError: The length of the input vector x must be greater than padlen, which is 21.
+
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+Inicio: 06/10/2026 00:29:11
+======================================================================
+
+======================================================================
+resnet18_10s_v1 — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 512,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'resnet18_10s_v1',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 250,
+ 'samples_patient_train': 500,
+ 'weight_decay': 0.01,
+ 'window_size': 10}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 907f6626338d49af87627bff83df0763
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7efd2cc8b640>
+  3,976,385 parametros | 12,869 por paciente de treino
+  congelados: 0 | treinaveis: 3,976,385
+
+ERRO FATAL:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1391500/972950933.py", line 449, in <module>
+    ag, m, lim = treinar_fold(proc, k, run_pai_id)
+  File "/tmp/ipykernel_1391500/972950933.py", line 357, in treinar_fold
+    tr_loss = train_epoch(model, train_loader, optimizer, DEVICE, scaler, criterio)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/arquiteturacnn_RESNET.py", line 306, in train_epoch
+    for batch in tqdm(loader, desc="Treino", leave=False, ncols=90):
+  File "/opt/conda/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "/opt/conda/lib/python3.10/site-packages/torch/_utils.py", line 722, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 254, in __getitem__
+    sinal = self._preprocess(raw)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 228, in _preprocess
+    cleaned = sosfiltfilt(SOS_BP, cleaned, axis=1)
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4452, in sosfiltfilt
+    edge, ext = _validate_pad(padtype, padlen, x, axis,
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4221, in _validate_pad
+    raise ValueError("The length of the input vector x must be greater "
+ValueError: The length of the input vector x must be greater than padlen, which is 21.
+
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+Inicio: 06/10/2026 00:30:26
+======================================================================
+
+======================================================================
+resnet18_10s_v1 — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 512,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'resnet18_10s_v1',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 250,
+ 'samples_patient_train': 500,
+ 'weight_decay': 0.01,
+ 'window_size': 10}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 74cda83a914f4411b486877a904ddc2a
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7f38622267a0>
+  3,976,385 parametros | 12,869 por paciente de treino
+  congelados: 0 | treinaveis: 3,976,385
+
+ERRO FATAL:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1392425/972950933.py", line 449, in <module>
+    ag, m, lim = treinar_fold(proc, k, run_pai_id)
+  File "/tmp/ipykernel_1392425/972950933.py", line 357, in treinar_fold
+    tr_loss = train_epoch(model, train_loader, optimizer, DEVICE, scaler, criterio)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/arquiteturacnn_RESNET.py", line 306, in train_epoch
+    for batch in tqdm(loader, desc="Treino", leave=False, ncols=90):
+  File "/opt/conda/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "/opt/conda/lib/python3.10/site-packages/torch/_utils.py", line 722, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 254, in __getitem__
+    sinal = self._preprocess(raw)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 228, in _preprocess
+    cleaned = sosfiltfilt(SOS_BP, cleaned, axis=1)
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4452, in sosfiltfilt
+    edge, ext = _validate_pad(padtype, padlen, x, axis,
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4221, in _validate_pad
+    raise ValueError("The length of the input vector x must be greater "
+ValueError: The length of the input vector x must be greater than padlen, which is 21.
+
+
+Patch AMP aplicado.
+GPUs visiveis: 1
+   GPU 0: NVIDIA A100-SXM4-40GB
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+
+Inicio: 06/10/2026 00:31:25
+======================================================================Inicio: 06/10/2026 00:31:25
+======================================================================
+
+
+======================================================================
+======================================================================
+
+resnet18_10s_v1 — validacao cruzada 5-foldresnet18_10s_v1 — validacao cruzada 5-fold
+
+============================================================================================================================================
+
+{{'batch_size''batch_size': : 512512,
+ ,
+ 'data_folder_path''data_folder_path': : '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG''/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ ,
+ 'dropout_rate''dropout_rate': : 0.60.6,
+ ,
+ 'estrategia_encoder''estrategia_encoder': : 'normal''normal',
+ ,
+ 'learning_rate''learning_rate': : 0.00010.0001,
+ ,
+ 'n_folds''n_folds': : 55,
+ ,
+ 'nome_do_ensaio''nome_do_ensaio': : 'resnet18_10s_v1''resnet18_10s_v1',
+ ,
+ 'nome_do_experiment''nome_do_experiment': : 'Resnet_Classificacao''Resnet_Classificacao',
+ ,
+ 'num_epochs''num_epochs': : 2020,
+ ,
+ 'num_workers''num_workers': : 88,
+ ,
+ 'patience_early_stop''patience_early_stop': : 1010,
+ ,
+ 'pooling''pooling': : 'both''both',
+ ,
+ 'rede_pequena''rede_pequena': : FalseFalse,
+ ,
+ 'samples_patient_eval''samples_patient_eval': : 250250,
+ ,
+ 'samples_patient_train''samples_patient_train': : 500500,
+ ,
+ 'weight_decay''weight_decay': : 0.010.01,
+ ,
+ 'window_size''window_size': : 1010}}
+
+
+Preparando dados...
+Preparando dados...
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+  Apos ritmo sinusal.................: 710  Apos ritmo sinusal.................: 710
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+    - morte nao cardiaca (cod. 1)....: 35    - morte nao cardiaca (cod. 1)....: 35
+
+    - falencia de bomba (cod. 6, 7)..: 67    - falencia de bomba (cod. 6, 7)..: 67
+
+    - vivos com < 4 anos.............: 21    - vivos com < 4 anos.............: 21
+
+  Casos + controles..................: 587  Casos + controles..................: 587
+
+  Com as 3 derivacoes................: 517  Com as 3 derivacoes................: 517
+
+    - CASOS (MSC)....................: 55    - CASOS (MSC)....................: 55
+
+    - CONTROLES (4 anos).............: 462    - CONTROLES (4 anos).............: 462
+
+  Prevalencia........................: 10.6%  Prevalencia........................: 10.6%
+
+
+Montando coorte caso-controle...
+Montando coorte caso-controle...
+
+  Coorte inicial.....................: 992  Coorte inicial.....................: 992
+
+  Apos ritmo sinusal.................: 710  Apos ritmo sinusal.................: 710
+
+  Excluidos por desfecho ambiguo:  Excluidos por desfecho ambiguo:
+
+    - morte nao cardiaca (cod. 1)....: 35    - morte nao cardiaca (cod. 1)....: 35
+
+    - falencia de bomba (cod. 6, 7)..: 67    - falencia de bomba (cod. 6, 7)..: 67
+
+    - vivos com < 4 anos.............: 21    - vivos com < 4 anos.............: 21
+
+  Casos + controles..................: 587  Casos + controles..................: 587
+
+  Com as 3 derivacoes................: 517  Com as 3 derivacoes................: 517
+
+    - CASOS (MSC)....................: 55    - CASOS (MSC)....................: 55
+
+    - CONTROLES (4 anos).............: 462    - CONTROLES (4 anos).............: 462
+
+  Prevalencia........................: 10.6%  Prevalencia........................: 10.6%
+
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+  5-fold estratificado sobre 517 pacientes (55 casos)
+
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+
+======================================================================
+======================================================================
+
+FOLD 0FOLD 0
+
+============================================================================================================================================
+
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+
+  pos_weight: 8.36  pos_weight: 8.36
+
+
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+
+  - idade: mu=61.72, sigma=11.17  - idade: mu=61.72, sigma=11.17
+
+  - paroxysmal: mu=0.30, sigma=0.48  - paroxysmal: mu=0.30, sigma=0.48
+
+  - nyha: mu=2.15, sigma=0.35  - nyha: mu=2.15, sigma=0.35
+
+
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+
+   Escala X: 1.3391 mV   Escala X: 1.3391 mV
+
+   Escala Y: 1.0668 mV   Escala Y: 1.0668 mV
+
+   Escala Z: 2.1674 mV   Escala Z: 2.1674 mV
+
+
+MLflow Run (pai): be89385d88b74841a0e93da26b9aa372
+MLflow Run (pai): be89385d88b74841a0e93da26b9aa372
+
+
+======================================================================
+======================================================================
+
+FOLD 0FOLD 0
+
+============================================================================================================================================
+
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+
+  pos_weight: 8.36  pos_weight: 8.36
+
+
+Normalizacao clinica (apenas treino):
+Normalizacao clinica (apenas treino):
+
+  - idade: mu=61.72, sigma=11.17  - idade: mu=61.72, sigma=11.17
+
+  - paroxysmal: mu=0.30, sigma=0.48  - paroxysmal: mu=0.30, sigma=0.48
+
+  - nyha: mu=2.15, sigma=0.35  - nyha: mu=2.15, sigma=0.35
+
+
+Escala global do sinal (100 pacientes)...
+Escala global do sinal (100 pacientes)...
+
+   Escala X: 1.3391 mV   Escala X: 1.3391 mV
+
+   Escala Y: 1.0668 mV   Escala Y: 1.0668 mV
+
+   Escala Z: 2.1674 mV   Escala Z: 2.1674 mV
+
+Tipo de Rede: <function resnet18_classificacao at 0x7f38622267a0>Tipo de Rede: <function resnet18_classificacao at 0x7f38622267a0>
+
+  3,976,385 parametros | 12,869 por paciente de treino  3,976,385 parametros | 12,869 por paciente de treino
+
+  congelados: 0 | treinaveis: 3,976,385  congelados: 0 | treinaveis: 3,976,385
+
+
+ERRO FATAL:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1392425/972950933.py", line 449, in <module>
+    ag, m, lim = treinar_fold(proc, k, run_pai_id)
+  File "/tmp/ipykernel_1392425/972950933.py", line 357, in treinar_fold
+    tr_loss = train_epoch(model, train_loader, optimizer, DEVICE, scaler, criterio)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/arquiteturacnn_RESNET.py", line 306, in train_epoch
+    for batch in tqdm(loader, desc="Treino", leave=False, ncols=90):
+  File "/opt/conda/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "/opt/conda/lib/python3.10/site-packages/torch/_utils.py", line 722, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 254, in __getitem__
+    sinal = self._preprocess(raw)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 228, in _preprocess
+    cleaned = sosfiltfilt(SOS_BP, cleaned, axis=1)
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4452, in sosfiltfilt
+    edge, ext = _validate_pad(padtype, padlen, x, axis,
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4221, in _validate_pad
+    raise ValueError("The length of the input vector x must be greater "
+ValueError: The length of the input vector x must be greater than padlen, which is 21.
+
+
+ERRO FATAL:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1392425/972950933.py", line 449, in <module>
+    ag, m, lim = treinar_fold(proc, k, run_pai_id)
+  File "/tmp/ipykernel_1392425/972950933.py", line 357, in treinar_fold
+    tr_loss = train_epoch(model, train_loader, optimizer, DEVICE, scaler, criterio)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/arquiteturacnn_RESNET.py", line 306, in train_epoch
+    for batch in tqdm(loader, desc="Treino", leave=False, ncols=90):
+  File "/opt/conda/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "/opt/conda/lib/python3.10/site-packages/torch/_utils.py", line 722, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 254, in __getitem__
+    sinal = self._preprocess(raw)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 228, in _preprocess
+    cleaned = sosfiltfilt(SOS_BP, cleaned, axis=1)
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4452, in sosfiltfilt
+    edge, ext = _validate_pad(padtype, padlen, x, axis,
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4221, in _validate_pad
+    raise ValueError("The length of the input vector x must be greater "
+ValueError: The length of the input vector x must be greater than padlen, which is 21.
+
+
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+Inicio: 06/10/2026 00:31:49
+======================================================================
+
+======================================================================
+resnet18_10s_v1 — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 512,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'resnet18_10s_v1',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 250,
+ 'samples_patient_train': 500,
+ 'weight_decay': 0.01,
+ 'window_size': 10}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 85521aa0c8424bb9a1f7a558f7dcbf43
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7f5c83b1f520>
+  3,976,385 parametros | 12,869 por paciente de treino
+  congelados: 0 | treinaveis: 3,976,385
+
+ERRO FATAL:
+Traceback (most recent call last):
+  File "/tmp/ipykernel_1393205/972950933.py", line 449, in <module>
+    ag, m, lim = treinar_fold(proc, k, run_pai_id)
+  File "/tmp/ipykernel_1393205/972950933.py", line 357, in treinar_fold
+    tr_loss = train_epoch(model, train_loader, optimizer, DEVICE, scaler, criterio)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/arquiteturacnn_RESNET.py", line 306, in train_epoch
+    for batch in tqdm(loader, desc="Treino", leave=False, ncols=90):
+  File "/opt/conda/lib/python3.10/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "/opt/conda/lib/python3.10/site-packages/torch/_utils.py", line 722, in reraise
+    raise exception
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/opt/conda/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 254, in __getitem__
+    sinal = self._preprocess(raw)
+  File "/home/jovyan/cox-models-sudden-death/classificacao/processamento_gpu.py", line 228, in _preprocess
+    cleaned = sosfiltfilt(SOS_BP, cleaned, axis=1)
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4452, in sosfiltfilt
+    edge, ext = _validate_pad(padtype, padlen, x, axis,
+  File "/opt/conda/lib/python3.10/site-packages/scipy/signal/_signaltools.py", line 4221, in _validate_pad
+    raise ValueError("The length of the input vector x must be greater "
+ValueError: The length of the input vector x must be greater than padlen, which is 21.
+
+
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+Inicio: 06/10/2026 00:37:41
+======================================================================
+
+======================================================================
+resnet18_10s_v1 — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 2000,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'resnet18_10s_v1',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 8,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 250,
+ 'samples_patient_train': 500,
+ 'weight_decay': 0.01,
+ 'window_size': 512}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 834815b23c69444c8f87ed954637d063
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7f0badfc67a0>
+  3,976,385 parametros | 12,869 por paciente de treino
+  congelados: 0 | treinaveis: 3,976,385
+  Ep   1 | train 1.1580 | val 1.2791 | AUC 0.6149 (suave 0.6149) | sens 0.909 | espec 0.419
+  Ep   2 | train 0.5784 | val 1.6103 | AUC 0.5132 (suave 0.5640) | sens 0.818 | espec 0.333
+  Ep   3 | train 0.2750 | val 1.7822 | AUC 0.5093 (suave 0.5458) | sens 0.636 | espec 0.516
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_10s_v1.log
+Inicio: 06/10/2026 00:52:26
+======================================================================
+
+======================================================================
+resnet18_10s_v1 — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 2000,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'resnet18_10s_v1',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 12,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 250,
+ 'samples_patient_train': 500,
+ 'weight_decay': 0.01,
+ 'window_size': 1024}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): 92144cd2f0544c40b24d6756fbaa0104
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7fc20a17e680>
+  3,976,385 parametros | 12,869 por paciente de treino
+  congelados: 0 | treinaveis: 3,976,385
+  Ep   1 | train 1.1406 | val 1.2460 | AUC 0.6823 (suave 0.6823) | sens 0.909 | espec 0.495
+  Ep   2 | train 0.4944 | val 1.4758 | AUC 0.6061 (suave 0.6442) | sens 0.818 | espec 0.495
+  Ep   3 | train 0.2468 | val 1.5964 | AUC 0.6070 (suave 0.6318) | sens 0.727 | espec 0.624
+  Ep   4 | train 0.1802 | val 1.7578 | AUC 0.5787 (suave 0.5973) | sens 0.636 | espec 0.656
+  Ep   5 | train 0.1435 | val 1.9050 | AUC 0.6041 (suave 0.5966) | sens 0.818 | espec 0.538
+  Ep   6 | train 0.1183 | val 2.0029 | AUC 0.5640 (suave 0.5823) | sens 0.727 | espec 0.570
+  Ep   7 | train 0.1000 | val 2.2284 | AUC 0.6080 (suave 0.5920) | sens 0.818 | espec 0.613
+  Ep   8 | train 0.0866 | val 2.3574 | AUC 0.5718 (suave 0.5813) | sens 0.818 | espec 0.538
+  Ep   9 | train 0.0759 | val 2.4827 | AUC 0.6090 (suave 0.5963) | sens 0.818 | espec 0.581
+  Ep  10 | train 0.0669 | val 2.5617 | AUC 0.5777 (suave 0.5862) | sens 0.818 | espec 0.495
+  Ep  11 | train 0.0622 | val 2.7532 | AUC 0.5943 (suave 0.5937) | sens 0.818 | espec 0.591
+  Parada antecipada na epoca 11
+
+  >> FOLD 0: AUC 0.4956 | AP 0.2752 | sens 0.545 | espec 0.419
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.97, sigma=11.88
+  - paroxysmal: mu=0.33, sigma=0.48
+  - nyha: mu=2.14, sigma=0.34
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5294 mV
+   Escala Y: 1.3044 mV
+   Escala Z: 2.5272 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7fc20a17e680>
+  congelados: 0 | treinaveis: 3,976,385
+  Ep   1 | train 1.1597 | val 1.3569 | AUC 0.5239 (suave 0.5239) | sens 0.182 | espec 0.978
+  Ep   2 | train 0.5488 | val 1.4683 | AUC 0.5992 (suave 0.5616) | sens 0.909 | espec 0.430
+  Ep   3 | train 0.2443 | val 1.4858 | AUC 0.6276 (suave 0.5836) | sens 0.545 | espec 0.742
+  Ep   4 | train 0.1743 | val 1.5692 | AUC 0.6051 (suave 0.6106) | sens 0.818 | espec 0.441
+  Ep   5 | train 0.1394 | val 1.7555 | AUC 0.6237 (suave 0.6188) | sens 0.909 | espec 0.441
+  Ep   6 | train 0.1133 | val 1.8450 | AUC 0.6256 (suave 0.6181) | sens 0.818 | espec 0.505
+  Ep   7 | train 0.0961 | val 1.9235 | AUC 0.6325 (suave 0.6272) | sens 1.000 | espec 0.398
+  Ep   8 | train 0.0828 | val 2.2481 | AUC 0.6491 (suave 0.6357) | sens 0.818 | espec 0.548
+  Ep   9 | train 0.0740 | val 2.2357 | AUC 0.6403 (suave 0.6406) | sens 0.909 | espec 0.398
+  Ep  10 | train 0.0635 | val 2.2855 | AUC 0.6393 (suave 0.6429) | sens 1.000 | espec 0.323
+  Ep  11 | train 0.0607 | val 2.3553 | AUC 0.6246 (suave 0.6347) | sens 0.818 | espec 0.538
+  Ep  12 | train 0.0548 | val 2.3938 | AUC 0.6188 (suave 0.6276) | sens 1.000 | espec 0.366
+  Ep  13 | train 0.0514 | val 2.4890 | AUC 0.6373 (suave 0.6269) | sens 1.000 | espec 0.355
+  Ep  14 | train 0.0476 | val 2.5620 | AUC 0.6334 (suave 0.6298) | sens 1.000 | espec 0.366
+  Ep  15 | train 0.0471 | val 2.5718 | AUC 0.6246 (suave 0.6318) | sens 1.000 | espec 0.366
+  Ep  16 | train 0.0457 | val 2.6281 | AUC 0.6305 (suave 0.6295) | sens 1.000 | espec 0.366
+  Ep  17 | train 0.0443 | val 2.5682 | AUC 0.6276 (suave 0.6276) | sens 1.000 | espec 0.387
+  Ep  18 | train 0.0431 | val 2.5802 | AUC 0.6422 (suave 0.6334) | sens 1.000 | espec 0.419
+  Ep  19 | train 0.0434 | val 2.6017 | AUC 0.6383 (suave 0.6360) | sens 1.000 | espec 0.387
+  Ep  20 | train 0.0430 | val 2.5803 | AUC 0.6334 (suave 0.6380) | sens 1.000 | espec 0.387
+  Parada antecipada na epoca 20
+
+  >> FOLD 1: AUC 0.5445 | AP 0.1696 | sens 0.909 | espec 0.226
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.27, sigma=11.76
+  - paroxysmal: mu=0.31, sigma=0.48
+  - nyha: mu=2.14, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4195 mV
+   Escala Y: 1.0943 mV
+   Escala Z: 2.6359 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7fc20a17e680>
+  congelados: 0 | treinaveis: 3,976,385
+  Ep   1 | train 1.1159 | val 1.5465 | AUC 0.4604 (suave 0.4604) | sens 0.182 | espec 0.978
+  Ep   2 | train 0.4488 | val 1.5751 | AUC 0.5073 (suave 0.4839) | sens 0.727 | espec 0.398
+  Ep   3 | train 0.2153 | val 1.5613 | AUC 0.5591 (suave 0.5090) | sens 0.727 | espec 0.495
+  Ep   4 | train 0.1603 | val 1.6502 | AUC 0.5767 (suave 0.5477) | sens 0.818 | espec 0.355
+  Ep   5 | train 0.1287 | val 1.8674 | AUC 0.4809 (suave 0.5389) | sens 0.818 | espec 0.344
+  Ep   6 | train 0.1065 | val 1.9128 | AUC 0.5122 (suave 0.5233) | sens 0.182 | espec 0.978
+  Ep   7 | train 0.0898 | val 2.1027 | AUC 0.5024 (suave 0.4985) | sens 0.909 | espec 0.258
+  Ep   8 | train 0.0798 | val 2.1715 | AUC 0.5191 (suave 0.5112) | sens 0.909 | espec 0.301
+  Ep   9 | train 0.0689 | val 2.2708 | AUC 0.5396 (suave 0.5204) | sens 0.909 | espec 0.323
+  Ep  10 | train 0.0626 | val 2.3614 | AUC 0.5415 (suave 0.5334) | sens 0.909 | espec 0.290
+  Ep  11 | train 0.0586 | val 2.5791 | AUC 0.5034 (suave 0.5282) | sens 0.182 | espec 0.957
+  Ep  12 | train 0.0539 | val 2.5984 | AUC 0.5103 (suave 0.5184) | sens 0.909 | espec 0.280
+  Ep  13 | train 0.0507 | val 2.5823 | AUC 0.5415 (suave 0.5184) | sens 0.909 | espec 0.280
+  Ep  14 | train 0.0498 | val 2.6998 | AUC 0.5044 (suave 0.5187) | sens 0.182 | espec 0.946
+  Parada antecipada na epoca 14
+
+  >> FOLD 2: AUC 0.5287 | AP 0.1228 | sens 0.727 | espec 0.402
+
+======================================================================
+FOLD 3
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=62.18, sigma=11.65
+  - paroxysmal: mu=0.32, sigma=0.49
+  - nyha: mu=2.16, sigma=0.37
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5358 mV
+   Escala Y: 1.1305 mV
+   Escala Z: 2.6929 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7fc20a17e680>
+  congelados: 0 | treinaveis: 3,976,385
+  Ep   1 | train 1.1529 | val 1.5215 | AUC 0.4995 (suave 0.4995) | sens 0.545 | espec 0.624
+  Ep   2 | train 0.5511 | val 1.4822 | AUC 0.5748 (suave 0.5371) | sens 0.727 | espec 0.559
+  Ep   3 | train 0.2487 | val 1.5340 | AUC 0.5415 (suave 0.5386) | sens 0.727 | espec 0.484
+  Ep   4 | train 0.1857 | val 1.5984 | AUC 0.5191 (suave 0.5451) | sens 0.727 | espec 0.452
+  Ep   5 | train 0.1506 | val 1.7198 | AUC 0.5142 (suave 0.5249) | sens 0.727 | espec 0.495
+  Ep   6 | train 0.1255 | val 1.8954 | AUC 0.5415 (suave 0.5249) | sens 0.727 | espec 0.516
+  Ep   7 | train 0.1083 | val 2.1026 | AUC 0.5181 (suave 0.5246) | sens 0.818 | espec 0.419
+  Ep   8 | train 0.0929 | val 2.1398 | AUC 0.5318 (suave 0.5305) | sens 0.818 | espec 0.398
+  Ep   9 | train 0.0816 | val 2.4331 | AUC 0.5464 (suave 0.5321) | sens 0.727 | espec 0.495
+  Ep  10 | train 0.0721 | val 2.4573 | AUC 0.5435 (suave 0.5406) | sens 0.818 | espec 0.452
+  Ep  11 | train 0.0673 | val 2.4600 | AUC 0.5660 (suave 0.5520) | sens 0.818 | espec 0.516
+  Ep  12 | train 0.0631 | val 2.4211 | AUC 0.5797 (suave 0.5630) | sens 0.818 | espec 0.516
+  Ep  13 | train 0.0590 | val 2.5797 | AUC 0.5640 (suave 0.5699) | sens 0.818 | espec 0.484
+  Ep  14 | train 0.0554 | val 2.7076 | AUC 0.5728 (suave 0.5722) | sens 0.727 | espec 0.538
+  Ep  15 | train 0.0540 | val 2.7591 | AUC 0.5601 (suave 0.5657) | sens 0.818 | espec 0.473
+  Ep  16 | train 0.0509 | val 2.7115 | AUC 0.5630 (suave 0.5653) | sens 0.818 | espec 0.430
+  Ep  17 | train 0.0504 | val 2.7434 | AUC 0.5777 (suave 0.5670) | sens 0.818 | espec 0.430
+  Ep  18 | train 0.0497 | val 2.7815 | AUC 0.5670 (suave 0.5692) | sens 0.727 | espec 0.527
+  Ep  19 | train 0.0496 | val 2.7663 | AUC 0.5670 (suave 0.5705) | sens 0.727 | espec 0.527
+  Ep  20 | train 0.0480 | val 2.7767 | AUC 0.5709 (suave 0.5683) | sens 0.727 | espec 0.527
+
+  >> FOLD 3: AUC 0.3636 | AP 0.0893 | sens 0.182 | espec 0.511
+
+======================================================================
+FOLD 4
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.33, sigma=11.78
+  - paroxysmal: mu=0.30, sigma=0.46
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4604 mV
+   Escala Y: 1.2672 mV
+   Escala Z: 2.4316 mV
+Tipo de Rede: <function resnet18_classificacao at 0x7fc20a17e680>
+  congelados: 0 | treinaveis: 3,976,385
+  Ep   1 | train 1.1814 | val 1.3237 | AUC 0.5885 (suave 0.5885) | sens 0.636 | espec 0.677
+  Ep   2 | train 0.5866 | val 1.4828 | AUC 0.5396 (suave 0.5640) | sens 0.364 | espec 0.839
+  Ep   3 | train 0.2426 | val 1.4828 | AUC 0.5513 (suave 0.5598) | sens 1.000 | espec 0.161
+  Ep   4 | train 0.1760 | val 1.5144 | AUC 0.5689 (suave 0.5533) | sens 1.000 | espec 0.172
+  Ep   5 | train 0.1399 | val 1.6310 | AUC 0.5445 (suave 0.5549) | sens 0.727 | espec 0.419
+  Ep   6 | train 0.1166 | val 1.7414 | AUC 0.5494 (suave 0.5543) | sens 0.364 | espec 0.839
+  Ep   7 | train 0.1011 | val 1.9047 | AUC 0.5337 (suave 0.5425) | sens 0.636 | espec 0.548
+  Ep   8 | train 0.0889 | val 1.9222 | AUC 0.5484 (suave 0.5438) | sens 0.455 | espec 0.742
+  Ep   9 | train 0.0794 | val 2.0948 | AUC 0.5220 (suave 0.5347) | sens 0.636 | espec 0.505
+  Ep  10 | train 0.0721 | val 2.1294 | AUC 0.5425 (suave 0.5376) | sens 0.364 | espec 0.849
+  Ep  11 | train 0.0656 | val 2.2647 | AUC 0.5425 (suave 0.5357) | sens 0.364 | espec 0.849
+  Parada antecipada na epoca 11
+
+  >> FOLD 4: AUC 0.5652 | AP 0.2300 | sens 0.545 | espec 0.554
+
+
+======================================================================
+RESULTADO 1 — MEDIA ENTRE OS FOLDS
+======================================================================
+      auc      ap  acuracia  sensibilidade  especificidade     vpp      f1
+0  0.4956  0.2752    0.4327         0.5455          0.4194  0.1000  0.1690
+1  0.5445  0.1696    0.2981         0.9091          0.2258  0.1220  0.2151
+2  0.5287  0.1228    0.4369         0.7273          0.4022  0.1270  0.2162
+3  0.3636  0.0893    0.4757         0.1818          0.5109  0.0426  0.0690
+4  0.5652  0.2300    0.5534         0.5455          0.5543  0.1277  0.2069
+----------------------------------------------------------------------
+  auc             : 0.4995 +- 0.0801
+  ap              : 0.1774 +- 0.0761
+  acuracia        : 0.4394 +- 0.0927
+  sensibilidade   : 0.5818 +- 0.2697
+  especificidade  : 0.4225 +- 0.1268
+  vpp             : 0.1038 +- 0.0361
+  f1              : 0.1752 +- 0.0624
+
+======================================================================
+RESULTADO 2 — OUT-OF-FOLD AGRUPADO
+======================================================================
+  517 pacientes | 55 casos | prevalencia 10.6%
+
+  Todos os pacientes, cada um predito fora do seu fold
+  ------------------------------------------------------
+    AUC-ROC..........: 0.4921
+    AUC-PR (AP)......: 0.1290
+    Limiar...........: 0.1863
+    Acuracia.........: 0.4565   (enganosa se desbalanceado)
+    Sensibilidade....: 0.5818   (recall)
+    Especificidade...: 0.4416
+    VPP (precisao)...: 0.1103
+    VPN..............: 0.8987
+    F1...............: 0.1855
+  ------------------------------------------------------
+                    Predito 0   Predito 1
+      Real 0 (vive)     204         258   <- FP (falso alarme)
+      Real 1 (morre)     23          32
+                        ^ FN (morte nao detectada)
+
+  AUC = 0.4921  IC95% [0.4108, 0.5769]
+  ATENCAO: o IC inclui 0,5 — nao distinguivel do acaso.
+
+  Agregacao por MAX das janelas: AUC 0.5133 | AP 0.1111
+
+======================================================================
+COMO REPORTAR NA DISSERTACAO
+======================================================================
+
+  AUC-ROC: 0.500 +- 0.080 (media dos 5 folds)
+  AUC out-of-fold: 0.492 (IC95% 0.411-0.577, bootstrap)
+
+  Um desvio entre folds acima de ~0.08 indica que o resultado depende de
+  quais pacientes cairam em cada particao — reporte-o sempre junto da media.
+
+  Desvio observado: 0.0801
+

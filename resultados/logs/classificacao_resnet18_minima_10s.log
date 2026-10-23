@@ -1,0 +1,329 @@
+
+
+Log: /home/jovyan/cox-models-sudden-death/Arquitetura/logs/Logs/classificacao_resnet18_minima_10s.log
+Inicio: 06/10/2026 18:08:48
+======================================================================
+
+======================================================================
+resnet18_minima_10s — validacao cruzada 5-fold
+======================================================================
+{'batch_size': 2000,
+ 'data_folder_path': '/home/jovyan/vol-1/scd-oregon-adaptado/raw_data/Holter_ECG',
+ 'dropout_rate': 0.6,
+ 'estrategia_encoder': 'normal',
+ 'learning_rate': 0.0001,
+ 'n_folds': 5,
+ 'nome_do_ensaio': 'resnet18_minima_10s',
+ 'nome_do_experiment': 'Resnet_Classificacao',
+ 'num_epochs': 20,
+ 'num_workers': 12,
+ 'patience_early_stop': 10,
+ 'pooling': 'both',
+ 'rede_pequena': False,
+ 'samples_patient_eval': 250,
+ 'samples_patient_train': 500,
+ 'weight_decay': 0.01,
+ 'window_size': 1024}
+
+Preparando dados...
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+Montando coorte caso-controle...
+  Coorte inicial.....................: 992
+  Apos ritmo sinusal.................: 710
+  Excluidos por desfecho ambiguo:
+    - morte nao cardiaca (cod. 1)....: 35
+    - falencia de bomba (cod. 6, 7)..: 67
+    - vivos com < 4 anos.............: 21
+  Casos + controles..................: 587
+  Com as 3 derivacoes................: 517
+    - CASOS (MSC)....................: 55
+    - CONTROLES (4 anos).............: 462
+  Prevalencia........................: 10.6%
+
+  5-fold estratificado sobre 517 pacientes (55 casos)
+    fold 0: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 1: treino 413 (44 casos) | teste 104 (11 casos)
+    fold 2: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 3: treino 414 (44 casos) | teste 103 (11 casos)
+    fold 4: treino 414 (44 casos) | teste 103 (11 casos)
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+
+MLflow Run (pai): b018f946b9704f67b0c88616b074194a
+
+======================================================================
+FOLD 0
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.72, sigma=11.17
+  - paroxysmal: mu=0.30, sigma=0.48
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.3391 mV
+   Escala Y: 1.0668 mV
+   Escala Z: 2.1674 mV
+Tipo de Rede: <function resnet18_minima at 0x7fd065c4b7f0>
+  78,169 parametros | 253 por paciente de treino
+  congelados: 0 | treinaveis: 78,169
+  Ep   1 | train 1.2952 | val 1.2504 | AUC 0.4770 (suave 0.4770) | sens 0.364 | espec 0.774
+  Ep   2 | train 1.2669 | val 1.2595 | AUC 0.4604 (suave 0.4687) | sens 0.364 | espec 0.710
+  Ep   3 | train 1.2458 | val 1.2712 | AUC 0.4663 (suave 0.4679) | sens 0.091 | espec 0.957
+  Ep   4 | train 1.2261 | val 1.2844 | AUC 0.4673 (suave 0.4646) | sens 0.091 | espec 0.968
+  Ep   5 | train 1.2012 | val 1.2961 | AUC 0.4731 (suave 0.4689) | sens 0.182 | espec 0.914
+  Ep   6 | train 1.1765 | val 1.3110 | AUC 0.4702 (suave 0.4702) | sens 0.727 | espec 0.355
+  Ep   7 | train 1.1389 | val 1.3257 | AUC 0.4770 (suave 0.4734) | sens 0.727 | espec 0.387
+  Ep   8 | train 1.0923 | val 1.3551 | AUC 0.4780 (suave 0.4751) | sens 0.727 | espec 0.366
+  Ep   9 | train 1.0239 | val 1.3935 | AUC 0.4976 (suave 0.4842) | sens 1.000 | espec 0.161
+  Ep  10 | train 0.9503 | val 1.4639 | AUC 0.4868 (suave 0.4875) | sens 1.000 | espec 0.172
+  Ep  11 | train 0.8670 | val 1.5338 | AUC 0.4878 (suave 0.4907) | sens 1.000 | espec 0.129
+  Ep  12 | train 0.7902 | val 1.5843 | AUC 0.4927 (suave 0.4891) | sens 0.273 | espec 0.849
+  Ep  13 | train 0.7304 | val 1.6449 | AUC 0.4927 (suave 0.4910) | sens 0.364 | espec 0.753
+  Ep  14 | train 0.6894 | val 1.6752 | AUC 0.5044 (suave 0.4966) | sens 0.364 | espec 0.796
+  Ep  15 | train 0.6614 | val 1.7102 | AUC 0.5093 (suave 0.5021) | sens 0.364 | espec 0.828
+  Ep  16 | train 0.6339 | val 1.7321 | AUC 0.5083 (suave 0.5073) | sens 0.364 | espec 0.828
+  Ep  17 | train 0.6236 | val 1.7376 | AUC 0.5112 (suave 0.5096) | sens 0.364 | espec 0.839
+  Ep  18 | train 0.6225 | val 1.7347 | AUC 0.5122 (suave 0.5106) | sens 0.364 | espec 0.828
+  Ep  19 | train 0.6123 | val 1.7476 | AUC 0.5093 (suave 0.5109) | sens 0.364 | espec 0.828
+  Ep  20 | train 0.6164 | val 1.7566 | AUC 0.5054 (suave 0.5090) | sens 0.364 | espec 0.828
+
+  >> FOLD 0: AUC 0.6432 | AP 0.2469 | sens 0.273 | espec 0.817
+
+======================================================================
+FOLD 1
+======================================================================
+  Treino 309 (33 casos) | Val 104 (11) | Teste 104 (11)
+  pos_weight: 8.36
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.97, sigma=11.88
+  - paroxysmal: mu=0.33, sigma=0.48
+  - nyha: mu=2.14, sigma=0.34
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5294 mV
+   Escala Y: 1.3044 mV
+   Escala Z: 2.5272 mV
+Tipo de Rede: <function resnet18_minima at 0x7fd065c4b7f0>
+  congelados: 0 | treinaveis: 78,169
+  Ep   1 | train 1.2938 | val 1.2003 | AUC 0.6716 (suave 0.6716) | sens 0.818 | espec 0.548
+  Ep   2 | train 1.2719 | val 1.1928 | AUC 0.6608 (suave 0.6662) | sens 0.818 | espec 0.538
+  Ep   3 | train 1.2533 | val 1.1926 | AUC 0.6579 (suave 0.6634) | sens 0.818 | espec 0.505
+  Ep   4 | train 1.2371 | val 1.1839 | AUC 0.6579 (suave 0.6588) | sens 0.727 | espec 0.624
+  Ep   5 | train 1.2125 | val 1.1805 | AUC 0.6657 (suave 0.6605) | sens 0.727 | espec 0.656
+  Ep   6 | train 1.1883 | val 1.1780 | AUC 0.6774 (suave 0.6670) | sens 1.000 | espec 0.344
+  Ep   7 | train 1.1417 | val 1.1812 | AUC 0.6764 (suave 0.6732) | sens 1.000 | espec 0.301
+  Ep   8 | train 1.0749 | val 1.1879 | AUC 0.6833 (suave 0.6790) | sens 0.909 | espec 0.516
+  Ep   9 | train 0.9779 | val 1.2295 | AUC 0.6383 (suave 0.6660) | sens 0.909 | espec 0.409
+  Ep  10 | train 0.8720 | val 1.2870 | AUC 0.6432 (suave 0.6549) | sens 1.000 | espec 0.344
+  Ep  11 | train 0.7792 | val 1.3483 | AUC 0.6471 (suave 0.6429) | sens 0.818 | espec 0.527
+  Ep  12 | train 0.7150 | val 1.3945 | AUC 0.6530 (suave 0.6478) | sens 1.000 | espec 0.376
+  Ep  13 | train 0.6708 | val 1.4476 | AUC 0.6325 (suave 0.6442) | sens 1.000 | espec 0.376
+  Ep  14 | train 0.6361 | val 1.4728 | AUC 0.6452 (suave 0.6435) | sens 1.000 | espec 0.387
+  Ep  15 | train 0.6142 | val 1.4995 | AUC 0.6364 (suave 0.6380) | sens 1.000 | espec 0.387
+  Ep  16 | train 0.5984 | val 1.5244 | AUC 0.6413 (suave 0.6409) | sens 1.000 | espec 0.398
+  Ep  17 | train 0.5864 | val 1.5353 | AUC 0.6325 (suave 0.6367) | sens 1.000 | espec 0.409
+  Ep  18 | train 0.5775 | val 1.5453 | AUC 0.6325 (suave 0.6354) | sens 1.000 | espec 0.398
+  Parada antecipada na epoca 18
+
+  >> FOLD 1: AUC 0.4594 | AP 0.1272 | sens 0.455 | espec 0.462
+
+======================================================================
+FOLD 2
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.27, sigma=11.76
+  - paroxysmal: mu=0.31, sigma=0.48
+  - nyha: mu=2.14, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4195 mV
+   Escala Y: 1.0943 mV
+   Escala Z: 2.6359 mV
+Tipo de Rede: <function resnet18_minima at 0x7fd065c4b7f0>
+  congelados: 0 | treinaveis: 78,169
+  Ep   1 | train 1.2807 | val 1.3028 | AUC 0.4282 (suave 0.4282) | sens 0.364 | espec 0.839
+  Ep   2 | train 1.2425 | val 1.3381 | AUC 0.4418 (suave 0.4350) | sens 0.273 | espec 0.914
+  Ep   3 | train 1.2088 | val 1.3548 | AUC 0.4536 (suave 0.4412) | sens 0.273 | espec 0.914
+  Ep   4 | train 1.1644 | val 1.3908 | AUC 0.4585 (suave 0.4513) | sens 0.273 | espec 0.935
+  Ep   5 | train 1.1208 | val 1.4260 | AUC 0.4448 (suave 0.4523) | sens 0.273 | espec 0.903
+  Ep   6 | train 1.0573 | val 1.4714 | AUC 0.4624 (suave 0.4552) | sens 0.364 | espec 0.753
+  Ep   7 | train 0.9516 | val 1.5116 | AUC 0.4624 (suave 0.4565) | sens 0.273 | espec 0.849
+  Ep   8 | train 0.8284 | val 1.5543 | AUC 0.4604 (suave 0.4617) | sens 1.000 | espec 0.215
+  Ep   9 | train 0.7165 | val 1.6447 | AUC 0.4379 (suave 0.4536) | sens 1.000 | espec 0.237
+  Ep  10 | train 0.6277 | val 1.7174 | AUC 0.4428 (suave 0.4471) | sens 1.000 | espec 0.226
+  Ep  11 | train 0.5638 | val 1.7013 | AUC 0.4448 (suave 0.4418) | sens 1.000 | espec 0.204
+  Ep  12 | train 0.5186 | val 1.7717 | AUC 0.4438 (suave 0.4438) | sens 1.000 | espec 0.172
+  Ep  13 | train 0.4849 | val 1.7820 | AUC 0.4370 (suave 0.4418) | sens 1.000 | espec 0.161
+  Ep  14 | train 0.4630 | val 1.7882 | AUC 0.4418 (suave 0.4409) | sens 0.909 | espec 0.258
+  Ep  15 | train 0.4476 | val 1.8072 | AUC 0.4448 (suave 0.4412) | sens 0.909 | espec 0.258
+  Ep  16 | train 0.4336 | val 1.8171 | AUC 0.4506 (suave 0.4457) | sens 0.909 | espec 0.247
+  Ep  17 | train 0.4244 | val 1.8209 | AUC 0.4545 (suave 0.4500) | sens 0.909 | espec 0.258
+  Ep  18 | train 0.4210 | val 1.8205 | AUC 0.4545 (suave 0.4532) | sens 0.909 | espec 0.247
+  Parada antecipada na epoca 18
+
+  >> FOLD 2: AUC 0.5850 | AP 0.1646 | sens 0.818 | espec 0.163
+
+======================================================================
+FOLD 3
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=62.18, sigma=11.65
+  - paroxysmal: mu=0.32, sigma=0.49
+  - nyha: mu=2.16, sigma=0.37
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.5358 mV
+   Escala Y: 1.1305 mV
+   Escala Z: 2.6929 mV
+Tipo de Rede: <function resnet18_minima at 0x7fd065c4b7f0>
+  congelados: 0 | treinaveis: 78,169
+  Ep   1 | train 1.2870 | val 1.2409 | AUC 0.6735 (suave 0.6735) | sens 0.909 | espec 0.527
+  Ep   2 | train 1.2449 | val 1.2452 | AUC 0.6540 (suave 0.6637) | sens 1.000 | espec 0.398
+  Ep   3 | train 1.2092 | val 1.2653 | AUC 0.5210 (suave 0.6162) | sens 0.636 | espec 0.516
+  Ep   4 | train 1.1557 | val 1.2872 | AUC 0.5279 (suave 0.5676) | sens 0.636 | espec 0.602
+  Ep   5 | train 1.0739 | val 1.3521 | AUC 0.5386 (suave 0.5292) | sens 0.727 | espec 0.484
+  Ep   6 | train 0.9577 | val 1.5086 | AUC 0.5073 (suave 0.5246) | sens 0.364 | espec 0.753
+  Ep   7 | train 0.8186 | val 1.6758 | AUC 0.4829 (suave 0.5096) | sens 0.545 | espec 0.570
+  Ep   8 | train 0.6857 | val 1.7891 | AUC 0.4888 (suave 0.4930) | sens 0.273 | espec 0.849
+  Ep   9 | train 0.5898 | val 1.8963 | AUC 0.4761 (suave 0.4826) | sens 0.273 | espec 0.828
+  Ep  10 | train 0.5204 | val 1.9561 | AUC 0.4780 (suave 0.4809) | sens 0.364 | espec 0.753
+  Ep  11 | train 0.4818 | val 1.9771 | AUC 0.4936 (suave 0.4826) | sens 0.364 | espec 0.774
+  Parada antecipada na epoca 11
+
+  >> FOLD 3: AUC 0.5781 | AP 0.1919 | sens 0.727 | espec 0.554
+
+======================================================================
+FOLD 4
+======================================================================
+  Treino 310 (33 casos) | Val 104 (11) | Teste 103 (11)
+  pos_weight: 8.39
+
+Normalizacao clinica (apenas treino):
+  - idade: mu=61.33, sigma=11.78
+  - paroxysmal: mu=0.30, sigma=0.46
+  - nyha: mu=2.15, sigma=0.35
+
+Escala global do sinal (100 pacientes)...
+   Escala X: 1.4604 mV
+   Escala Y: 1.2672 mV
+   Escala Z: 2.4316 mV
+Tipo de Rede: <function resnet18_minima at 0x7fd065c4b7f0>
+  congelados: 0 | treinaveis: 78,169
+  Ep   1 | train 1.2903 | val 1.2722 | AUC 0.4252 (suave 0.4252) | sens 0.273 | espec 0.882
+  Ep   2 | train 1.2538 | val 1.3097 | AUC 0.4370 (suave 0.4311) | sens 0.273 | espec 0.903
+  Ep   3 | train 1.2294 | val 1.3562 | AUC 0.4418 (suave 0.4347) | sens 0.273 | espec 0.935
+  Ep   4 | train 1.1968 | val 1.3874 | AUC 0.4487 (suave 0.4425) | sens 0.273 | espec 0.882
+  Ep   5 | train 1.1562 | val 1.4334 | AUC 0.4585 (suave 0.4497) | sens 0.182 | espec 0.978
+  Ep   6 | train 1.1099 | val 1.4553 | AUC 0.4819 (suave 0.4630) | sens 0.364 | espec 0.796
+  Ep   7 | train 1.0358 | val 1.5176 | AUC 0.4985 (suave 0.4796) | sens 0.364 | espec 0.806
+  Ep   8 | train 0.9369 | val 1.5645 | AUC 0.5406 (suave 0.5070) | sens 0.273 | espec 0.914
+  Ep   9 | train 0.8256 | val 1.6420 | AUC 0.5650 (suave 0.5347) | sens 0.364 | espec 0.892
+  Ep  10 | train 0.7384 | val 1.6126 | AUC 0.5601 (suave 0.5552) | sens 0.455 | espec 0.785
+  Ep  11 | train 0.6694 | val 1.6626 | AUC 0.5533 (suave 0.5595) | sens 0.455 | espec 0.796
+  Ep  12 | train 0.6194 | val 1.7050 | AUC 0.5415 (suave 0.5516) | sens 0.455 | espec 0.785
+  Ep  13 | train 0.5841 | val 1.7153 | AUC 0.5259 (suave 0.5402) | sens 0.455 | espec 0.785
+  Ep  14 | train 0.5538 | val 1.7714 | AUC 0.5220 (suave 0.5298) | sens 0.455 | espec 0.763
+  Ep  15 | train 0.5357 | val 1.7322 | AUC 0.5357 (suave 0.5279) | sens 0.455 | espec 0.796
+  Ep  16 | train 0.5249 | val 1.7586 | AUC 0.5259 (suave 0.5279) | sens 0.455 | espec 0.796
+  Ep  17 | train 0.5137 | val 1.7723 | AUC 0.5239 (suave 0.5285) | sens 0.455 | espec 0.796
+  Ep  18 | train 0.5129 | val 1.7468 | AUC 0.5249 (suave 0.5249) | sens 0.455 | espec 0.796
+  Ep  19 | train 0.5087 | val 1.7664 | AUC 0.5181 (suave 0.5223) | sens 0.455 | espec 0.785
+  Ep  20 | train 0.5036 | val 1.7600 | AUC 0.5230 (suave 0.5220) | sens 0.455 | espec 0.796
+
+  >> FOLD 4: AUC 0.5800 | AP 0.1779 | sens 0.364 | espec 0.804
+
+
+======================================================================
+RESULTADO 1 — MEDIA ENTRE OS FOLDS
+======================================================================
+      auc      ap  acuracia  sensibilidade  especificidade     vpp      f1
+0  0.6432  0.2469    0.7596         0.2727          0.8172  0.1500  0.1935
+1  0.4594  0.1272    0.4615         0.4545          0.4624  0.0909  0.1515
+2  0.5850  0.1646    0.2330         0.8182          0.1630  0.1047  0.1856
+3  0.5781  0.1919    0.5728         0.7273          0.5543  0.1633  0.2667
+4  0.5800  0.1779    0.7573         0.3636          0.8043  0.1818  0.2424
+----------------------------------------------------------------------
+  auc             : 0.5691 +- 0.0670
+  ap              : 0.1817 +- 0.0437
+  acuracia        : 0.5569 +- 0.2211
+  sensibilidade   : 0.5273 +- 0.2353
+  especificidade  : 0.5603 +- 0.2706
+  vpp             : 0.1381 +- 0.0388
+  f1              : 0.2079 +- 0.0462
+
+======================================================================
+RESULTADO 2 — OUT-OF-FOLD AGRUPADO
+======================================================================
+  517 pacientes | 55 casos | prevalencia 10.6%
+
+  Todos os pacientes, cada um predito fora do seu fold
+  ------------------------------------------------------
+    AUC-ROC..........: 0.5617
+    AUC-PR (AP)......: 0.1599
+    Limiar...........: 0.4895
+    Acuracia.........: 0.6325   (enganosa se desbalanceado)
+    Sensibilidade....: 0.4545   (recall)
+    Especificidade...: 0.6537
+    VPP (precisao)...: 0.1351
+    VPN..............: 0.9096
+    F1...............: 0.2083
+  ------------------------------------------------------
+                    Predito 0   Predito 1
+      Real 0 (vive)     302         160   <- FP (falso alarme)
+      Real 1 (morre)     30          25
+                        ^ FN (morte nao detectada)
+
+  AUC = 0.5617  IC95% [0.4750, 0.6419]
+  ATENCAO: o IC inclui 0,5 — nao distinguivel do acaso.
+
+  Agregacao por MAX das janelas: AUC 0.5237 | AP 0.1392
+
+======================================================================
+COMO REPORTAR NA DISSERTACAO
+======================================================================
+
+  AUC-ROC: 0.569 +- 0.067 (media dos 5 folds)
+  AUC out-of-fold: 0.562 (IC95% 0.475-0.642, bootstrap)
+
+  Um desvio entre folds acima de ~0.08 indica que o resultado depende de
+  quais pacientes cairam em cada particao — reporte-o sempre junto da media.
+
+  Desvio observado: 0.0670
+
