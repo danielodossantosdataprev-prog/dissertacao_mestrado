@@ -86,6 +86,28 @@ continha a derivação Z. A coorte final compreendeu 517 pacientes, dos quais
 \section{Pré-processamento do sinal}
 \label{sec:met-preprocessamento}
 
+Cada registro de Holter contém três derivações, X, Y e Z, amostradas a
+200\,Hz ao longo de cerca de 24~horas. A \autoref{fig:met-ecg-amostra}
+mostra, como exemplo, um trecho de 10~segundos de um paciente controle da
+coorte, sorteado aleatoriamente, após a filtragem descrita na
+\autoref{subsec:met-filtragem}. As três derivações registram os mesmos
+batimentos sob ângulos diferentes, o que se reflete na amplitude e na forma
+distintas dos complexos QRS e das ondas T em cada uma.
+
+\begin{figure}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{fig:met-ecg-amostra} Trecho de 10 segundos do Holter de um
+		paciente controle da coorte, nas derivações X, Y e Z, após o filtro
+		passa-faixa de 0,5 a 40\,Hz}
+	\UFCfig{}{
+		\includegraphics[width=15cm]{figuras/ecg_tres_derivacoes.png}
+	}{
+		\Fonte{elaborado pelo autor (2026), a partir da base MUSIC. Grade no
+			padrão do papel de \gls{ECG}: 0,2\,s e 0,5\,mV nas linhas fortes.}
+	}
+\end{figure}
+
+
 \subsection{Extração de janelas}
 \label{subsec:met-janelas}
 
