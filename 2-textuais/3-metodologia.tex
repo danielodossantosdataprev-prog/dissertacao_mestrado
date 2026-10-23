@@ -413,6 +413,36 @@ distintas, que não coincidem exatamente ao serem reunidas em ordenamento
 % CONFERIR os valores marcados com [conferir] contra os logs antes de fechar.
 % ==============================================================================
 
+\subsection{Ambiente computacional}
+\label{subsec:met-ambiente}
+
+Os experimentos foram executados em um servidor com sistema operacional
+Ubuntu, cujas características constam da \autoref{tab:met-ambiente}. Cada
+treinamento utilizou uma das duas unidades de processamento gráfico, com
+precisão mista. A extração dos marcadores e os modelos sobre variáveis
+tabulares foram executados nos processadores, com paralelismo entre
+pacientes.
+
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:met-ambiente} Ambiente computacional}
+	\IBGEtab{}{
+		\begin{tabular}{ll}
+			\toprule
+			Componente                     & Especificação                                              \\
+			\midrule \midrule
+			Unidades de processamento gráfico & 2 $\times$ NVIDIA A100-SXM4, 40\,GB de memória cada     \\
+			Processadores                  & 2 $\times$ AMD EPYC 7742 (128 núcleos, 256 \textit{threads}) \\
+			Memória principal              & 2\,TB                                                      \\
+			Sistema operacional            & Ubuntu 22.04                                               \\
+			Linguagem e bibliotecas        & Python, PyTorch, scikit-learn, NeuroKit2, WFDB             \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
 \subsection{Experimentos com a rede convolucional}
 \label{subsec:met-cnn-experimentos}
 
