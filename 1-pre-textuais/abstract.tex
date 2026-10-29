@@ -1,40 +1,35 @@
-This work investigates whether the 24-hour Holter electrocardiogram (ECG)
-can identify, among patients with chronic heart failure, those who will
-suffer sudden cardiac death (SCD) within four years. The problem was framed
-as a patient-level binary classification: from the Holter recording,
-distinguish the 55 patients who died of SCD from the 462 who survived the
-four-year follow-up, in a cohort of 517 patients in sinus rhythm from the
-public MUSIC database (PhysioNet). In stratified five-fold cross-validation with
-patient-level splits, the main metric is the
-area under the ROC curve (AUC) for predicting SCD versus survival, computed
-on out-of-fold predictions, with 95\,\% bootstrap confidence intervals (CI).
-Four approaches were compared. (i) Convolutional and residual networks,
-trained directly on the three-lead signal to predict SCD, in 19
-configurations, reached AUC
-between 0.48 and 0.56, not different from chance. (ii) Markers extracted from
-the signal --- heart rate variability, ectopy and beat morphology ---, in
-logistic regression, predicted SCD with AUC between 0.58 and 0.62 with 44
-markers and 0.647 (CI: 0.56--0.73) with two markers defined from the
-literature before the analysis: the variation of heart rate over the day and
-the ectopic burden. (iii) Six clinical variables
-(age, sex, NYHA class, Q waves and two arrhythmias) predicted SCD
-with AUC 0.661 (CI: 0.58--0.74). (iv) In the proposed approach, a ResNet-18
-was trained to recognize, in 30-second Holter windows, 45 clinical
-attributes measured by other exams, such as QRS duration, ejection fraction
-and Pro-BNP, and the representation it learned from the signal was used by
-a logistic regression to predict SCD. The network learned to recognize
-electrical attributes in the Holter, such as QRS above 120~ms (AUC 0.92).
-Using only the Holter signal, its representation predicted SCD with AUC
-0.682 (CI: 0.60--0.76), equivalent to the clinical variables and 0.17 above
-the same network trained directly for SCD (0.508); combined with the
-clinical variables, it reached 0.702 (CI: 0.62--0.78). The best model of
-this work, with the clinical variables and the measured exams
-(echocardiography, Pro-BNP and resting ECG), reached 0.733 (CI: 0.66--0.80),
-and no Holter-based approach added information to it. The results show that
-guiding the network with clinical attributes is what makes it possible to
-extract from the Holter, with no clinical variable as input, an SCD risk
-estimate at the level of the clinical variables, which the same network
-trained directly for SCD did not achieve.
+This work evaluates machine learning models to predict, from the 24-hour
+Holter electrocardiogram (ECG), which patients with chronic heart failure
+will suffer sudden cardiac death (SCD) within four years. Prediction was
+framed as a patient-level binary classification: distinguishing the 55
+patients who died of SCD from the 462 who survived the four-year follow-up,
+in a cohort of 517 patients in sinus rhythm from the public MUSIC database
+(PhysioNet). Three scenarios were tested in stratified
+five-fold cross-validation with patient-level splits. The main metric is the area under
+the ROC curve (AUC) for SCD prediction, with 95\,\% bootstrap confidence intervals (CI). In the first scenario, deep
+learning models --- convolutional, residual (ResNet-18 to ResNet-50),
+attention and fusion networks with clinical variables --- were trained directly on the raw Holter signal to
+predict SCD, in 19 configurations. In the second, models based on ECG processing techniques
+extracted from the signal, in 5-minute and 30-second segments, heart rate
+variability parameters (SDNN, RMSSD, LF and HF power, Poincaré and entropy), ectopy parameters (ectopic burden, couplets and pauses) and
+beat morphology parameters (QRS duration, QT interval and P and T waves),
+used in L1- and L2-penalized logistic regression,
+principal component analysis and random forest. In the third, six clinical
+variables (age, sex, NYHA functional class, Q waves, non-sustained
+ventricular tachycardia and paroxysmal supraventricular tachyarrhythmia)
+were used alone and combined with the ECG parameters. The deep learning
+models predicted SCD with AUC between 0.48 and 0.56. The models based on ECG
+processing reached AUC between 0.58 and 0.62 with 44 parameters and 0.647
+(CI: 0.56--0.73) with two parameters defined from the literature before the
+analysis, the variation of heart rate over the day and the ectopic burden,
+0.085 above the best deep learning network (0.562). The clinical
+variables predicted SCD with AUC 0.661 (CI: 0.58--0.74), and their
+combination with the ECG parameters reached 0.681 (CI: 0.60--0.76). With the study
+exams, such as echocardiography and Pro-BNP, the clinical variables reached
+0.733 (CI: 0.66--0.80), the best result. Thus, ECG
+processing techniques yielded better SCD predictors than deep learning on the
+raw signal, and the best models combine the ECG parameters with the clinical
+variables and exams.
 
 \textbf{Keywords:} Sudden Cardiac Death. Holter ECG. Deep Learning. Heart Rate
 Variability. Heart Failure. Risk Stratification.

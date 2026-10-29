@@ -1,39 +1,38 @@
-Este trabalho investiga se o eletrocardiograma (ECG) Holter de 24~horas
-permite identificar, entre pacientes com insuficiência cardíaca crônica,
-aqueles que sofrerão morte súbita cardíaca (MSC) em até quatro anos. O
-problema foi formulado como uma classificação binária por paciente: a partir
-do Holter, distinguir os 55 pacientes que morreram de MSC dos 462 que
+Este trabalho avalia modelos de aprendizado de máquina para prever, a partir
+do eletrocardiograma (ECG) Holter de 24~horas, quais pacientes com
+insuficiência cardíaca crônica sofrerão morte súbita cardíaca (MSC) em até
+quatro anos. A predição foi formulada como uma classificação binária por
+paciente: distinguir os 55 pacientes que morreram de MSC dos 462 que
 sobreviveram aos quatro anos de seguimento, em uma coorte de 517 pacientes em
-ritmo sinusal da base pública MUSIC (PhysioNet). Na validação cruzada
-estratificada em cinco partições por paciente, a métrica principal é a área sob a curva ROC (AUC) da predição
-de MSC contra sobrevivência, calculada sobre as predições fora da partição,
-com intervalo de confiança de 95\,\% (IC) por \textit{bootstrap}. Foram
-comparadas quatro abordagens. (i) Redes convolucionais e residuais, treinadas
-diretamente sobre o sinal das três derivações para prever a MSC, em 19
-configurações, obtiveram AUC entre
-0,48 e 0,56, sem diferença em relação ao acaso. (ii) Marcadores extraídos do
-sinal --- variabilidade da frequência cardíaca, ectopia e morfologia do
-batimento ---, em regressão logística, previram a MSC com AUC entre 0,58 e
-0,62 com 44 marcadores e de 0,647 (IC: 0,56--0,73) com dois marcadores
-definidos pela literatura antes da análise: a variação da frequência
-cardíaca ao longo do dia e a carga de ectopia. (iii) Seis variáveis clínicas
-(idade, sexo, classe NYHA, ondas Q e duas arritmias) previram a MSC com AUC de 0,661 (IC: 0,58--0,74). (iv) Na
-abordagem proposta, uma ResNet-18 foi treinada para reconhecer, em janelas de
-30~segundos do Holter, 45 atributos clínicos medidos por outros exames,
-como a duração do QRS, a fração de ejeção e o Pro-BNP, e a representação que
-ela aprendeu do sinal foi usada por uma regressão logística para prever a
-MSC. A rede aprendeu a reconhecer no Holter atributos elétricos, como o QRS
-acima de 120~ms (AUC de 0,92). Usando apenas o sinal do Holter, sua
-representação previu a MSC com AUC de 0,682 (IC: 0,60--0,76), equivalente às
-variáveis clínicas e 0,17 acima da mesma rede treinada diretamente para a MSC
-(0,508); somada às variáveis clínicas, chegou a 0,702 (IC: 0,62--0,78). O
-melhor modelo do trabalho, com as variáveis clínicas e os exames medidos
-(ecocardiograma, Pro-BNP e ECG de repouso), alcançou 0,733 (IC: 0,66--0,80),
-e nenhuma abordagem baseada no Holter acrescentou informação a ele. Os
-resultados mostram que orientar a rede por atributos clínicos é o que
-permite extrair do Holter, sem nenhuma variável clínica na entrada, uma
-estimativa do risco de MSC no nível das variáveis clínicas, o que a mesma
-rede, treinada diretamente para a MSC, não alcançou.
+ritmo sinusal da base pública MUSIC (PhysioNet). Três cenários foram testados em
+validação cruzada estratificada em cinco partições por paciente. A métrica principal é a área sob a curva ROC (AUC) da
+predição de MSC, com intervalo
+de confiança de 95\,\% (IC) por \textit{bootstrap}. No primeiro cenário,
+modelos de aprendizado profundo --- redes convolucionais, residuais
+(ResNet-18 a ResNet-50), com atenção e de fusão com variáveis clínicas ---
+foram treinados diretamente sobre o sinal bruto do
+Holter para prever a MSC, em 19 configurações. No segundo, modelos baseados em técnicas de processamento do ECG
+extraíram do sinal, em segmentos de 5~minutos e de 30~segundos, parâmetros de
+variabilidade da frequência cardíaca (SDNN, RMSSD, potências LF e HF,
+Poincaré e entropia), de ectopia (carga de batimentos
+ectópicos, dupletes e pausas) e de morfologia do batimento (duração do QRS,
+intervalo QT e ondas P e T), usados em regressão
+logística com penalização L1 e L2, análise de componentes principais e
+floresta aleatória. No terceiro, seis variáveis clínicas (idade, sexo, classe
+funcional NYHA, ondas Q, taquicardia ventricular não sustentada e
+taquiarritmia supraventricular paroxística) foram usadas sozinhas e
+combinadas aos parâmetros do ECG. Os modelos de aprendizado profundo
+previram a MSC com AUC entre 0,48 e 0,56. Os modelos baseados no
+processamento do ECG obtiveram AUC entre 0,58 e 0,62 com 44 parâmetros e de
+0,647 (IC: 0,56--0,73) com dois parâmetros definidos pela literatura antes da
+análise, a variação da frequência cardíaca ao longo do dia e a carga de
+ectopia, 0,085 acima da melhor rede de aprendizado profundo (0,562). As variáveis clínicas previram a MSC com AUC de 0,661
+(IC: 0,58--0,74), e sua combinação com os parâmetros do ECG alcançou 0,681
+(IC: 0,60--0,76).
+Com os exames do estudo, como o ecocardiograma e o Pro-BNP, as variáveis
+clínicas chegaram a 0,733 (IC: 0,66--0,80), o melhor resultado. Assim, as técnicas de processamento do ECG produziram preditores
+de MSC superiores ao aprendizado profundo sobre o sinal bruto, e os melhores
+modelos combinam os parâmetros do ECG com as variáveis clínicas e os exames.
 
 \textbf{Palavras-chave:} Morte Súbita Cardíaca. ECG Holter. Aprendizado
 Profundo. Variabilidade da Frequência Cardíaca. Insuficiência Cardíaca.
