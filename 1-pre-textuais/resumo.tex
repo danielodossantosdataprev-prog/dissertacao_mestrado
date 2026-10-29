@@ -1,40 +1,36 @@
 A morte súbita cardíaca (MSC) é uma das principais causas de óbito em
-pacientes com insuficiência cardíaca, e identificar quem está em risco orienta
-medidas de prevenção, como o implante de cardiodesfibrilador. Este trabalho
-compara modelos de aprendizado de máquina para prever, a partir do
-eletrocardiograma (ECG) Holter de 24~horas, quais pacientes com insuficiência
-cardíaca crônica sofrerão MSC. A predição foi formulada como uma
+pacientes com insuficiência cardíaca, e identificar quem está em risco orienta a
+prevenção. O objetivo
+deste trabalho é identificar qual abordagem de aprendizado de máquina melhor
+prevê, a partir do eletrocardiograma (ECG) Holter de 24~horas, quais
+pacientes com insuficiência cardíaca crônica sofrerão MSC: modelos de
+aprendizado profundo aplicados ao sinal bruto, modelos baseados em marcadores
+extraídos por processamento do ECG ou a combinação desses com variáveis
+clínicas. A predição foi formulada como uma
 classificação binária por paciente: distinguir os 55 pacientes que morreram
 de MSC dos 462 que sobreviveram a quatro anos de seguimento, em 517 pacientes
-em ritmo sinusal da base pública MUSIC (PhysioNet). Três cenários foram
-comparados em validação cruzada estratificada em cinco partições por
-paciente, tendo como métrica principal a área sob a curva ROC (AUC) da
-predição de MSC, com intervalo de confiança de 95\,\% (IC) por
-\textit{bootstrap}. No primeiro, modelos de aprendizado profundo ---
-redes convolucionais, residuais (ResNet-18 a ResNet-50) e com atenção ---
-foram treinados diretamente sobre o sinal bruto do Holter, em 15
-configurações. No segundo, modelos baseados unicamente em marcadores
-extraídos por processamento do ECG, em segmentos de 5~minutos e de
-30~segundos --- variabilidade da frequência cardíaca (SDNN, RMSSD, potências
+em ritmo sinusal da base pública MUSIC (PhysioNet). Os três cenários foram comparados em validação cruzada estratificada em cinco partições por paciente, pela área sob a curva ROC (AUC) da predição de MSC, com intervalo de confiança de 95\,\% (IC). No primeiro, redes convolucionais, residuais (ResNet-18 a ResNet-50) e com
+atenção foram treinadas sobre o sinal bruto do Holter, em 15 configurações. No segundo, modelos baseados unicamente em marcadores
+do ECG, extraídos em segmentos de 5~minutos e 30~segundos --- variabilidade da frequência cardíaca (SDNN, RMSSD, potências
 LF e HF, Poincaré e entropia), ectopia (carga de batimentos ectópicos,
 dupletes e pausas) e morfologia do batimento (QRS, QT e ondas P e T) ---,
 foram usados em regressão logística com penalização L1 e L2, análise de
 componentes principais e floresta aleatória. No terceiro, seis variáveis
-clínicas (idade, sexo, classe NYHA, ondas Q, taquicardia ventricular não
-sustentada e taquiarritmia supraventricular paroxística) foram usadas
-sozinhas e combinadas ao ECG, tanto aos marcadores quanto ao sinal, em redes
-de fusão. O aprendizado profundo previu a MSC com AUC entre 0,48 e 0,56. Os
+clínicas (idade, sexo, classe NYHA, ondas Q, taquicardia ventricular não sustentada
+e taquiarritmia paroxística) foram usadas
+sozinhas, com os marcadores e, em redes de fusão, com o sinal. O aprendizado profundo previu a MSC com AUC entre 0,48 e 0,56. Os
 marcadores obtiveram AUC entre 0,58 e 0,62 com 44 marcadores e de 0,647
 (IC: 0,56--0,73) com dois marcadores definidos pela literatura antes da
 análise, a variação da frequência cardíaca ao longo do dia e a carga de
 ectopia, 0,085 acima da melhor rede (0,562). As variáveis clínicas previram a
 MSC com AUC de 0,661 (IC: 0,58--0,74); combinadas aos marcadores, chegaram a
 0,681 (IC: 0,60--0,76), e às redes de fusão, a no máximo 0,579. Com os exames
-do estudo, como o ecocardiograma e o Pro-BNP, alcançaram 0,733
+do estudo --- ecocardiograma, Pro-BNP, ECG de repouso e medidas de Holter
+fornecidas pela base ---, alcançaram 0,733
 (IC: 0,66--0,80), o melhor resultado. Assim, o processamento do ECG produziu
 preditores de MSC superiores ao aprendizado profundo sobre o sinal bruto, e
 os melhores modelos combinam os marcadores do ECG com as variáveis clínicas e
-os exames dos pacientes.
+os exames.
 
 \textbf{Palavras-chave:} Morte Súbita Cardíaca. ECG Holter. Aprendizado
 Profundo. Variabilidade da Frequência Cardíaca. Insuficiência Cardíaca.
