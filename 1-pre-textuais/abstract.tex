@@ -1,37 +1,40 @@
-This work investigates the prediction of sudden cardiac death in patients with
-chronic heart failure from 24-hour Holter electrocardiography (ECG). Data were
-obtained from the MUSIC database, available on the PhysioNet platform,
-comprising three orthogonal lead signals (X, Y and Z) sampled at 200~Hz and
-clinical variables from 992 patients followed at Spanish university
-hospitals. A case-control design restricted to patients in sinus rhythm was
-adopted, in which cases are deaths from sudden cardiac death within four
-years and controls are survivors with complete four-year follow-up, for a
-total of 517 individuals and 55 events. Four approaches were compared under
-the same protocol of stratified five-fold cross-validation, with
-patient-level splits, decision threshold set on internal validation and
-bootstrap confidence intervals. The first applies deep neural networks
-directly to the signal --- convolutional, residual, attention-based and fusion networks ---, in nineteen
-configurations with 14 thousand to 16.5 million parameters. The second
-extracts markers from the signal --- heart rate variability, beat morphology
-and ectopy --- from 5-minute and 30-second segments. The third uses clinical variables only. In the fourth, a network learns to
-predict echocardiographic, ECG and laboratory attributes, and its
-representation is used for prediction. The neural networks
-achieved areas under the ROC curve (AUC) between 0.48 and 0.56, compatible with chance. The markers reached AUC between 0.59 and 0.62, and the clinical
-variables 0.66 (95\,\% CI: 0.58--0.74). Combining clinical variables with
-markers, with selection performed within each fold, reached 0.68 (95\,\% CI:
-0.60--0.76), close to values reported in the literature for the same
-database, but the gain over clinical variables alone was not statistically
-significant. The representation of the network guided by clinical
-attributes reached 0.68 (95\,\% CI: 0.60--0.76) on its own, equivalent to
-clinical variables, but added no information to the measured exams, whose
-best model, with echocardiography, reached 0.73. The results indicate that, with the available number of events,
-no predictive pattern of sudden cardiac death could be learned from the raw
-signal by training the network directly on the outcome, that the prognostic
-information in the signal overlaps with that of the available exams, and
-that higher estimates depend on evaluation choices --- variable
-selection on the whole cohort, single data splits, treating segments as
-independent observations and inclusion of non-sinus rhythms ---, whose
-effects this work quantifies on the same patients.
+This work investigates whether the 24-hour Holter electrocardiogram (ECG)
+can identify, among patients with chronic heart failure, those who will
+suffer sudden cardiac death (SCD) within four years. The problem was framed
+as a patient-level binary classification: from the Holter recording,
+distinguish the 55 patients who died of SCD from the 462 who survived the
+four-year follow-up, in a cohort of 517 patients in sinus rhythm from the
+public MUSIC database (PhysioNet). In stratified five-fold cross-validation with
+patient-level splits, the main metric is the
+area under the ROC curve (AUC) for predicting SCD versus survival, computed
+on out-of-fold predictions, with 95\,\% bootstrap confidence intervals (CI).
+Four approaches were compared. (i) Convolutional and residual networks,
+trained directly on the three-lead signal to predict SCD, in 19
+configurations, reached AUC
+between 0.48 and 0.56, not different from chance. (ii) Markers extracted from
+the signal --- heart rate variability, ectopy and beat morphology ---, in
+logistic regression, predicted SCD with AUC between 0.58 and 0.62 with 44
+markers and 0.647 (CI: 0.56--0.73) with two markers defined from the
+literature before the analysis: the variation of heart rate over the day and
+the ectopic burden. (iii) Six clinical variables
+(age, sex, NYHA class, Q waves and two arrhythmias) predicted SCD
+with AUC 0.661 (CI: 0.58--0.74). (iv) In the proposed approach, a ResNet-18
+was trained to recognize, in 30-second Holter windows, 45 clinical
+attributes measured by other exams, such as QRS duration, ejection fraction
+and Pro-BNP, and the representation it learned from the signal was used by
+a logistic regression to predict SCD. The network learned to recognize
+electrical attributes in the Holter, such as QRS above 120~ms (AUC 0.92).
+Using only the Holter signal, its representation predicted SCD with AUC
+0.682 (CI: 0.60--0.76), equivalent to the clinical variables and 0.17 above
+the same network trained directly for SCD (0.508); combined with the
+clinical variables, it reached 0.702 (CI: 0.62--0.78). The best model of
+this work, with the clinical variables and the measured exams
+(echocardiography, Pro-BNP and resting ECG), reached 0.733 (CI: 0.66--0.80),
+and no Holter-based approach added information to it. The results show that
+guiding the network with clinical attributes is what makes it possible to
+extract from the Holter, with no clinical variable as input, an SCD risk
+estimate at the level of the clinical variables, which the same network
+trained directly for SCD did not achieve.
 
 \textbf{Keywords:} Sudden Cardiac Death. Holter ECG. Deep Learning. Heart Rate
 Variability. Heart Failure. Risk Stratification.
