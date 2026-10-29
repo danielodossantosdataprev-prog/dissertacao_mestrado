@@ -1637,13 +1637,25 @@ correspondente.
 \subsection{Agregação por paciente}
 \label{subsec:fund-agregacao}
 
+\textit{Pseudorreplicação} é o erro de tratar como réplicas independentes
+medidas repetidas de uma mesma unidade experimental
+\cite{hurlbert1984pseudoreplication}. A unidade, aqui, é o paciente: é a ele
+que pertence o desfecho, e as janelas ou segmentos extraídos de um mesmo
+Holter são medidas repetidas da mesma pessoa, que compartilham o mesmo
+rótulo e são fortemente correlacionadas entre si. Um registro de 24~horas
+fornece centenas de segmentos; tratá-los como observações independentes faria
+os 517 pacientes valerem como centenas de milhares de observações. O tamanho
+amostral efetivo seria superestimado, os intervalos de confiança ficariam
+estreitos demais e os valores-$p$, pequenos demais, de modo que diferenças
+mínimas entre casos e controles pareceriam estatisticamente significativas.
+A \autoref{subsec:res-protocolo-b} quantifica esse efeito sobre os
+marcadores deste trabalho.
+
 As redes neurais deste trabalho não recebem o Holter inteiro, mas janelas
 extraídas dele, e produzem uma probabilidade para cada janela. O rótulo, por
-outro lado, pertence ao paciente. Calcular as métricas sobre janelas
-trataria como observações independentes centenas de trechos do mesmo exame,
-que compartilham o mesmo rótulo e são fortemente correlacionados entre si.
-O tamanho amostral efetivo seria superestimado, e os intervalos de confiança
-resultantes, estreitos demais --- um caso de pseudorreplicação.
+outro lado, pertence ao paciente. Calcular as métricas de desempenho sobre
+janelas incorreria na mesma pseudorreplicação, além de permitir que um
+paciente com muitas janelas pesasse mais que os demais.
 
 Por esse motivo, toda métrica é calculada no nível do paciente. A
 probabilidade do paciente $i$ é a média das probabilidades de suas $M_i$
