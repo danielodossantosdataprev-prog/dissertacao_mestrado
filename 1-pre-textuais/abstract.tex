@@ -1,34 +1,35 @@
 Sudden cardiac death (SCD) is one of the main causes of death in patients
-with heart failure, and identifying those at risk guides prevention. The objective of this
-work is to identify which machine learning approach best predicts, from the
-24-hour Holter electrocardiogram (ECG), which patients with chronic heart
-failure will suffer SCD: deep learning models applied to the raw signal,
-models based on markers extracted by ECG processing, or their combination
-with clinical variables. Prediction was
-framed as a patient-level binary classification: distinguishing the 55
-patients who died of SCD from the 462 who survived four years of follow-up,
-among 517 patients in sinus rhythm from the public MUSIC database
-(PhysioNet). The three scenarios were compared in stratified five-fold cross-validation with patient-level splits, by the area under the ROC curve (AUC) for SCD prediction, with 95\,\% confidence intervals (CI). In the first, deep learning models ---
-convolutional, residual (ResNet-18 to ResNet-50) and attention networks ---
-were trained directly on the raw Holter signal, in 15 configurations. In the
-second, feature learning, markers extracted by digital ECG processing from
-5-minute and 30-second segments --- heart rate variability (SDNN, RMSSD, LF
-and HF power, Poincaré and entropy), ectopy (ectopic burden, couplets and
-pauses) and beat morphology (QRS, QT and P and T waves) --- were
-the input of machine learning models: L1- and L2-penalized logistic regression, principal component analysis and
-random forest. In the third, six clinical variables (age, sex, NYHA class, Q
-waves, non-sustained ventricular tachycardia and paroxysmal supraventricular
-tachyarrhythmia) were used alone, with the
-markers and, in fusion networks, with the signal. Deep learning predicted SCD
-with AUC between 0.48 and 0.56. The markers reached AUC between 0.58 and 0.62
-with 44 markers and 0.647 (CI: 0.56--0.73) with two markers defined from the
-literature before the analysis, the variation of heart rate over the day and
-the ectopic burden, 0.085 above the best network (0.562). The clinical
-variables predicted SCD with AUC 0.661 (CI: 0.58--0.74); combined with the
-markers they reached 0.681 (CI: 0.60--0.76), and with the fusion networks at
-most 0.579. Thus, ECG processing yielded
-better SCD predictors than deep learning on the raw signal, and the best
-models combine the ECG markers with the clinical variables.
+with heart failure (HF). This work aims to predict the occurrence of SCD in
+a population of HF patients, over a four-year follow-up period, based on
+parameters extracted from the 24-hour Holter electrocardiogram (ECG) and on
+machine learning models. The population comprised 517 patients in sinus
+rhythm from the public MUSIC database: 55 who died of SCD and 462 who
+survived four years. Three scenarios were evaluated in stratified five-fold
+cross-validation with patient-level splits, by the area under the ROC curve
+(AUC) for SCD prediction, with 95\,\% confidence intervals (CI). In scenario
+(I), deep neural networks --- convolutional, residual (ResNet-18 to
+ResNet-50) and attention networks --- processed the original ECG (raw
+signal). In scenario (II), the signal underwent preprocessing and feature
+extraction --- heart rate variability (SDNN, RMSSD, LF and HF power,
+Poincaré and entropy), ectopy and beat morphology (QRS, QT and P and T
+waves) ---, used in classical machine learning models: L1- and L2-penalized
+logistic regression, principal component analysis and random forest. In
+scenario (III), for comparison and analysis, models based on clinical
+variables were evaluated --- patient data (age, sex, NYHA class), ECG
+reports, Holter measurements and laboratory and imaging exams, such as
+Pro-BNP and echocardiography ---, alone and combined with the ECG data.
+Scenario (I) yielded AUC between 0.48 and 0.56; the best network, the
+minimal ResNet-18, reached 0.562 (CI: 0.48--0.64). Scenario (II) yielded AUC
+between 0.58 and 0.62 with 44 markers and 0.647 (CI: 0.56--0.73) with two
+markers chosen from the literature, the variation of heart rate over the day
+and the ectopic burden. In scenario (III), six clinical variables reached AUC
+0.661 (CI: 0.58--0.74); combined with the ECG markers, 0.681 (CI:
+0.60--0.76); and combined with the exams, 0.733 (CI: 0.66--0.80).
+Performance gains were observed, although not statistically significant,
+from models based on parameters extracted from the ECG, especially those
+related to heart rate, over deep neural networks that take the raw signal as
+input, and from combining clinical variables with ECG data over clinical
+variables alone.
 
 \textbf{Keywords:} Sudden Cardiac Death. Holter ECG. Deep Learning. Heart Rate
 Variability. Heart Failure. Risk Stratification.

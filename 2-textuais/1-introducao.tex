@@ -1,334 +1,153 @@
+% ==============================================================================
+% INTRODUCAO — reestruturada em 30/10/2026 conforme o roteiro do orientador:
+% motivacao do problema; importancia dos modelos preditivos para a MSC; o que
+% a literatura tem feito; desafios e lacunas; objetivo geral e especificos.
+% A escolha dos dados e a delimitacao da coorte foram para a metodologia
+% (secao Populacao de estudo). Versao anterior: historico do git (versao 27).
+% ==============================================================================
+
 \chapter{Introdução}
 \label{cap:introducao}
 
-% ==============================================================================
-% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
-% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
-% os nomes das variaveis, fica na metodologia.
-% ==============================================================================
+\section{Motivação do problema}
+\label{sec:intro-motivacao}
 
-% ==============================================================================
-% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
-% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
-% os nomes das variaveis, fica na metodologia.
-% ==============================================================================
+A insuficiência cardíaca é uma síndrome crônica e progressiva em que o
+coração não consegue manter o débito adequado às necessidades do organismo.
+Entre os pacientes acometidos, a morte ocorre por duas vias principais: a
+falência de bomba, em que a função cardíaca se deteriora progressivamente, e
+a \gls{MSC}, um evento abrupto, em geral causado por uma arritmia ventricular
+--- taquicardia ou fibrilação ventricular --- em um paciente que, muitas
+vezes, se encontrava estável. A \gls{MSC} responde por parcela expressiva dos
+óbitos nessa população, estimada em cerca de metade das mortes de pacientes
+com insuficiência cardíaca \cite{tomaselli2004sudden}.
 
-% ==============================================================================
-% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
-% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
-% os nomes das variaveis, fica na metodologia.
-% ==============================================================================
+A gravidade do problema decorre também do caráter inesperado do evento.
+Diferentemente da falência de bomba, que costuma ser precedida de piora
+clínica e de internações, a \gls{MSC} pode ocorrer sem sinais de alerta, e a
+chance de sobrevivência depende de atendimento em poucos minutos. A
+prevenção, portanto, precisa ser feita antes do evento, identificando os
+pacientes em risco. A principal medida disponível é o
+cardiodesfibrilador implantável, que reverte a arritmia no momento em que
+ela ocorre e reduziu a mortalidade de pacientes com insuficiência cardíaca e
+fração de ejeção reduzida \cite{bardy2005amiodarone}.
 
-% \subsection{Objetivo e visão geral}
-% \label{sec:intro-objetivo}
+A indicação do dispositivo para prevenção primária baseia-se,
+principalmente, na fração de ejeção do ventrículo esquerdo
+\cite{zeppenfeld2022esc}. Esse critério, no entanto, é reconhecidamente
+imperfeito: parte dos pacientes que recebem o dispositivo nunca chega a
+utilizá-lo, enquanto parte das mortes súbitas ocorre em pacientes com fração
+de ejeção acima do limiar de indicação \cite{zeppenfeld2022esc}. Há,
+portanto, espaço para ferramentas que estratifiquem melhor o risco de
+\gls{MSC}, distinguindo-o do risco de morte por falência de bomba.
 
-% Este trabalho investiga se o \gls{ECG} de Holter de 24~horas contém
-% informação suficiente para identificar, entre pacientes com insuficiência
-% cardíaca, aqueles que viriam a sofrer \gls{MSC}. A insuficiência cardíaca é
-% a condição comum a todos os pacientes estudados, e não o desfecho: o que se
-% procura distinguir é quem, dentro dessa população, morreu subitamente de
-% quem sobreviveu. Para responder a essa
-% pergunta, foram comparadas duas famílias de abordagens sobre a mesma coorte
-% e sob o mesmo protocolo de avaliação: modelos de aprendizado profundo, que
-% recebem o sinal bruto e aprendem dele as próprias representações, e modelos
-% de aprendizado de máquina clássico, que recebem biomarcadores extraídos do
-% \gls{ECG} --- medidas de variabilidade da frequência cardíaca, de ectopia e
-% de morfologia --- combinados ou não a variáveis clínicas.
+\section{Modelos preditivos para a morte súbita cardíaca}
+\label{sec:intro-modelos}
 
-% A comparação foi conduzida em validação cruzada estratificada por paciente,
-% com a \gls{AUC} como métrica principal e intervalos de confiança estimados
-% por \textit{bootstrap}. Entre as redes avaliadas estão uma rede convolucional
-% simples, redes residuais de profundidades crescentes, uma rede residual
-% seguida de um codificador \textit{Transformer}, uma rede convolucional com
-% camada recorrente (\textit{Long Short-Term Memory}) e um codificador
-% pré-treinado em outra base de Holter.
+Um modelo preditivo de \gls{MSC} estima, para cada paciente, a probabilidade
+de que ele venha a sofrer o evento em um horizonte de tempo definido. Esse
+tipo de modelo permite ordenar os pacientes por risco e concentrar a
+prevenção naqueles com maior probabilidade de benefício, em vez de
+depender de um único limiar clínico. Para que seja útil, o modelo precisa
+basear-se em informações disponíveis na rotina e ser avaliado de forma que
+seu desempenho em pacientes novos possa ser estimado com confiança.
 
-% O resultado central é que a complexidade do modelo não se converteu em
-% desempenho. Nenhuma das redes alimentadas com o sinal bruto se distinguiu do
-% acaso, com \gls{AUC} entre 0,49 e 0,54. Os modelos mais simples, baseados em
-% regressão logística sobre biomarcadores e variáveis clínicas, alcançaram os
-% melhores valores, até 0,689 [0,607--0,769], embora o ganho dos biomarcadores
-% sobre as variáveis clínicas isoladas não tenha sido estatisticamente
-% distinguível de zero. Atribui-se esse comportamento principalmente ao
-% tamanho da amostra e ao desbalanceamento entre as classes: com apenas 55
-% eventos, modelos com milhões de parâmetros não encontram exemplos
-% suficientes para aprender padrões que generalizem, enquanto modelos com
-% poucas variáveis bem definidas se ajustam com menor variância. Quando a
-rede foi orientada por atributos clínicos, sua representação do sinal
-alcançou \gls{AUC} de 0,682, equivalente às variáveis clínicas, mas não
-acrescentou informação aos exames já medidos.
+O \gls{ECG} de Holter de 24~horas reúne essas condições. É um exame não
+invasivo, de baixo custo e amplamente disponível, que registra a atividade
+elétrica do coração ao longo de um dia inteiro, captando batimentos
+ectópicos, pausas e variações da frequência cardíaca entre o sono e a
+vigília que um traçado de repouso de poucos segundos não alcança. Como a
+\gls{MSC} tem origem, na maior parte dos casos, em uma instabilidade elétrica,
+é plausível que o Holter contenha sinais do substrato arrítmico que a
+antecede. O aprendizado de máquina oferece meios para explorar esses sinais,
+seja a partir de medidas extraídas do traçado, seja diretamente a partir do
+sinal bruto.
 
-% Mais do que propor um classificador, o trabalho contribui com uma avaliação
-% controlada dos limites dessas abordagens em uma coorte real e pequena. O
-% protocolo foi desenhado para evitar erros de avaliação que, quando presentes,
-% fazem um modelo parecer melhor do que é e que são frequentes em estudos de
-% aprendizado de máquina aplicado \cite{kapoor2023leakage}. Dois exemplos
-% tratados neste trabalho são calcular as métricas sobre janelas do sinal, e
-% não sobre pacientes, o que trata como independentes trechos de um mesmo
-% exame, e escolher o melhor entre vários modelos olhando o próprio conjunto
-% de teste, o que superestima o desempenho do modelo escolhido.
+\section{O que a literatura tem feito}
+\label{sec:intro-literatura}
 
-% \subsection{Escolha dos dados e delimitação da coorte}
-% \label{sec:intro-dados}
+Os estudos de predição de \gls{MSC} a partir do \gls{ECG} ambulatorial têm
+seguido dois caminhos, descritos em detalhe no
+\autoref{cap:trabalhos-relacionados}. O primeiro, mais antigo, extrai do
+Holter marcadores definidos por especialistas --- variabilidade da frequência
+cardíaca, ectopia, turbulência da frequência, alternância da onda T,
+dinâmica da repolarização --- e os combina com variáveis clínicas em modelos
+estatísticos ou de aprendizado de máquina clássico. Na base \gls{MUSIC},
+utilizada neste trabalho, esse caminho produziu escores de risco que
+combinam marcadores da repolarização e variáveis clínicas
+\cite{ramirez2017sudden} e modelos de aprendizado de máquina sobre
+marcadores de segmentos curtos do Holter \cite{swee2026multimodal}.
 
-% Os dados deste trabalho provêm da base MUSIC (\textit{Muerte Súbita en
-%     Insuficiencia Cardiaca}), disponibilizada publicamente no PhysioNet
-% \cite{martinyebra2025music, martinyebra2024music}. A base reúne 992 pacientes
-% com insuficiência cardíaca crônica sintomática (classes II e III da
-% \textit{New York Heart Association}), recrutados entre abril de 2003 e
-% dezembro de 2004 em oito hospitais universitários da Espanha e acompanhados
-% por uma mediana de 44 meses. Para 936 deles há um registro de Holter de
-% 24~horas, e as causas de óbito foram adjudicadas segundo definições
-% explícitas, que separam a \gls{MSC} do óbito por falência de bomba.
+O segundo caminho, mais recente, aplica redes neurais profundas diretamente
+ao sinal, apoiado no sucesso dessas redes em tarefas diagnósticas sobre o
+\gls{ECG}, como a detecção de arritmias no Holter
+\cite{hannun2019cardiologist} e o diagnóstico automático no \gls{ECG} de 12
+derivações \cite{ribeiro2020automatic}. Na predição de eventos cardíacos a
+partir do Holter, as abordagens que obtiveram melhores resultados partiram
+de redes pré-treinadas em grandes bases de \gls{ECG} e ajustaram apenas um
+classificador pequeno com os poucos eventos disponíveis \cite{kim2025deep}.
 
-% Três características tornam a MUSIC adequada ao problema estudado. Primeiro,
-% trata-se de uma população em que a \gls{MSC} é um desfecho frequente e
-% clinicamente relevante, e não de uma amostra da população geral, na qual o
-% evento seria raro demais para o aprendizado. Segundo, o Holter de 24~horas
-% oferece uma observação longa do \gls{ECG}, que capta variações ao longo do
-% dia inacessíveis a um traçado de repouso de poucos segundos. Terceiro, a
-% adjudicação do mecanismo de óbito permite isolar a morte de origem elétrica,
-% que é o objeto deste trabalho.
+\section{Desafios e lacunas}
+\label{sec:intro-lacunas}
 
-% O problema foi formulado como uma classificação binária no nível do
-% paciente: a partir do Holter, distinguir quem veio a óbito por \gls{MSC}
-% de quem sobreviveu ao período de observação. Essa formulação dispensa o
-% tratamento de censura próprio da análise de sobrevivência, mas transfere a
-% exigência para o rótulo, que precisa ser inequívoco para cada paciente. Os
-% critérios de seleção decorrem dessa exigência e são três.
+A predição de \gls{MSC} difere das tarefas diagnósticas em que as redes
+profundas se destacaram. Nas tarefas diagnósticas, o padrão a ser
+reconhecido está presente no traçado e há dezenas de milhares de exemplos
+rotulados; na predição de um evento futuro, não se sabe de antemão se o
+traçado contém o padrão, e as coortes com desfecho adjudicado reúnem poucas
+centenas de pacientes. Nessas condições, a escolha entre aprender
+diretamente do sinal ou de medidas extraídas dele não é óbvia e precisa ser
+avaliada empiricamente.
 
-% \textbf{Critério 1: ritmo sinusal durante o Holter.} Foram mantidos apenas
-% os pacientes cujo registro foi anotado como ritmo sinusal. Em fibrilação ou
-% \textit{flutter} atrial não há onda P organizada e os intervalos entre
-% batimentos são irregulares por definição, de modo que as medidas de
-% variabilidade da frequência cardíaca e de morfologia perdem o significado
-% fisiológico que têm em ritmo sinusal. Além disso, o próprio ritmo está
-% associado ao risco: incluí-lo permitiria que um modelo aprendesse a
-% reconhecer a arritmia atrial, e não marcadores de vulnerabilidade elétrica
-% ventricular. Restringir a coorte ao ritmo sinusal remove esse fator de
-% confusão e torna homogêneo o sinal de entrada.
+Três lacunas motivam este trabalho. A primeira é a falta de comparações
+diretas, sobre os mesmos pacientes e sob o mesmo protocolo, entre redes
+profundas aplicadas ao sinal bruto, modelos baseados em marcadores extraídos
+do \gls{ECG} e modelos baseados em variáveis clínicas. A segunda é a
+presença, em parte dos estudos, de escolhas de avaliação que tornam as
+estimativas otimistas, como calcular as métricas sobre trechos do sinal e
+não sobre pacientes, ou selecionar variáveis observando o desfecho de toda a
+coorte \cite{kapoor2023leakage}. A terceira é a inclusão de pacientes com
+fibrilação atrial, ritmo facilmente reconhecível no sinal e associado a pior
+prognóstico, que pode elevar a discriminação sem que o modelo capte
+marcadores de vulnerabilidade elétrica ventricular \cite{swee2026multimodal}.
 
-% \textbf{Critério 2: somente óbito por \gls{MSC} e sobreviventes.} Os casos
-% são os pacientes cuja causa de óbito foi adjudicada como \gls{MSC}; os
-% controles, os que permaneceram vivos. Foram excluídos os óbitos por falência
-% de bomba, cujo mecanismo é mecânico e progressivo, e os óbitos de causa não
-% cardíaca. Incluir a falência de bomba entre os casos ensinaria o modelo a
-% reconhecer a gravidade da insuficiência cardíaca em geral, e não o risco
-% específico de morte súbita; incluí-la entre os controles colocaria do lado
-% ``sem evento'' pacientes que também morreram de causa cardíaca.
-
-% \textbf{Critério 3: controles com quatro anos completos de seguimento.} Um
-% paciente vivo na última avaliação só é um controle confiável se tiver sido
-% acompanhado por tempo suficiente. Um sobrevivente observado por poucos
-% meses pode ter sofrido o evento logo depois de deixar o estudo; rotulá-lo
-% como controle introduziria erro no rótulo. Por isso exigiu-se dos controles
-% um seguimento de pelo menos 1.460~dias (quatro anos), horizonte compatível
-% com a mediana de acompanhamento da base.
-
-% A aplicação sucessiva desses critérios está resumida na
-% \autoref{tab:intro-coorte}. Dos 710 pacientes em ritmo sinusal, 123 foram
-% excluídos por desfecho ambíguo, restando 587 casos e controles. Desses, 47
-% não tinham registro de Holter disponível e 23 tinham um registro sem as três
-% derivações exigidas pelos modelos. A coorte final reúne 517 pacientes: 55
-% casos de \gls{MSC} e 462 controles, uma prevalência de 10,6\%.
-
-% \begin{table}[h!]
-%     \captionsetup{width=13cm}
-%     \Caption{\label{tab:intro-coorte} Delimitação da coorte a partir da base
-%         MUSIC}
-%     \IBGEtab{}{
-%         \begin{tabular}{lrr}
-%             \toprule
-%             Etapa                                                   & \multicolumn{1}{c}{Excluídos} &
-%             \multicolumn{1}{c}{Restantes}                                                                 \\
-%             \midrule \midrule
-%             Pacientes na base MUSIC                                 & ---                           & 992 \\
-%             Critério 1: ritmo não sinusal                           & 282                           & 710 \\
-%             Critério 2: óbito não cardíaco                          & 35                            &     \\
-%             Critério 2: óbito por falência de bomba                 & 67                            &     \\
-%             Critério 3: vivos com seguimento inferior a quatro anos & 21                            & 587 \\
-%             Sem registro de Holter                                  & 47                            &     \\
-%             Registro sem as três derivações                         & 23                            & 517 \\
-%             \midrule
-%             \multicolumn{3}{l}{Coorte final: 55 casos de \gls{MSC} e 462
-%             controles (prevalência de 10,6\%)}                                                            \\
-%             \bottomrule
-%         \end{tabular}
-%     }{
-%         \Fonte{elaborado pelo autor (2026), a partir de
-%             \citeonline{martinyebra2025music}.}
-%     }
-% \end{table}
-
-% Os critérios têm um custo que deve ser reconhecido desde já. A restrição ao
-% ritmo sinusal e a exclusão dos desfechos ambíguos reduzem a coorte a pouco
-% mais da metade da base e deixam apenas 55 eventos, o que limita o poder
-% estatístico de qualquer comparação e torna amplos os intervalos de
-% confiança. Além disso, os resultados se aplicam a pacientes com
-% insuficiência cardíaca em ritmo sinusal e não podem ser estendidos, sem nova
-% avaliação, a pacientes com fibrilação atrial. Optou-se por essa troca porque
-% um rótulo confiável e um sinal de entrada homogêneo são pré-requisitos para
-% que um resultado, positivo ou negativo, possa ser interpretado. Os detalhes
-% de cada etapa, incluindo as variáveis da base utilizadas, são apresentados
-% na metodologia.
-
-
-% ==============================================================================
-% INTRODUCAO — ESCOLHA DOS DADOS E DELIMITACAO DA COORTE
-% Visao geral e justificativa dos criterios. O passo a passo da selecao, com
-% os nomes das variaveis, fica na metodologia.
-% ==============================================================================
-
-\section{Objetivo e visão geral}
+\section{Objetivos}
 \label{sec:intro-objetivo}
 
-Este trabalho investiga se o \gls{ECG} de Holter de 24~horas contém
-informação suficiente para identificar, entre pacientes com insuficiência
-cardíaca, aqueles que viriam a sofrer \gls{MSC}. A insuficiência cardíaca é
-a condição comum a todos os pacientes estudados, e não o desfecho: o que se
-procura distinguir é quem, dentro dessa população, morreu subitamente de
-quem sobreviveu. Para responder a essa
-pergunta, foram comparadas duas famílias de abordagens sobre a mesma coorte
-e sob o mesmo protocolo de avaliação: modelos de aprendizado profundo, que
-recebem o sinal bruto e aprendem dele as próprias representações, e modelos
-de aprendizado de máquina clássico, que recebem marcadores extraídos do
-\gls{ECG} --- medidas de variabilidade da frequência cardíaca, de ectopia e
-de morfologia --- combinados ou não a variáveis clínicas.
+\subsection{Objetivo geral}
+\label{subsec:intro-objetivo-geral}
 
-A comparação foi conduzida em validação cruzada estratificada por paciente,
-com a \gls{AUC} como métrica principal e intervalos de confiança estimados
-por \textit{bootstrap}. Entre as redes avaliadas estão uma rede convolucional
-simples, redes residuais de profundidades crescentes, uma rede residual
-seguida de um codificador \textit{Transformer} e redes de fusão com as
-variáveis clínicas, além de uma rede convolucional com camada recorrente
-(\textit{Long Short-Term Memory}) aplicada ao \gls{ECG} de repouso. Por fim,
-avaliou-se uma estratégia em que a rede aprende primeiro a prever atributos
-clínicos disponíveis para todos os pacientes --- medidas do ecocardiograma,
-do \gls{ECG} e do laboratório --- e sua representação é depois usada na
-predição da morte súbita.
+Este trabalho propõe a investigação de métodos baseados em aprendizado de
+máquina e no pré-processamento do sinal de \gls{ECG} para a predição da
+ocorrência de \gls{MSC} em uma população de pacientes com insuficiência
+cardíaca crônica, a partir do Holter de 24~horas, ao longo de um período de
+acompanhamento de quatro anos.
 
-O resultado central é que a complexidade do modelo não se converteu em
-desempenho. Nenhuma das redes treinadas diretamente para o desfecho se distinguiu do
-acaso, com \gls{AUC} entre 0,48 e 0,56. Os modelos mais simples alcançaram os
-melhores valores: as seis variáveis clínicas, em regressão logística,
-atingiram \gls{AUC} de 0,661 [0,577--0,741], e os marcadores extraídos do
-\gls{ECG}, isoladamente, valores entre 0,58 e 0,65. Acrescentar os
-marcadores às variáveis clínicas não produziu ganho estatisticamente
-distinguível de zero. Atribui-se esse comportamento principalmente ao
-tamanho da amostra e ao desbalanceamento entre as classes: com apenas 55
-eventos, modelos com milhões de parâmetros não encontram exemplos
-suficientes para aprender padrões que generalizem, enquanto modelos com
-poucas variáveis bem definidas se ajustam com menor variância.
+\subsection{Objetivos específicos}
+\label{subsec:intro-objetivos-especificos}
 
-Mais do que propor um classificador, o trabalho contribui com uma avaliação
-controlada dos limites dessas abordagens em uma coorte real e pequena. O
-protocolo foi desenhado para evitar erros de avaliação que, quando presentes,
-fazem um modelo parecer melhor do que é e que são frequentes em estudos de
-aprendizado de máquina aplicado \cite{kapoor2023leakage}. Dois exemplos
-tratados neste trabalho são calcular as métricas sobre janelas do sinal, e
-não sobre pacientes, o que trata como independentes trechos de um mesmo
-exame, e escolher o melhor entre vários modelos olhando o próprio conjunto
-de teste, o que superestima o desempenho do modelo escolhido.
+\begin{enumerate}
+	\item[(i)] Comparar três cenários para a predição da \gls{MSC}: (1) modelos de
+	      aprendizado profundo aplicados ao sinal bruto do \gls{ECG}; (2)
+	      pré-processamento do sinal, extração de características e uso de
+	      modelos de aprendizado de máquina clássico; e (3) modelos baseados
+	      em variáveis clínicas, isoladas e combinadas aos dados extraídos do
+	      \gls{ECG}.
+	\item[(ii)] Avaliar a combinação de modelos baseados em dados clínicos com
+	      modelos baseados em dados extraídos do \gls{ECG}, quantificando o
+	      ganho de desempenho de cada combinação.
+	\item[(iii)] Revisar os trabalhos da literatura que propõem a predição de
+	      \gls{MSC} a partir do \gls{ECG} ambulatorial e posicionar os
+	      resultados deste trabalho em relação a eles.
+\end{enumerate}
 
-\section{Escolha dos dados e delimitação da coorte}
-\label{sec:intro-dados}
+\section{Organização do trabalho}
+\label{sec:intro-organizacao}
 
-Os dados deste trabalho provêm da base \gls{MUSIC}, disponibilizada publicamente no PhysioNet
-\cite{martinyebra2025music, martinyebra2024music}. A base reúne 992 pacientes
-com insuficiência cardíaca crônica sintomática (classes II e III da
-\textit{New York Heart Association}), recrutados entre abril de 2003 e
-dezembro de 2004 em oito hospitais universitários da Espanha e acompanhados
-por uma mediana de 44 meses. Para 936 deles há um registro de Holter de
-24~horas, e as causas de óbito foram adjudicadas segundo definições
-explícitas, que separam a \gls{MSC} do óbito por falência de bomba.
-
-Três características tornam a MUSIC adequada ao problema estudado. Primeiro,
-trata-se de uma população em que a \gls{MSC} é um desfecho frequente e
-clinicamente relevante, e não de uma amostra da população geral, na qual o
-evento seria raro demais para o aprendizado. Segundo, o Holter de 24~horas
-oferece uma observação longa do \gls{ECG}, que capta variações ao longo do
-dia inacessíveis a um traçado de repouso de poucos segundos. Terceiro, a
-adjudicação do mecanismo de óbito permite isolar a morte de origem elétrica,
-que é o objeto deste trabalho.
-
-O problema foi formulado como uma classificação binária no nível do
-paciente: a partir do Holter, distinguir quem veio a óbito por \gls{MSC}
-de quem sobreviveu ao período de observação. Essa formulação dispensa o
-tratamento de censura próprio da análise de sobrevivência, mas transfere a
-exigência para o rótulo, que precisa ser inequívoco para cada paciente. Os
-critérios de seleção decorrem dessa exigência e são três.
-
-\textbf{Critério 1: ritmo sinusal durante o Holter.} Foram mantidos apenas
-os pacientes cujo registro foi anotado como ritmo sinusal. Em fibrilação ou
-\textit{flutter} atrial não há onda P organizada e os intervalos entre
-batimentos são irregulares por definição, de modo que as medidas de
-variabilidade da frequência cardíaca e de morfologia perdem o significado
-fisiológico que têm em ritmo sinusal. Além disso, o próprio ritmo está
-associado ao risco: incluí-lo permitiria que um modelo aprendesse a
-reconhecer a arritmia atrial, e não marcadores de vulnerabilidade elétrica
-ventricular. Restringir a coorte ao ritmo sinusal remove esse fator de
-confusão e torna homogêneo o sinal de entrada.
-
-\textbf{Critério 2: somente óbito por \gls{MSC} e sobreviventes.} Os casos
-são os pacientes cuja causa de óbito foi adjudicada como \gls{MSC}; os
-controles, os que permaneceram vivos. Foram excluídos os óbitos por falência
-de bomba, cujo mecanismo é mecânico e progressivo, e os óbitos de causa não
-cardíaca. Incluir a falência de bomba entre os casos ensinaria o modelo a
-reconhecer a gravidade da insuficiência cardíaca em geral, e não o risco
-específico de morte súbita; incluí-la entre os controles colocaria do lado
-``sem evento'' pacientes que também morreram de causa cardíaca.
-
-\textbf{Critério 3: controles com quatro anos completos de seguimento.} Um
-paciente vivo na última avaliação só é um controle confiável se tiver sido
-acompanhado por tempo suficiente. Um sobrevivente observado por poucos
-meses pode ter sofrido o evento logo depois de deixar o estudo; rotulá-lo
-como controle introduziria erro no rótulo. Por isso exigiu-se dos controles
-um seguimento de pelo menos 1.460~dias (quatro anos), horizonte compatível
-com a mediana de acompanhamento da base.
-
-A aplicação sucessiva desses critérios está resumida na
-\autoref{tab:intro-coorte}. Dos 710 pacientes em ritmo sinusal, 123 foram
-excluídos por desfecho ambíguo, restando 587 casos e controles. Desses, 47
-não tinham registro de Holter disponível e 23 tinham um registro sem as três
-derivações exigidas pelos modelos. A coorte final reúne 517 pacientes: 55
-casos de \gls{MSC} e 462 controles, uma prevalência de 10,6\%.
-
-\begin{table}[h!]
-    \captionsetup{width=13cm}
-    \Caption{\label{tab:intro-coorte} Delimitação da coorte a partir da base
-        MUSIC}
-    \IBGEtab{}{
-        \begin{tabular}{lrr}
-            \toprule
-            Etapa                                                   & \multicolumn{1}{c}{Excluídos} &
-            \multicolumn{1}{c}{Restantes}                                                                 \\
-            \midrule \midrule
-            Pacientes na base MUSIC                                 & ---                           & 992 \\
-            Critério 1: ritmo não sinusal                           & 282                           & 710 \\
-            Critério 2: óbito não cardíaco                          & 35                            &     \\
-            Critério 2: óbito por falência de bomba                 & 67                            &     \\
-            Critério 3: vivos com seguimento inferior a quatro anos & 21                            & 587 \\
-            Sem registro de Holter                                  & 47                            &     \\
-            Registro sem as três derivações                         & 23                            & 517 \\
-            \midrule
-            \multicolumn{3}{l}{Coorte final: 55 casos de \gls{MSC} e 462
-            controles (prevalência de 10,6\%)}                                                            \\
-            \bottomrule
-        \end{tabular}
-    }{
-        \Fonte{elaborado pelo autor (2026), a partir de
-            \citeonline{martinyebra2025music}.}
-    }
-\end{table}
-
-Os critérios têm um custo que deve ser reconhecido desde já. A restrição ao
-ritmo sinusal e a exclusão dos desfechos ambíguos reduzem a coorte a pouco
-mais da metade da base e deixam apenas 55 eventos, o que limita o poder
-estatístico de qualquer comparação e torna amplos os intervalos de
-confiança. Além disso, os resultados se aplicam a pacientes com
-insuficiência cardíaca em ritmo sinusal e não podem ser estendidos, sem nova
-avaliação, a pacientes com fibrilação atrial. Optou-se por essa troca porque
-um rótulo confiável e um sinal de entrada homogêneo são pré-requisitos para
-que um resultado, positivo ou negativo, possa ser interpretado. Os detalhes
-de cada etapa, incluindo as variáveis da base utilizadas, são apresentados
-na metodologia.
+O \autoref{cap:trabalhos-relacionados} apresenta os trabalhos relacionados.
+O capítulo de fundamentação teórica descreve o pré-processamento e a
+extração de características do \gls{ECG}, os modelos de aprendizado profundo
+e de aprendizado de máquina aplicados ao sinal e os métodos de avaliação. A
+metodologia apresenta a população de estudo e detalha os três cenários, na
+mesma ordem em que seus resultados são apresentados no capítulo seguinte. O
+último capítulo reúne as conclusões, as limitações e os trabalhos futuros.

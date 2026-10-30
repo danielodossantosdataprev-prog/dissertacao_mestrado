@@ -14,13 +14,84 @@
 %   validação   25% do treino de cada partição (frac_val = 0.25)
 % ==============================================================================
 
-\section{Seleção da coorte}
+\section{População de estudo}
 \label{sec:met-coorte}
+\label{sec:intro-dados}
 
-A partir dos 992 pacientes da base MUSIC, a coorte foi definida em três
-etapas, resumidas na \autoref{fig:fluxograma-coorte}.
+\subsection{Base de dados}
+\label{subsec:met-base}
 
-% ---- FIGURA: fluxograma ----
+Os dados deste trabalho provêm da base \gls{MUSIC}, disponibilizada
+publicamente no PhysioNet \cite{martinyebra2025music, martinyebra2024music}.
+A base reúne 992 pacientes com insuficiência cardíaca crônica sintomática
+(classes II e III da \textit{New York Heart Association}), recrutados entre
+abril de 2003 e dezembro de 2004 em oito hospitais universitários da Espanha
+e acompanhados por uma mediana de 44 meses. Para 936 deles há um registro de
+Holter de 24~horas, com três derivações ortogonais (X, Y e Z) amostradas a
+200\,Hz, e as causas de óbito foram adjudicadas segundo definições
+explícitas, que separam a \gls{MSC} do óbito por falência de bomba. Além do
+Holter, a base fornece, para cada paciente, variáveis clínicas e resultados
+de exames realizados na entrada do estudo, descritos na
+\autoref{subsec:met-clinicas}.
+
+Três características tornam a MUSIC adequada ao problema estudado. Primeiro,
+trata-se de uma população em que a \gls{MSC} é um desfecho frequente e
+clinicamente relevante, e não de uma amostra da população geral, na qual o
+evento seria raro demais para o aprendizado. Segundo, o Holter de 24~horas
+oferece uma observação longa do \gls{ECG}, que capta variações ao longo do
+dia inacessíveis a um traçado de repouso de poucos segundos. Terceiro, a
+adjudicação do mecanismo de óbito permite isolar a morte de origem elétrica,
+que é o objeto deste trabalho.
+
+\subsection{Definição da população e critérios de seleção}
+\label{subsec:met-criterios}
+
+O problema foi formulado como uma classificação binária no nível do
+paciente: a partir do Holter, distinguir quem veio a óbito por \gls{MSC} de
+quem sobreviveu ao período de acompanhamento de quatro anos. Essa
+formulação exige que o rótulo de cada paciente seja inequívoco, e os
+critérios de seleção decorrem dessa exigência. A partir dos 992 pacientes da
+base, a população foi definida pelos três critérios a seguir, resumidos na
+\autoref{fig:fluxograma-coorte} e na \autoref{tab:fluxo-music}.
+
+\textbf{Critério 1: ritmo sinusal durante o Holter.} Foram excluídos os
+pacientes cujo registro foi anotado com ritmo diferente do sinusal (282
+pacientes, com fibrilação atrial permanente, \textit{flutter} atrial ou
+ritmo de marcapasso). Na fibrilação atrial não há onda P organizada e os
+intervalos entre batimentos são irregulares por definição, de modo que as
+medidas de variabilidade da frequência cardíaca e de morfologia perdem o
+significado fisiológico que têm em ritmo sinusal; o ritmo de marcapasso,
+por sua vez, não reflete a atividade elétrica espontânea do coração. Além
+disso, o próprio ritmo está associado ao risco: incluí-lo permitiria que um
+modelo aprendesse a reconhecer a arritmia atrial, e não marcadores de
+vulnerabilidade elétrica ventricular.
+
+\textbf{Critério 2: classe 0 (sobreviventes) e classe 3 (morte súbita
+cardíaca).} Foram mantidos apenas os pacientes vivos ao fim do
+acompanhamento (classe 0 da variável de causa de óbito), que formam o grupo
+de controles, e os pacientes com óbito adjudicado como \gls{MSC} (classe 3),
+que formam o grupo de casos. Foram excluídos os óbitos por falência de bomba
+(67 pacientes), cujo mecanismo é mecânico e progressivo, e os óbitos de
+causa não cardíaca (35 pacientes). Incluir a falência de bomba entre os
+casos ensinaria o modelo a reconhecer a gravidade da insuficiência cardíaca
+em geral, e não o risco específico de morte súbita; incluí-la entre os
+controles colocaria do lado ``sem evento'' pacientes que também morreram de
+causa cardíaca.
+
+\textbf{Critério 3: exclusão dos sobreviventes que deixaram o acompanhamento
+antes de quatro anos.} Foram excluídos os pacientes da classe 0 com
+seguimento inferior a 1\,460~dias (21 pacientes). Um sobrevivente observado
+por menos de quatro anos pode ter sofrido o evento depois de deixar o
+estudo, e rotulá-lo como controle introduziria erro no rótulo. O critério
+não se aplica aos casos, cujo desfecho já foi observado.
+
+Por fim, exigiu-se a presença das três derivações no registro de Holter:
+foram excluídos 47 pacientes sem registro disponível e 23 cujo registro não
+continha a derivação Z. A população final compreendeu 517 pacientes, dos
+quais 55 casos de \gls{MSC} e 462 controles, com prevalência de 10,6\,\%.
+
+
+
 \begin{figure}[h!]
 	\captionsetup{width=14cm}
 	\Caption{\label{fig:fluxograma-coorte} Fluxograma de seleção da coorte}
@@ -82,29 +153,56 @@ etapas, resumidas na \autoref{fig:fluxograma-coorte}.
 	\end{tabular}
 \end{table}
 
-% nome da figura ser adicionada fluxograma_coorte
+Os critérios têm um custo. A restrição ao ritmo sinusal e a exclusão dos
+desfechos ambíguos reduzem a população a pouco mais da metade da base, e os
+resultados se aplicam a pacientes com insuficiência cardíaca em ritmo
+sinusal, sem poderem ser estendidos, sem nova avaliação, a pacientes com
+fibrilação atrial. Optou-se por essa troca porque um rótulo confiável e um
+sinal de entrada homogêneo são pré-requisitos para que um resultado,
+positivo ou negativo, possa ser interpretado.
 
-A primeira etapa restringiu a análise a pacientes em ritmo sinusal,
-excluindo 282 indivíduos com fibrilação atrial permanente, \textit{flutter}
-atrial ou ritmo de marcapasso. A exclusão justifica-se porque a ausência de
-onda P e a irregularidade dos intervalos RR na fibrilação atrial alteram
-qualitativamente o traçado, e porque o ritmo imposto pelo marcapasso não
-reflete a atividade elétrica espontânea do coração.
 
-A segunda etapa definiu os grupos. Foram considerados casos os pacientes com
-óbito por morte súbita cardíaca, e controles os sobreviventes com seguimento
-completo de quatro anos. Excluíram-se, por desfecho ambíguo, 35 óbitos de
-causa não cardíaca, 67 óbitos por falência de bomba e 21 sobreviventes com
-seguimento inferior a quatro anos. A exclusão destes últimos é necessária na
-formulação binária: diferentemente da análise de sobrevivência, que
-incorpora a informação parcial dos indivíduos censurados, a classificação
-exige rótulo definido para cada paciente, e um sobrevivente acompanhado por
-menos de quatro anos poderia ter vindo a óbito após o término do seguimento.
+\subsection{Variáveis clínicas e exames}
+\label{subsec:met-clinicas}
 
-A terceira etapa exigiu a presença das três derivações no registro Holter.
-Foram excluídos 47 pacientes sem registro disponível e 23 cujo registro não
-continha a derivação Z. A coorte final compreendeu 517 pacientes, dos quais
-55 casos e 462 controles, com prevalência de 10,6\,\%.
+Nos experimentos que combinam o sinal a variáveis clínicas, foram empregadas
+seis, de três tipos: a idade, variável numérica de valor inteiro, em anos; a
+classe funcional \gls{NYHA}, variável categórica ordinal; e quatro variáveis
+binárias, codificadas como 0 (ausente) ou 1 (presente) --- gênero (1 =
+masculino), presença de ondas Q de necrose no \gls{ECG} de repouso,
+taquicardia ventricular não sustentada (TVNS)\glsadd{TVNS}\glsunset{TVNS} e
+taquiarritmia supraventricular paroxística. A idade e a classe \gls{NYHA}
+foram padronizadas pela média e pelo desvio-padrão do conjunto de
+treinamento de cada partição.
+
+Duas particularidades da coorte merecem registro. A classe funcional \gls{NYHA}
+assume apenas os valores II e III, comportando-se, na prática, como variável
+binária. A variável de taquiarritmia supraventricular paroxística é
+originalmente categórica nominal, com códigos para taquicardia
+supraventricular, fibrilação atrial paroxística, \textit{flutter} e outras;
+o código de ausência por fibrilação atrial crônica deixa de ocorrer após a
+restrição ao ritmo sinusal, e a variável foi tratada como indicadora da
+presença de qualquer episódio.
+
+
+
+Além dessas seis variáveis, a base fornece os resultados de exames
+realizados na entrada do estudo, empregados no Cenário III
+(\autoref{sec:met-cenario3}) e agrupados por origem: o ecocardiograma e a
+radiografia de tórax (\gls{FEVE}, tamanho do átrio esquerdo, diâmetros
+diastólico e sistólico do ventrículo esquerdo, espessuras do septo e da
+parede posterior, diâmetro e contratilidade do ventrículo direito e índice
+cardiotorácico), todos numéricos de valor real, exceto a contratilidade do
+ventrículo direito, binária; o laudo do \gls{ECG} de repouso (intervalos PR
+e QT, QT corrigido e duração do QRS, numéricos, e QRS acima de 120\,ms,
+hipertrofia ventricular esquerda e distúrbio de condução intraventricular,
+binários); as medidas do Holter tabuladas pela equipe do estudo (intervalos
+RR mínimo e máximo e sua amplitude, número de extrassístoles ventriculares e
+supraventriculares em 24~horas, dupletes, \gls{SDNN}, SDANN, \gls{RMSSD} e
+pNN50, numéricos); e o exame laboratorial do Pro-BNP, numérico. As
+contagens de extrassístoles e o Pro-BNP, de distribuição muito assimétrica,
+foram transformados por $\log(1+x)$.
+
 
 \section{Pré-processamento do sinal}
 \label{sec:met-preprocessamento}
@@ -199,61 +297,527 @@ preserva as diferenças de amplitude entre pacientes. A padronização por
 janela, alternativa descartada, realizaria as duas operações
 simultaneamente e eliminaria a informação de amplitude absoluta.
 
-\subsection{Particionamento}
-\label{subsec:met-particionamento}
 
-A coorte foi dividida em cinco partições estratificadas pelo desfecho, com
-divisão no nível do paciente: cada indivíduo pertence a uma única partição, e
-as janelas são extraídas apenas após a divisão. Cada partição contém 103 ou
-104 pacientes, com 11 casos.
+% ==============================================================================
+% CENARIO I — aprendizado profundo sobre o sinal bruto
+% ==============================================================================
 
-Em cada rodada da validação cruzada, uma partição constitui o conjunto de
-teste e as quatro restantes, com 413 ou 414 pacientes, são subdivididas: 75\,\%
-compõem o conjunto de treinamento e 25\,\% a validação interna, também com
-estratificação pelo desfecho. A validação interna define a época de parada do
-treinamento e o limiar de decisão, que é então aplicado ao conjunto de teste
-sem ajuste adicional.
+\section{Cenário I: aprendizado profundo sobre o sinal bruto}
+\label{sec:met-cenario1}
+\label{sec:met-redes}
 
-\subsection{Variáveis clínicas}
-\label{subsec:met-clinicas}
+No primeiro cenário, redes neurais profundas recebem o sinal do Holter,
+apenas filtrado e normalizado conforme a \autoref{sec:met-preprocessamento},
+e são treinadas diretamente para prever a \gls{MSC}. Cada rede recebe janelas
+do sinal, produz uma probabilidade por janela e é avaliada no nível do
+paciente, após a agregação descrita na \autoref{subsec:fund-agregacao}. Os
+fundamentos de cada componente foram apresentados no
+\autoref{cap:fundamentacao-teorica}; esta seção descreve as arquiteturas
+construídas e as escolhas de treinamento efetivamente adotadas.
 
-Nos experimentos que combinam o sinal a variáveis clínicas, foram empregadas
-seis, de três tipos: a idade, variável numérica de valor inteiro, em anos; a
-classe funcional \gls{NYHA}, variável categórica ordinal; e quatro variáveis
-binárias, codificadas como 0 (ausente) ou 1 (presente) --- gênero (1 =
-masculino), presença de ondas Q de necrose no \gls{ECG} de repouso,
-taquicardia ventricular não sustentada (TVNS)\glsadd{TVNS}\glsunset{TVNS} e
-taquiarritmia supraventricular paroxística. A idade e a classe \gls{NYHA}
-foram padronizadas pela média e pelo desvio-padrão do conjunto de
-treinamento de cada partição.
 
-Duas particularidades da coorte merecem registro. A classe funcional \gls{NYHA}
-assume apenas os valores II e III, comportando-se, na prática, como variável
-binária. A variável de taquiarritmia supraventricular paroxística é
-originalmente categórica nominal, com códigos para taquicardia
-supraventricular, fibrilação atrial paroxística, \textit{flutter} e outras;
-o código de ausência por fibrilação atrial crônica deixa de ocorrer após a
-restrição ao ritmo sinusal, e a variável foi tratada como indicadora da
-presença de qualquer episódio.
+\subsection{Arquiteturas avaliadas}
+\label{subsec:met-arquiteturas}
 
+As arquiteturas foram organizadas em três famílias, avaliadas em ordem
+crescente de complexidade, e a rede de fusão com as variáveis clínicas, que
+compartilha o mesmo extrator e é avaliada no Cenário III
+(\autoref{sec:met-cenario3}). A \autoref{tab:met-arquiteturas} resume cada uma
+delas.
+
+\begin{enumerate}
+	\item \textbf{Redes convolucionais sem atalhos.} A rede convolucional
+	      descrita na \autoref{sec:fund-cnn}, em três variantes de capacidade ---
+	      mínima, simples e média --- que diferem apenas no número de blocos e de
+	      filtros. É a família de menor capacidade e serve de referência para as
+	      demais.
+
+	\item \textbf{Redes residuais.} Adaptações unidimensionais da ResNet
+	      \cite{he2016deep}, na linha das redes empregadas para a classificação de
+	      \gls{ECG} por \citeonline{hannun2019cardiologist} e
+	      \citeonline{ribeiro2020automatic}. Foram avaliadas profundidades de 18, 34
+	      e 50 camadas e, para a profundidade de 18 camadas, três larguras, de modo a
+	      separar o efeito da profundidade do efeito do número de canais.
+
+	\item \textbf{Rede residual com atenção.} A ResNet-18 seguida de um
+	      codificador \textit{Transformer} \cite{vaswani2017attention}, que recebe a
+	      sequência de vetores produzida pelo último estágio residual e permite que
+	      cada trecho da janela seja relacionado aos demais antes do agrupamento.
+
+\end{enumerate}
+
+\begin{table}[h!]
+	\captionsetup{width=15.5cm}
+	\Caption{\label{tab:met-arquiteturas} Arquiteturas de redes neurais
+		avaliadas sobre o sinal de Holter}
+	\IBGEtab{}{
+		\begin{tabular}{llrl}
+			\toprule
+			Família       & Variante                         & \multicolumn{1}{c}{Parâmetros} & Entrada             \\
+			\midrule \midrule
+			Convolucional & mínima (3 blocos)                & 14\,425                        & 2 min e 10 s        \\
+			              & simples (4 blocos)               & 109\,361                       & 2 min e 10 s        \\
+			              & média (4 blocos)                 & 418\,145                       & 2 min e 10 s        \\
+			\midrule
+			Residual      & ResNet-18 mínima                 & 78\,169                        & 5,12 s              \\
+			              & ResNet-18 reduzida               & 1\,029\,985                    & 2 min               \\
+			              & ResNet-18                        & 3\,976\,385                    & 2 min e 5,12 s      \\
+			              & ResNet-34                        & 7\,350\,721                    & 2 min               \\
+			              & ResNet-50                        & 16\,479\,937                   & 2 min               \\
+			\midrule
+			Atenção       & ResNet-18 + \textit{Transformer} & 1\,491\,553                    & 2 min               \\
+			\midrule
+			Fusão         & ResNet-18 + ramo clínico         & 3\,987\,041                    & 2 min + 6 variáveis \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Todas as variantes compartilham o mesmo classificador final --- agrupamento
+global por média e máximo, seguido de duas camadas totalmente conectadas com
+descarte --- e a mesma saída: um único \textit{logit} por janela, convertido
+em probabilidade pela \autoref{eq:logistica}. A diferença entre elas está
+apenas no extrator de características, o que permite atribuir as diferenças
+de desempenho à arquitetura.
 
 
 % ==============================================================================
-% CONFIGURAÇÃO EXPERIMENTAL
-% Precede as seções de resultados das arquiteturas.
-%
-% ⚠️ Dois pontos exigem decisão do autor antes da redação final:
-%
-% 1. A justificativa dos hiperparâmetros. O texto abaixo afirma que os
-%    valores foram fixados após ensaios preliminares. Se esses ensaios não
-%    estiverem registrados, convém suavizar a afirmação ou documentá-los.
-%
-% 2. O tamanho do lote da ResNet-50, reduzido de 256 para 128 por limitação
-%    de memória. Está registrado como nota de rodapé.
-% ==============================================================================
 
-\section{Configuração experimental}
+\subsection{Arquitetura da rede convolucional}
+\label{subsec:fund-cnn-arquitetura}
+
+A rede convolucional adotada neste trabalho é composta por blocos
+sequenciais, seguidos de agrupamento global e de um classificador de duas
+camadas. Cada bloco aplica, nesta ordem, convolução, normalização em lote,
+ativação \textit{ReLU}, agrupamento máximo com fator quatro e descarte com
+probabilidade 0,1. A \autoref{fig:cnn-arquitetura} ilustra o fluxo.
+
+% ---- FIGURA: diagrama da arquitetura ----
+\begin{figure}[h!]
+	\captionsetup{width=16cm}
+	\Caption{\label{fig:cnn-arquitetura} Arquitetura da rede convolucional
+		unidimensional}
+	\UFCfig{}{
+		\fbox{\includegraphics[width=16cm]{figuras/arquitetura_cnn.jpg}}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{figure}
+
+\subsubsection{Variantes de capacidade}
+\label{subsubsec:fund-cnn-variantes}
+
+Para avaliar se o desempenho depende da capacidade do modelo, a mesma
+estrutura foi instanciada em três tamanhos, que diferem apenas no número de
+blocos e de filtros por bloco. A variante \textit{mínima} tem três blocos,
+com 8, 16 e 32 filtros; a \textit{simples}, quatro blocos, com 16, 32, 64 e
+64 filtros; a \textit{média}, quatro blocos, com 32, 64, 128 e 128 filtros.
+Todos os demais elementos --- largura do núcleo, agrupamento, descarte,
+classificador e inicialização --- são idênticos. Entre a menor e a maior
+variante, o número de parâmetros cresce cerca de 29 vezes. Se o desempenho
+não acompanhar esse crescimento, a limitação não está na capacidade da
+rede, mas na informação disponível nos dados.
+
+A \autoref{tab:cnn-dimensoes} detalha os canais de cada variante e o
+comprimento das representações intermediárias para as duas durações de
+janela avaliadas: 2~minutos (24\,000 amostras) e 10~segundos (2\,000
+amostras).
+
+% ---- TABELA: dimensões ----
+\begin{table}[h!]
+	\captionsetup{width=15.5cm}
+	\Caption{\label{tab:cnn-dimensoes} Canais e comprimento das
+		representações intermediárias das variantes da rede convolucional}
+	\IBGEtab{}{
+		\begin{tabular}{lrrrrrr}
+			\toprule
+			                          & \multicolumn{3}{c}{Canais}          & \multicolumn{2}{c}{Comprimento} &                                         \\
+			\cmidrule(lr){2-4} \cmidrule(lr){5-6}
+			Etapa                     & \multicolumn{1}{c}{Mínima}          & \multicolumn{1}{c}{Simples}     &
+			\multicolumn{1}{c}{Média} & \multicolumn{1}{c}{2 min}           &
+			\multicolumn{1}{c}{10 s}  & \multicolumn{1}{c}{Campo receptivo}                                                                             \\
+			\midrule \midrule
+			Entrada                   & 3                                   & 3                               & 3   & 24\,000 & 2\,000 & 5\,ms          \\
+			Bloco 1                   & 8                                   & 16                              & 32  & 6\,000  & 500    & 90\,ms         \\
+			Bloco 2                   & 16                                  & 32                              & 64  & 1\,500  & 125    & 430\,ms        \\
+			Bloco 3                   & 32                                  & 64                              & 128 & 375     & 31     & 1,8\,s         \\
+			Bloco 4                   & ---                                 & 64                              & 128 & 93      & 7      & 7,2\,s         \\
+			Agrupamento global        & 64                                  & 128                             & 256 & ---     & ---    & janela inteira \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+A coluna de campo receptivo indica a extensão do sinal original que
+influencia cada posição de saída e não depende da duração da janela. Ao
+final do primeiro bloco, cada posição reflete 90\,ms de registro ---
+aproximadamente a duração de um complexo QRS ---; ao final do quarto,
+7,2\,s, o equivalente a oito a nove ciclos cardíacos a 70\,bpm. A rede,
+portanto, combina progressivamente padrões morfológicos de batimentos
+isolados em padrões que abrangem sequências de batimentos.
+
+A duração da janela altera o que esses padrões representam no conjunto.
+Na janela de 2~minutos, o quarto bloco ainda produz 93 posições, cada uma
+resumindo alguns segundos, e o agrupamento global combina dezenas de trechos
+distintos. Na janela de 10~segundos, restam 7 posições cujo campo receptivo
+já cobre a maior parte da janela, de modo que a rede analisa essencialmente
+um único trecho de poucos batimentos. Na variante mínima, que não possui o
+quarto bloco, o campo receptivo final é de 1,8\,s, cerca de dois ciclos
+cardíacos.
+
+\subsubsection{Largura do núcleo}
+\label{subsubsec:fund-cnn-nucleo}
+
+O núcleo convolucional foi dimensionado em $\kappa = 15$ amostras,
+equivalentes a 75\,ms na frequência de 200\,Hz. A escolha difere da convenção
+predominante em arquiteturas originadas no processamento de imagens, em que
+núcleos de três elementos são usuais e corresponderiam, neste contexto, a
+apenas 15\,ms. Com núcleo de 75\,ms, um único filtro da primeira camada
+abrange parcela substancial de um complexo QRS, cuja duração normal situa-se
+entre 80 e 100\,ms, podendo representar diretamente padrões de despolarização
+ventricular.
+
+\subsubsection{Agrupamento combinado}
+\label{subsubsec:fund-cnn-pooling}
+
+Ao término do último bloco, os canais são reduzidos a um vetor com o dobro
+da sua dimensão pela concatenação dos agrupamentos globais por média e
+máximo, conforme a \autoref{eq:pooling-global}: 64, 128 e 256 dimensões nas
+variantes mínima, simples e média. As duas operações capturam aspectos
+complementares: a média reflete o comportamento típico da janela, enquanto o
+máximo registra o instante de maior ativação de cada filtro. A combinação
+permite que a rede seja sensível tanto a alterações persistentes quanto a
+eventos breves, como extrassístoles isoladas, que a média isoladamente
+diluiria.
+
+\subsubsection{Ausência de conexões residuais}
+\label{subsubsec:fund-cnn-residual}
+
+A arquitetura não emprega as conexões residuais descritas na
+\autoref{sec:fund-resnet}. Essas conexões foram concebidas para viabilizar o
+treinamento de redes com dezenas de camadas, nas quais o gradiente tenderia a
+se atenuar ao percorrer a sequência de transformações. Com três ou quatro
+blocos convolucionais, o gradiente alcança as camadas iniciais sem atenuação
+significativa, e os atalhos acrescentariam parâmetros sem benefício
+correspondente.
+
+\subsubsection{Classificador e número de parâmetros}
+\label{subsubsec:fund-cnn-classificador}
+
+O vetor resultante do agrupamento alimenta um classificador composto por
+duas camadas totalmente conectadas --- a primeira com 64 unidades,
+normalização em lote e ativação \textit{ReLU}, a segunda com uma unidade de
+saída ---, ambas precedidas por descarte com probabilidade 0,6. Os pesos das
+camadas convolucionais são inicializados conforme \citeonline{he2015delving},
+esquema adequado a redes com ativação \textit{ReLU}.
+
+A \autoref{tab:cnn-parametros} decompõe os parâmetros treináveis de cada
+variante. Como as camadas convolucionais não dependem do comprimento do
+sinal, os valores são os mesmos para as duas durações de janela.
+
+% ---- TABELA: parâmetros ----
+\begin{table}[h!]
+	\captionsetup{width=13.5cm}
+	\Caption{\label{tab:cnn-parametros} Distribuição dos parâmetros das
+		variantes da rede convolucional}
+	\IBGEtab{}{
+		\begin{tabular}{lrrr}
+			\toprule
+			Componente                  & \multicolumn{1}{c}{Mínima} &
+			\multicolumn{1}{c}{Simples} & \multicolumn{1}{c}{Média}                        \\
+			\midrule \midrule
+			Bloco 1                     & 360                        & 720      & 1\,440   \\
+			Bloco 2                     & 1\,920                     & 7\,680   & 30\,720  \\
+			Bloco 3                     & 7\,680                     & 30\,720  & 122\,880 \\
+			Bloco 4                     & ---                        & 61\,440  & 245\,760 \\
+			Normalização dos blocos     & 112                        & 352      & 704      \\
+			Classificador               & 4\,353                     & 8\,449   & 16\,641  \\
+			\midrule
+			Total                       & 14\,425                    & 109\,361 & 418\,145 \\
+			Por paciente de treino      & 47                         & 354      & 1\,353   \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+Cada bloco convolucional tem $C \cdot C' \cdot \kappa$ pesos, sem termo de
+viés, pois a normalização em lote seguinte o tornaria redundante. A última
+linha divide o total pelos 309 pacientes do conjunto de treinamento de cada
+partição. Mesmo a variante média tem cerca de dez vezes menos parâmetros por
+paciente que a ResNet-18 descrita na \autoref{sec:fund-resnet}, que tem 3\,976\,385
+parâmetros, ou 12\,869 por paciente de treinamento.
+
+% arquitetura resnet =======================================
+
+
+\subsection{Arquitetura das redes residuais}
+\label{subsec:fund-resnet-arquitetura}
+
+A arquitetura empregada adapta ao domínio unidimensional a estrutura proposta
+por \citeonline{he2016deep}, seguindo a prática estabelecida em trabalhos de
+classificação de \gls{ECG} com redes residuais
+\cite{hannun2019cardiologist,ribeiro2020automatic}. Uma etapa inicial
+precede quatro estágios de blocos residuais:
+
+\begin{itemize}
+	\item \textbf{Etapa inicial:} convolução com núcleo 7 e passo 2, seguida
+	      de normalização em lote, \textit{ReLU} e agrupamento máximo com núcleo 3 e
+	      passo 2. O comprimento é reduzido por quatro antes do primeiro bloco.
+	\item \textbf{Estágios 1 a 4:} sequências de blocos residuais com $P$,
+	      $2P$, $4P$ e $8P$ canais internos, em que $P$ denota a largura inicial.
+	      O primeiro bloco dos estágios 2 a 4 emprega passo 2, dividindo o
+	      comprimento pela metade e exigindo projeção no atalho.
+	\item \textbf{Agrupamento global e classificador:} idênticos aos da
+	      \autoref{subsec:fund-cnn-arquitetura}, com o vetor resultante de
+	      dimensão $2 \times 8 \cdot P \cdot E$ ao combinar média e máximo.
+\end{itemize}
+
+A cada estágio, portanto, o comprimento temporal é dividido por dois e a
+profundidade da representação, multiplicada por dois --- progressão distinta
+da adotada na rede convolucional da \autoref{sec:fund-cnn}, que divide o
+comprimento por quatro a cada bloco.
+
+\subsubsection{Configurações avaliadas}
+\label{subsubsec:fund-resnet-config}
+
+Três parâmetros definem cada configuração: o tipo de bloco, o número de
+blocos por estágio e a largura inicial $P$. A
+\autoref{tab:resnet-configuracoes} reúne as quatro variantes avaliadas, que
+percorrem uma faixa de dezesseis vezes em número de parâmetros.
+
+% ---- TABELA: configurações ----
+\begin{table}[h!]
+	\captionsetup{width=15.5cm}
+	\Caption{\label{tab:resnet-configuracoes} Configurações das redes
+		residuais avaliadas}
+	\IBGEtab{}{
+		\begin{tabular}{lcccrr}
+			\toprule
+			Configuração              & Bloco                          & Blocos por estágio & $P$ &
+			\multicolumn{1}{c}{Saída} & \multicolumn{1}{c}{Parâmetros}                                                    \\
+			\midrule \midrule
+			ResNet-18 reduzida        & básico                         & 2--2--2--2         & 32  & 256    & 1\,029\,985  \\
+			ResNet-18 completa        & básico                         & 2--2--2--2         & 64  & 512    & 3\,976\,385  \\
+			ResNet-34                 & básico                         & 3--4--6--3         & 64  & 512    & 7\,350\,721  \\
+			ResNet-50                 & gargalo                        & 3--4--6--3         & 64  & 2\,048 & 16\,479\,937 \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+As configurações permitem examinar separadamente duas dimensões da
+capacidade. A comparação entre as duas variantes da ResNet-18 isola o efeito
+da \textit{largura}: mesma profundidade, o dobro de canais. A comparação
+entre a ResNet-18 completa e a ResNet-34 isola o efeito da
+\textit{profundidade}: mesma largura, o dobro de blocos. A ResNet-50 combina
+a profundidade da ResNet-34 com o bloco de gargalo e saída quatro vezes mais
+larga.
+
+Os números de parâmetros são inferiores aos das versões bidimensionais
+homônimas, nas quais a ResNet-18 possui cerca de 11 milhões, porque o núcleo
+unidimensional de largura três contém três pesos por par de canais, contra
+nove do núcleo $3 \times 3$.
+
+\subsubsection{Dimensões e campo receptivo}
+\label{subsubsec:fund-resnet-dimensoes}
+
+A \autoref{tab:resnet-dimensoes} apresenta as dimensões das representações
+intermediárias para a janela de 24\,000 amostras e o campo receptivo ao
+término de cada etapa.
+
+% ---- TABELA: dimensões ----
+\begin{table}[h!]
+	\captionsetup{width=15.5cm}
+	\Caption{\label{tab:resnet-dimensoes} Dimensões e campo receptivo das
+		redes residuais para janela de 24\,000 amostras}
+	\IBGEtab{}{
+		\begin{tabular}{lrrrrr}
+			\toprule
+			                              &                                 & \multicolumn{2}{c}{Canais} & \multicolumn{2}{c}{Campo receptivo}                     \\
+			\cmidrule(lr){3-4} \cmidrule(lr){5-6}
+			Etapa                         & \multicolumn{1}{c}{Comprimento} &
+			\multicolumn{1}{c}{18 e 34}   & \multicolumn{1}{c}{50}          &
+			\multicolumn{1}{c}{ResNet-18} & \multicolumn{1}{c}{ResNet-34}                                                                                          \\
+			\midrule \midrule
+			Entrada                       & 24\,000                         & 3                          & 3                                   & 5\,ms   & 5\,ms   \\
+			Etapa inicial                 & 6\,000                          & 64                         & 64                                  & 55\,ms  & 55\,ms  \\
+			Estágio 1                     & 6\,000                          & 64                         & 256                                 & 215\,ms & 295\,ms \\
+			Estágio 2                     & 3\,000                          & 128                        & 512                                 & 495\,ms & 895\,ms \\
+			Estágio 3                     & 1\,500                          & 256                        & 1\,024                              & 1,1\,s  & 2,7\,s  \\
+			Estágio 4                     & 750                             & 512                        & 2\,048                              & 2,2\,s  & 4,5\,s  \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+O campo receptivo ao final da ResNet-18 é de 2,2\,s --- inferior aos 7,2\,s da
+rede convolucional rasa, apesar de esta possuir apenas quatro camadas
+convolucionais contra dezessete. A diferença decorre do núcleo: com três
+amostras (15\,ms), cada convolução residual amplia pouco a extensão
+observada, e a cobertura temporal depende do empilhamento de muitas camadas.
+A ResNet-34, com o dobro de blocos, alcança 4,5\,s. A ResNet-50 apresenta
+campo receptivo semelhante ao da ResNet-18, pois apenas uma das três
+convoluções de cada bloco de gargalo considera vizinhança temporal.
+
+Ainda que inferior à duração da janela, esse campo receptivo não limita a
+informação disponível ao classificador: o agrupamento global da
+\autoref{eq:pooling-global} combina as 750 posições do último estágio,
+abrangendo os dois minutos integralmente.
+
+\subsubsection{Distribuição dos parâmetros}
+\label{subsubsec:fund-resnet-parametros}
+
+Os parâmetros concentram-se nos estágios finais, em que o número de canais é
+maior. Na ResNet-18 completa, o quarto estágio, com 512 canais, responde por
+aproximadamente três quartos do total. Na ResNet-50, o classificador recebe
+vetor de 4\,096 dimensões --- 2\,048 de cada agrupamento ---, e sua primeira
+camada sozinha possui cerca de 525\,000 parâmetros.
+
+Os pesos das camadas convolucionais são inicializados conforme
+\citeonline{he2015delving}, e os parâmetros de escala e deslocamento da
+normalização em lote, com um e zero, respectivamente, de modo que cada bloco
+inicie próximo da identidade.
+
+\subsection{Regime de dados das redes residuais}
+\label{subsec:fund-resnet-regime}
+
+As redes residuais foram concebidas para conjuntos de treinamento de grande
+porte. A ResNet original foi avaliada sobre 1,28 milhão de imagens
+\cite{he2016deep}; no domínio do \gls{ECG}, os trabalhos que estabeleceram
+seu desempenho empregaram dezenas de milhares a milhões de registros
+\cite{hannun2019cardiologist,ribeiro2020automatic}.
+
+Neste trabalho, cada partição dispõe de 309 pacientes no treinamento, dos
+quais 33 casos. A razão entre parâmetros e pacientes varia de $3\,333$ na
+ResNet-18 reduzida a cerca de $53\,000$ na ResNet-50. Nesse regime, a
+capacidade da rede é amplamente suficiente para ajustar individualmente cada
+exemplo de treinamento, o que motiva a comparação sistemática entre
+configurações de capacidade crescente apresentada no
+\autoref{cap:resultados}: se a capacidade fosse o fator limitante, o
+desempenho deveria variar com ela.
+
+
+\subsection{Arquitetura da rede residual com atenção}
+\label{subsec:fund-atencao-arquitetura}
+
+A arquitetura avaliada mantém integralmente o corpo da ResNet-18 reduzida
+(\autoref{tab:resnet-configuracoes}), que produz sequência de 750 posições
+com 256 canais, e insere entre ele e o agrupamento global uma camada
+codificadora com os parâmetros da \autoref{tab:atencao-config}.
+
+% ---- TABELA: configuração ----
+\begin{table}[h!]
+	\captionsetup{width=12cm}
+	\Caption{\label{tab:atencao-config} Configuração da camada de atenção}
+	\IBGEtab{}{
+		\begin{tabular}{ll}
+			\toprule
+			Parâmetro & Valor \\
+			\midrule \midrule
+			Comprimento da sequência ($L$) & 750 posições \\
+			Dimensão do modelo ($d$) & 256 \\
+			Número de cabeças ($h$) & 4 \\
+			Dimensão por cabeça ($d_k$) & 64 \\
+			Dimensão da rede interna ($d_{\mathrm{ff}}$) & 512 \\
+			Número de camadas & 1 \\
+			Descarte & 0,3 \\
+			\bottomrule
+		\end{tabular}
+	}{
+	\Fonte{elaborado pelo autor (2026).}
+}
+\end{table}
+
+A saída do codificador, com as mesmas dimensões da entrada, passa pelo
+agrupamento global combinado de média e máximo, resultando em vetor de 512
+dimensões. Diferentemente das demais redes, o classificador consiste em uma
+única camada linear precedida de descarte, sem camada intermediária: a
+capacidade adicional introduzida pela atenção dispensa a não linearidade
+extra no classificador.
+
+A \autoref{tab:atencao-parametros} decompõe os parâmetros.
+
+% ---- TABELA: parâmetros ----
+\begin{table}[h!]
+	\captionsetup{width=12.5cm}
+	\Caption{\label{tab:atencao-parametros} Distribuição dos parâmetros da
+	ResNet-18 reduzida com camada de atenção}
+	\IBGEtab{}{
+		\begin{tabular}{lrr}
+			\toprule
+			Componente & \multicolumn{1}{c}{Parâmetros} &
+			\multicolumn{1}{c}{Fração} \\
+			\midrule \midrule
+			Corpo residual & 963\,936 & 64,6\,\% \\
+			Atenção com múltiplas cabeças & 263\,168 & 17,6\,\% \\
+			Rede interna (FFN) & 262\,912 & 17,6\,\% \\
+			Normalização de camada & 1\,024 & 0,1\,\% \\
+			Classificador & 513 & $<$\,0,1\,\% \\
+			\midrule
+			Total & 1\,491\,553 & 100,0\,\% \\
+			\bottomrule
+		\end{tabular}
+	}{
+	\Fonte{elaborado pelo autor (2026).}
+}
+\end{table}
+
+A camada de atenção acrescenta $527\,104$ parâmetros, cerca de metade do
+corpo convolucional e 35\,\% do total.
+
+\subsubsection{Ausência de codificação posicional}
+\label{subsubsec:fund-posicional}
+
+A operação da \autoref{eq:atencao} é invariante à ordem das posições: se a
+sequência de entrada for permutada, a saída é permutada da mesma forma. Em
+aplicações nas quais a ordem é essencial, como a linguagem, acrescenta-se à
+entrada uma \textit{codificação posicional} que identifica cada posição
+\cite{vaswani2017attention}.
+
+A arquitetura empregada não utiliza codificação posicional. Duas razões
+sustentam a escolha. A primeira é que as representações produzidas pelo
+corpo convolucional já carregam informação local de ordem, pois cada posição
+resume um trecho contíguo do sinal. A segunda é que a saída do codificador é
+submetida ao agrupamento global, operação também invariante à ordem: a
+posição absoluta de um padrão dentro da janela de dois minutos não altera a
+representação final. O que a atenção acrescenta, nesse arranjo, é a
+possibilidade de cada posição ser representada em função do conteúdo das
+demais, e não a modelagem da ordem temporal propriamente dita.
+
+\subsection{Regime de dados da rede com atenção}
+\label{subsec:fund-atencao-regime}
+
+As arquiteturas baseadas em atenção apresentam menos vieses indutivos que
+as convolucionais. Uma convolução pressupõe, por construção, que padrões
+relevantes são locais e podem ocorrer em qualquer posição; a atenção não
+pressupõe localidade e precisa aprender, a partir dos dados, quais relações
+são relevantes. \citeonline{dosovitskiy2021image} mostraram que essa
+flexibilidade só se converte em vantagem quando o conjunto de treinamento é
+suficientemente grande: em conjuntos de pequeno porte, modelos baseados em
+atenção apresentaram desempenho inferior ao de redes convolucionais de
+capacidade semelhante.
+
+A arquitetura híbrida aqui empregada atenua esse problema ao preservar o
+corpo convolucional e restringir a atenção a uma única camada sobre
+representações já comprimidas. Ainda assim, com 33 casos positivos por
+partição de treinamento, a estimativa dos $527\,104$ parâmetros adicionais
+encontra-se no regime em que a literatura reporta menor eficácia do
+mecanismo.
+
+
+\section{Cenário I: treinamento e avaliação das redes}
 \label{sec:configuracao-experimental}
+
 
 As arquiteturas avaliadas nas seções seguintes compartilham o mesmo
 protocolo de preparação dos dados, treinamento e avaliação. Essa
@@ -264,6 +828,7 @@ dos experimentos; são apresentados a seguir, acompanhados da justificativa
 correspondente. Duas configurações foram empregadas: a das redes residuais,
 de atenção e de fusão, e a das redes convolucionais, que estendeu o número
 de épocas e de janelas. As diferenças entre elas são indicadas nas tabelas.
+
 
 \subsection{Representação do sinal}
 \label{subsec:config-sinal}
@@ -400,96 +965,6 @@ equilíbrio entre classes seria obtido às custas de reduzir a coorte de 517
 para 110 pacientes, sem alterar o número de eventos --- que constitui o
 fator efetivamente limitante --- e com ampliação dos intervalos de confiança.
 
-\subsection{Protocolo de avaliação}
-\label{subsec:config-avaliacao}
-
-A avaliação emprega validação cruzada estratificada em cinco partições. A
-divisão ocorre no nível do paciente, e as janelas são extraídas somente após
-a separação: nenhum indivíduo contribui simultaneamente para treinamento e
-teste. O cuidado é necessário porque janelas de um mesmo registro
-compartilham a assinatura eletrocardiográfica individual --- eixo elétrico,
-morfologia do complexo QRS e relação de amplitude entre derivações ---, e sua
-presença em ambos os conjuntos permitiria ao modelo reconhecer o paciente em
-lugar de estimar o risco.
-
-De cada conjunto de treinamento, uma fração é reservada para a definição do
-critério de parada antecipada e do limiar de decisão. O limiar é obtido pelo
-índice de Youden, que maximiza a soma de sensibilidade e especificidade, e
-apenas aplicado ao conjunto de teste --- sua determinação a partir do próprio
-teste produziria estimativas otimistas.
-
-As probabilidades preditas para as janelas de um mesmo paciente são
-agregadas por média antes do cálculo de qualquer métrica. Sem essa agregação,
-um indivíduo com 100 janelas seria contabilizado cem vezes, como se
-correspondesse a cem observações independentes --- o que estreitaria
-artificialmente os intervalos de confiança.
-
-Os intervalos de confiança de 95\,\% foram estimados por reamostragem
-\textit{bootstrap}, sorteando pacientes com reposição: 1\,000 repetições
-para as redes neurais e 2\,000 para os modelos sobre os marcadores.
-Comparações entre modelos empregaram reamostragem pareada: a mesma amostra
-avalia ambos os modelos, de modo a isolar a incerteza da diferença.
-
-\subsection{Métricas}
-\label{subsec:config-metricas}
-
-A métrica principal é a \gls{AUC}, que mede a capacidade de ordenar
-corretamente os pacientes por risco e independe do limiar adotado. Reporta-se
-também a \gls{AP}, cuja linha de base sob classificação aleatória é a
-prevalência da classe positiva --- 0,106 nesta coorte --- em lugar de 0,5, o
-que a torna mais informativa quando os eventos são raros.
-
-Sensibilidade, especificidade e \gls{VPP} são reportadas no limiar definido
-na validação. A acurácia não é empregada como critério de comparação pela
-razão já exposta: o classificador trivial a maximiza sem apresentar
-utilidade.
-
-Dois valores de \gls{AUC} são apresentados em cada seção. A média entre
-partições, acompanhada do desvio-padrão, indica a estabilidade do resultado
-em relação à composição das partições. A estimativa agrupada, calculada sobre
-a totalidade dos 517 pacientes --- cada um predito pelo modelo que não o
-observou durante o treinamento ---, é considerada mais confiável por avaliar
-simultaneamente os 55 eventos, enquanto cada partição isolada dispõe de
-apenas onze. Eventuais discrepâncias entre as duas estimativas decorrem de os
-modelos ajustados em cada partição produzirem probabilidades em escalas
-distintas, que não coincidem exatamente ao serem reunidas em ordenamento
-único.
-
-% ==============================================================================
-% METODOLOGIA — Experimentos com a rede convolucional: capacidade x janela
-% Fonte da configuracao: config.yaml + processamento_gpu_classificacao.py
-% CONFERIR os valores marcados com [conferir] contra os logs antes de fechar.
-% ==============================================================================
-
-\subsection{Ambiente computacional}
-\label{subsec:met-ambiente}
-
-Os experimentos foram executados em um servidor com sistema operacional
-Ubuntu, cujas características constam da \autoref{tab:met-ambiente}. Cada
-treinamento utilizou uma das duas unidades de processamento gráfico, com
-precisão mista. A extração dos marcadores e os modelos sobre variáveis
-tabulares foram executados nos processadores, com paralelismo entre
-pacientes.
-
-\begin{table}[h!]
-	\captionsetup{width=14cm}
-	\Caption{\label{tab:met-ambiente} Ambiente computacional}
-	\IBGEtab{}{
-		\begin{tabular}{ll}
-			\toprule
-			Componente                     & Especificação                                              \\
-			\midrule \midrule
-			Unidades de processamento gráfico & 2 $\times$ NVIDIA A100-SXM4, 40\,GB de memória cada     \\
-			Processadores                  & 2 $\times$ AMD EPYC 7742 (128 núcleos, 256 \textit{threads}) \\
-			Memória principal              & 2\,TB                                                      \\
-			Sistema operacional            & Ubuntu 22.04                                               \\
-			Linguagem e bibliotecas        & Python, PyTorch, scikit-learn, NeuroKit2, WFDB             \\
-			\bottomrule
-		\end{tabular}
-	}{
-		\Fonte{elaborado pelo autor (2026).}
-	}
-\end{table}
 
 \subsection{Experimentos com a rede convolucional}
 \label{subsec:met-cnn-experimentos}
@@ -566,118 +1041,6 @@ janelas, e o limiar de decisão é escolhido pelo índice de Youden na
 validação interna, nunca no conjunto de teste.
 
 
-% ==============================================================================
-% METODOLOGIA — Redes profundas aplicadas ao sinal: arquiteturas e protocolo
-%
-% Fontes: classificacao_v2 (famílias ResNet, Transformer, fusão) e
-%         classificacao_cnn (CNN mínima, simples, média); ambos usam
-%         processamento_gpu_classificacao.py.
-%
-% A teoria de cada bloco está na fundamentação (sec:fund-cnn, sec:fund-resnet,
-% sec:fund-atencao, sec:fund-metricas). Aqui fica o que foi FEITO.
-%
-% [conferir] = valor a confirmar no log antes da versão final.
-% ==============================================================================
-
-\section{Redes neurais aplicadas ao sinal}
-\label{sec:met-redes}
-
-Esta seção descreve as arquiteturas de redes neurais avaliadas sobre o sinal
-de Holter e o protocolo comum de treinamento e avaliação. Todas as redes
-recebem janelas do sinal pré-processado conforme a
-\autoref{sec:met-preprocessamento}, produzem uma probabilidade por janela e
-são avaliadas no nível do paciente, após a agregação descrita na
-\autoref{subsec:fund-agregacao}. Os fundamentos de cada componente foram
-apresentados no \autoref{cap:fundamentacao-teorica}; esta seção registra as escolhas
-efetivamente adotadas.
-
-\subsection{Arquiteturas avaliadas}
-\label{subsec:met-arquiteturas}
-
-As arquiteturas foram organizadas em quatro famílias, avaliadas em ordem
-crescente de complexidade. A \autoref{tab:met-arquiteturas} resume cada uma
-delas.
-
-\begin{enumerate}
-	\item \textbf{Redes convolucionais sem atalhos.} A rede convolucional
-	      descrita na \autoref{sec:fund-cnn}, em três variantes de capacidade ---
-	      mínima, simples e média --- que diferem apenas no número de blocos e de
-	      filtros. É a família de menor capacidade e serve de referência para as
-	      demais.
-
-	\item \textbf{Redes residuais.} Adaptações unidimensionais da ResNet
-	      \cite{he2016deep}, na linha das redes empregadas para a classificação de
-	      \gls{ECG} por \citeonline{hannun2019cardiologist} e
-	      \citeonline{ribeiro2020automatic}. Foram avaliadas profundidades de 18, 34
-	      e 50 camadas e, para a profundidade de 18 camadas, três larguras, de modo a
-	      separar o efeito da profundidade do efeito do número de canais.
-
-	\item \textbf{Rede residual com atenção.} A ResNet-18 seguida de um
-	      codificador \textit{Transformer} \cite{vaswani2017attention}, que recebe a
-	      sequência de vetores produzida pelo último estágio residual e permite que
-	      cada trecho da janela seja relacionado aos demais antes do agrupamento.
-
-	\item \textbf{Fusão com variáveis clínicas.} A ResNet-18 com um segundo
-	      ramo, que recebe as seis variáveis clínicas da
-	      \autoref{subsec:met-clinicas}. As representações dos dois ramos
-	      são concatenadas antes do classificador. Para medir a contribuição de cada
-	      modalidade, a mesma arquitetura foi treinada também com cada ramo isolado.
-\end{enumerate}
-
-\begin{table}[h!]
-	\captionsetup{width=15.5cm}
-	\Caption{\label{tab:met-arquiteturas} Arquiteturas de redes neurais
-		avaliadas sobre o sinal de Holter}
-	\IBGEtab{}{
-		\begin{tabular}{llrl}
-			\toprule
-			Família       & Variante                         & \multicolumn{1}{c}{Parâmetros} & Entrada             \\
-			\midrule \midrule
-			Convolucional & mínima (3 blocos)                & 14\,425                        & 2 min e 10 s        \\
-			              & simples (4 blocos)               & 109\,361                       & 2 min e 10 s        \\
-			              & média (4 blocos)                 & 418\,145                       & 2 min e 10 s        \\
-			\midrule
-			Residual      & ResNet-18 mínima                 & 78\,169                        & 5,12 s              \\
-			              & ResNet-18 reduzida               & 1\,029\,985                    & 2 min               \\
-			              & ResNet-18                        & 3\,976\,385                    & 2 min e 5,12 s      \\
-			              & ResNet-34                        & 7\,350\,721                    & 2 min               \\
-			              & ResNet-50                        & 16\,479\,937                   & 2 min               \\
-			\midrule
-			Atenção       & ResNet-18 + \textit{Transformer} & 1\,491\,553                    & 2 min               \\
-			\midrule
-			Fusão         & ResNet-18 + ramo clínico         & 3\,987\,041                    & 2 min + 6 variáveis \\
-			\bottomrule
-		\end{tabular}
-	}{
-		\Fonte{elaborado pelo autor (2026).}
-	}
-\end{table}
-
-Todas as variantes compartilham o mesmo classificador final --- agrupamento
-global por média e máximo, seguido de duas camadas totalmente conectadas com
-descarte --- e a mesma saída: um único \textit{logit} por janela, convertido
-em probabilidade pela \autoref{eq:logistica}. A diferença entre elas está
-apenas no extrator de características, o que permite atribuir as diferenças
-de desempenho à arquitetura.
-
-\subsection{Estratégias de treinamento da rede de fusão}
-\label{subsec:met-fusao}
-
-Na rede de fusão, o ramo do sinal tem cerca de 4 milhões de parâmetros,
-enquanto o ramo clínico recebe apenas seis variáveis. Treinados juntos com a
-mesma taxa de aprendizado, o ramo do sinal tende a dominar o ajuste e a
-memorizar os pacientes de treinamento antes que o ramo clínico contribua.
-Para controlar esse desequilíbrio, foram comparadas três estratégias:
-
-\begin{itemize}
-	\item \textit{treinamento conjunto}, com a mesma taxa de aprendizado
-	      ($10^{-4}$) para toda a rede;
-	\item \textit{taxa de aprendizado discriminativa}, em que o ramo do sinal
-	      recebe taxa de $10^{-6}$ e decaimento de pesos de $10^{-1}$, e o restante
-	      da rede mantém $10^{-4}$ e $10^{-2}$;
-	\item \textit{ramo do sinal congelado}, em que apenas o ramo clínico e o
-	      classificador são ajustados.
-\end{itemize}
 
 \subsection{Protocolo de treinamento e avaliação}
 \label{subsec:met-protocolo-redes}
@@ -794,24 +1157,15 @@ probabilidade do paciente é a máxima, e não a média, de suas janelas, o que
 privilegia a janela de maior risco ao longo do registro.
 
 
-% ==============================================================================
-% METODOLOGIA — Extração dos marcadores eletrocardiográficos
-%
-% Fontes:
-%   Protocolo A: extrair_biomarcadores.py        (5 min a cada hora)
-%   Protocolo B: extrair_biomarcadores_30s_nn.py (30 s a cada 2 min, versão NN)
-%   Agregação B: janelas30s_agregado_paciente.py
-%   Auditoria B: saída da extração completa (517 pacientes, 328 807 segmentos)
-%
-% [conferir] = número a confirmar no log antes da versão final.
-% Citações sem entrada no .bib: swee2026 (use a chave que você já tem),
-% emrich2024 (método de proeminência do NeuroKit2; completar a referência).
-% ==============================================================================
 
-\section{Extração dos marcadores eletrocardiográficos}
+\section{Cenário II: extração de características do ECG}
+\label{sec:met-cenario2}
 \label{sec:met-extracao}
 
-Os marcadores descritos na \autoref{sec:fund-marcadores} foram extraídos dos
+No segundo cenário, o sinal do Holter passa por pré-processamento e extração
+de características, e as medidas obtidas --- os marcadores
+eletrocardiográficos --- são a entrada de modelos de aprendizado de máquina
+clássico. Os marcadores descritos na \autoref{sec:fund-marcadores} foram extraídos dos
 registros de Holter dos 517 pacientes da coorte segundo dois protocolos,
 que diferem na duração e na densidade dos segmentos analisados. O protocolo
 A privilegia segmentos longos, que permitem a análise espectral; o protocolo
@@ -843,6 +1197,62 @@ e a delineação dos batimentos.
 		\end{tabular}
 	}{
 		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+
+\subsection{Marcadores extraídos}
+\label{subsec:met-marcadores-extraidos}
+
+A \autoref{tab:fund-biomarcadores} reúne os marcadores extraídos neste
+trabalho, com sua definição, unidade e significado fisiológico. Cada um é
+calculado em cada segmento e depois resumido por paciente de duas formas: a
+média entre os segmentos, que representa o nível típico do marcador, e o
+desvio-padrão entre os segmentos, que representa quanto ele varia ao longo
+do dia. Assim, o desvio-padrão da frequência cardíaca média, por exemplo, não
+mede a variação batimento a batimento, mas a diferença de frequência entre os
+períodos do registro, incluindo o ciclo dia--noite.
+
+\begin{table}[h!]
+	\captionsetup{width=16cm}
+	\Caption{\label{tab:fund-biomarcadores} Marcadores eletrocardiográficos
+		extraídos: definição e significado}
+	\IBGEtab{}{
+		\footnotesize
+		\begin{tabular}{p{3.3cm}p{5.6cm}p{1.1cm}p{5.2cm}}
+			\toprule
+			Marcador & Definição & Unidade & Significado \\
+			\midrule \midrule
+			\multicolumn{4}{l}{\textit{Ritmo e variabilidade (sobre intervalos NN)}} \\
+			Frequência cardíaca média & 60\,000 dividido pela média dos intervalos NN & bpm & Nível de ativação do ritmo \\
+			Intervalo RR médio & Média dos intervalos NN & ms & Inverso da frequência \\
+			\gls{SDNN} & Desvio-padrão dos intervalos NN (\autoref{eq:sdnn}) & ms & Variabilidade total do segmento \\
+			\gls{RMSSD} & Raiz da média dos quadrados das diferenças sucessivas (\autoref{eq:rmssd}) & ms & Variação batimento a batimento; tônus vagal \\
+			\gls{pNN50} & Porcentagem de diferenças sucessivas maiores que 50\,ms & \% & Tônus vagal \\
+			SD1 e SD2 & Dispersões do gráfico de Poincaré (\autoref{eq:poincare}) & ms & Variabilidade de curto e de longo prazo \\
+			SD1/SD2 & Razão entre as duas dispersões & --- & Forma da nuvem de Poincaré \\
+			\gls{VLF}, \gls{LF}, \gls{HF}, LF/HF & Potência espectral por faixa (só em 5~minutos) & ms$^2$ & Modulação autonômica por mecanismo \\
+			Entropia amostral & Regularidade da sequência de intervalos (só em 5~minutos) & --- & Complexidade do ritmo \\
+			\midrule
+			\multicolumn{4}{l}{\textit{Ectopia e pausas (pelo ritmo, sem distinguir a origem)}} \\
+			Batimentos precoces & Intervalos RR menores que 80\,\% da mediana local & contagem & Batimentos fora do ritmo sinusal \\
+			Extrassístoles & Precoce seguido de intervalo maior que 115\,\% da mediana local & contagem & Batimento ectópico com pausa compensatória \\
+			Dupletes & Dois intervalos precoces consecutivos & contagem & Ectopia repetitiva; instabilidade elétrica \\
+			Carga de ectopia & Porcentagem de intervalos precoces & \% & Frequência global de ectopia \\
+			Intervalos irregulares & Porcentagem de intervalos plausíveis que não são NN & \% & Irregularidade do ritmo \\
+			Maior pausa & Maior intervalo RR plausível do segmento & ms & Pausas e bradiarritmias \\
+			Pausas acima de 2\,s & Intervalos RR maiores que 2\,000\,ms & contagem & Pausas prolongadas \\
+			\midrule
+			\multicolumn{4}{l}{\textit{Morfologia (mediana dos batimentos delineados)}} \\
+			Duração do QRS & Do início ao fim do complexo QRS & ms & Condução ventricular; bloqueios de ramo \\
+			Intervalo \gls{QT} & Do início do QRS ao fim da onda T & ms & Despolarização e repolarização ventriculares \\
+			\gls{QTc} & QT corrigido pela frequência (\autoref{eq:bazett}) & ms & Repolarização prolongada; risco arrítmico \\
+			Ondas P e T identificadas & Fração dos batimentos com cada onda delineada & --- & Qualidade do sinal e da delineação \\
+			Amplitude & Percentil 99 do valor absoluto do sinal filtrado, por derivação & mV & Massa ventricular ativa e geometria \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026), com base em
+			\citeonline{taskforce1996heart}.}
 	}
 \end{table}
 
@@ -1007,14 +1417,8 @@ dimensionalidade ou seleção de variáveis, sempre ajustadas dentro de cada
 partição da validação cruzada, conforme a
 \autoref{subsec:fund-validacao-cruzada}.
 
-% ==============================================================================
-% METODOLOGIA — Modelos sobre os marcadores eletrocardiográficos
-% Fontes: modelar_biomarcadores.py e modelos_parcimoniosos.py (protocolo A);
-%         janelas_estatistica_modelos.py e janelas30s_agregado_paciente.py
-%         (protocolo B).
-% ==============================================================================
 
-\section{Modelos sobre os marcadores eletrocardiográficos}
+\section{Cenário II: modelos de aprendizado de máquina sobre os marcadores}
 \label{sec:met-modelos-marcadores}
 
 Os marcadores extraídos conforme a \autoref{sec:met-extracao} foram
@@ -1108,19 +1512,6 @@ resumos por paciente, os três conjuntos de variáveis A, B e C da
 resulta em doze configurações. Como a melhor delas é escolhida após a
 observação dos resultados, todas as doze são reportadas.
 
-
-
-\section{Representações aprendidas com rótulos substitutos}
-\label{sec:met-substitutos}
-
-Os experimentos das seções anteriores treinaram as redes diretamente para a
-morte súbita, com apenas 33 casos por partição. Esta seção descreve uma
-estratégia alternativa: aprender primeiro uma representação do sinal a
-partir de rótulos disponíveis para todos os pacientes e, depois, usar essa
-representação em um modelo pequeno ajustado ao desfecho. Todos os modelos
-desta seção usam as mesmas cinco partições estratificadas, e nenhuma etapa
-utiliza os pacientes de teste da rodada.
-
 \subsection{Marcadores pré-especificados nas três derivações}
 \label{subsec:met-pre-especificados}
 
@@ -1135,50 +1526,181 @@ variação ao longo do dia, e a carga de ectopia. O modelo foi ajustado por
 regressão logística com penalização L2, sem seleção, sozinho e com as
 variáveis clínicas.
 
-\subsection{Rede multitarefa}
-\label{subsec:met-multitarefa}
 
-Uma ResNet-18 unidimensional com cerca de 2,3 milhões de parâmetros foi
-treinada em regime multitarefa \cite{caruana1997multitask} para prever, a partir de janelas de 30~segundos, 45 atributos dos
-pacientes: medidas do ecocardiograma (\gls{FEVE}, diâmetros e espessuras do
-ventrículo esquerdo, átrio esquerdo, ventrículo direito), do
-\gls{ECG} de repouso (intervalos PR, QRS e QT, ondas Q, hipertrofia),
-resumos do Holter calculados no estudo original (extrassístoles, \gls{TVNS},
-\gls{SDNN}), o Pro-BNP, a classe \gls{NYHA}, a idade, o sexo e doze
-marcadores extraídos neste trabalho. Variáveis de desfecho e de seguimento
-foram excluídas. Os atributos contínuos foram padronizados com o treinamento
-de cada partição e ajustados por erro quadrático; os binários, por entropia
-cruzada; valores ausentes foram ignorados na perda.
 
-Como esses atributos não dependem do desfecho, o treinamento da rede incluiu,
-além dos pacientes de treinamento da coorte, 381 pacientes do MUSIC fora da
-coorte do estudo, com fibrilação atrial, outras causas de morte ou
-seguimento incompleto, totalizando cerca de 780 pacientes por rodada. Cada
-paciente foi representado por 100 janelas em grade uniforme ao longo do
-registro, descartada 1~hora em cada extremidade. O treinamento usou AdamW
-com taxa de aprendizado de $3 \times 10^{-4}$, até 40 épocas e parada
-antecipada pela perda em 15\,\% dos pacientes reservados para validação.
+% ==============================================================================
+% CENARIO III — variaveis clinicas e combinacao com o ECG
+% ==============================================================================
 
-Na segunda etapa, a representação de cada paciente --- a média, sobre suas
-100 janelas, dos 128 valores da penúltima camada --- foi reduzida a oito
-componentes principais e usada em uma regressão logística com penalização L2,
-sozinha e com as variáveis clínicas. A análise de componentes principais e o
-modelo foram ajustados apenas com os pacientes de treinamento da rodada. O
-limiar de decisão foi escolhido pelo índice de Youden em validação cruzada
-interna ao treinamento. Para verificar se a rede acrescenta informação aos
-exames já disponíveis, os mesmos modelos foram ajustados com os valores
-medidos dos atributos, sem a rede, e as diferenças de \gls{AUC} foram
-estimadas por \textit{bootstrap} pareado (\autoref{eq:delta-auc}).
+\section{Cenário III: variáveis clínicas e combinação com o ECG}
+\label{sec:met-cenario3}
 
-\subsection{Aprendizado autossupervisionado}
-\label{subsec:met-autossupervisionado}
+O terceiro cenário avalia, para fins de comparação e análise, modelos
+baseados nas variáveis clínicas descritas na \autoref{subsec:met-clinicas}
+e a combinação dessas variáveis com os dados extraídos do \gls{ECG}. Todos
+os modelos usam as mesmas cinco partições dos cenários anteriores.
 
-Para avaliar se a rede encontra padrões úteis sem nenhum rótulo, o mesmo
-extrator foi treinado em três tarefas geradas pelo próprio sinal:
-\textit{contrastiva}, em que duas janelas do mesmo paciente, em horários
-diferentes, devem ter representações próximas e as de pacientes diferentes,
-distantes \cite{chen2020simple, kiyasseh2021clocs}; \textit{autoencoder}, em que a janela é
-comprimida em 128 valores e reconstruída; e \textit{mascarada}, em que
-25\,\% do sinal é apagado em trechos de 0,5~s e reconstruído. Como controle,
-usou-se o mesmo extrator com pesos aleatórios, sem treinamento. A segunda
-etapa foi idêntica à da rede multitarefa.
+\subsection{Modelos baseados em variáveis clínicas}
+\label{subsec:met-modelos-clinicos}
+
+O modelo de referência é uma regressão logística sobre as seis variáveis
+clínicas. Para avaliar a contribuição dos exames, foram ajustadas regressões
+logísticas com penalização L2 ($C = 1$) e pesos de classe inversamente
+proporcionais à frequência, sobre cada grupo de exames isolado e sobre cada
+grupo somado às seis variáveis clínicas. Valores ausentes foram imputados
+pela mediana do conjunto de treinamento de cada partição, e todas as
+variáveis foram padronizadas com as estatísticas do mesmo conjunto.
+
+\subsection{Combinação com os marcadores do ECG}
+\label{subsec:met-clinicas-marcadores}
+
+A combinação com os marcadores do Cenário II foi avaliada acrescentando às
+seis variáveis clínicas, na mesma regressão logística, os marcadores do
+protocolo A (com penalização L1 e L2) e os dois marcadores pré-especificados
+da \autoref{subsec:met-pre-especificados}. O ganho de cada combinação sobre
+o modelo apenas clínico foi estimado pela diferença de \gls{AUC} com
+\textit{bootstrap} pareado (\autoref{eq:delta-auc}).
+
+\subsection{Combinação com o sinal: rede de fusão}
+\label{subsec:met-fusao-arquitetura}
+
+A combinação das variáveis clínicas com o sinal bruto foi avaliada por uma
+rede de fusão: a ResNet-18 do Cenário I com um segundo ramo, que recebe as
+seis variáveis clínicas. As representações dos dois ramos são concatenadas
+antes do classificador, e a rede é treinada para prever a \gls{MSC} pelo
+mesmo protocolo das redes do Cenário I. Para medir a contribuição de cada
+modalidade, a mesma arquitetura foi treinada também apenas com o ramo
+clínico.
+
+\subsubsection{Estratégias de treinamento da rede de fusão}
+\label{subsec:met-fusao}
+
+Na rede de fusão, o ramo do sinal tem cerca de 4 milhões de parâmetros,
+enquanto o ramo clínico recebe apenas seis variáveis. Treinados juntos com a
+mesma taxa de aprendizado, o ramo do sinal tende a dominar o ajuste e a
+memorizar os pacientes de treinamento antes que o ramo clínico contribua.
+Para controlar esse desequilíbrio, foram comparadas três estratégias:
+
+\begin{itemize}
+	\item \textit{treinamento conjunto}, com a mesma taxa de aprendizado
+	      ($10^{-4}$) para toda a rede;
+	\item \textit{taxa de aprendizado discriminativa}, em que o ramo do sinal
+	      recebe taxa de $10^{-6}$ e decaimento de pesos de $10^{-1}$, e o restante
+	      da rede mantém $10^{-4}$ e $10^{-2}$;
+	\item \textit{ramo do sinal congelado}, em que apenas o ramo clínico e o
+	      classificador são ajustados.
+\end{itemize}
+
+
+
+% ==============================================================================
+% PROTOCOLO DE AVALIACAO — comum aos tres cenarios
+% ==============================================================================
+
+\section{Protocolo de avaliação}
+\label{sec:met-avaliacao}
+
+Os três cenários foram avaliados pelo mesmo protocolo, descrito a seguir,
+de modo que suas diferenças de desempenho possam ser atribuídas às
+abordagens, e não a escolhas de avaliação.
+
+\subsection{Particionamento}
+\label{subsec:met-particionamento}
+
+A coorte foi dividida em cinco partições estratificadas pelo desfecho, com
+divisão no nível do paciente: cada indivíduo pertence a uma única partição, e
+as janelas são extraídas apenas após a divisão. Cada partição contém 103 ou
+104 pacientes, com 11 casos.
+
+Em cada rodada da validação cruzada, uma partição constitui o conjunto de
+teste e as quatro restantes, com 413 ou 414 pacientes, são subdivididas: 75\,\%
+compõem o conjunto de treinamento e 25\,\% a validação interna, também com
+estratificação pelo desfecho. A validação interna define a época de parada do
+treinamento e o limiar de decisão, que é então aplicado ao conjunto de teste
+sem ajuste adicional.
+
+\subsection{Validação e agregação por paciente}
+\label{subsec:config-avaliacao}
+
+A avaliação emprega validação cruzada estratificada em cinco partições. A
+divisão ocorre no nível do paciente, e as janelas são extraídas somente após
+a separação: nenhum indivíduo contribui simultaneamente para treinamento e
+teste. O cuidado é necessário porque janelas de um mesmo registro
+compartilham a assinatura eletrocardiográfica individual --- eixo elétrico,
+morfologia do complexo QRS e relação de amplitude entre derivações ---, e sua
+presença em ambos os conjuntos permitiria ao modelo reconhecer o paciente em
+lugar de estimar o risco.
+
+De cada conjunto de treinamento, uma fração é reservada para a definição do
+critério de parada antecipada e do limiar de decisão. O limiar é obtido pelo
+índice de Youden, que maximiza a soma de sensibilidade e especificidade, e
+apenas aplicado ao conjunto de teste --- sua determinação a partir do próprio
+teste produziria estimativas otimistas.
+
+As probabilidades preditas para as janelas de um mesmo paciente são
+agregadas por média antes do cálculo de qualquer métrica. Sem essa agregação,
+um indivíduo com 100 janelas seria contabilizado cem vezes, como se
+correspondesse a cem observações independentes --- o que estreitaria
+artificialmente os intervalos de confiança.
+
+Os intervalos de confiança de 95\,\% foram estimados por reamostragem
+\textit{bootstrap}, sorteando pacientes com reposição: 1\,000 repetições
+para as redes neurais e 2\,000 para os modelos sobre os marcadores.
+Comparações entre modelos empregaram reamostragem pareada: a mesma amostra
+avalia ambos os modelos, de modo a isolar a incerteza da diferença.
+
+\subsection{Métricas}
+\label{subsec:config-metricas}
+
+A métrica principal é a \gls{AUC}, que mede a capacidade de ordenar
+corretamente os pacientes por risco e independe do limiar adotado. Reporta-se
+também a \gls{AP}, cuja linha de base sob classificação aleatória é a
+prevalência da classe positiva --- 0,106 nesta coorte --- em lugar de 0,5, o
+que a torna mais informativa quando os eventos são raros.
+
+Sensibilidade, especificidade e \gls{VPP} são reportadas no limiar definido
+na validação. A acurácia não é empregada como critério de comparação pela
+razão já exposta: o classificador trivial a maximiza sem apresentar
+utilidade.
+
+Dois valores de \gls{AUC} são apresentados em cada seção. A média entre
+partições, acompanhada do desvio-padrão, indica a estabilidade do resultado
+em relação à composição das partições. A estimativa agrupada, calculada sobre
+a totalidade dos 517 pacientes --- cada um predito pelo modelo que não o
+observou durante o treinamento ---, é considerada mais confiável por avaliar
+simultaneamente os 55 eventos, enquanto cada partição isolada dispõe de
+apenas onze. Eventuais discrepâncias entre as duas estimativas decorrem de os
+modelos ajustados em cada partição produzirem probabilidades em escalas
+distintas, que não coincidem exatamente ao serem reunidas em ordenamento
+único.
+
+\subsection{Ambiente computacional}
+\label{subsec:met-ambiente}
+
+Os experimentos foram executados em um servidor com sistema operacional
+Ubuntu, cujas características constam da \autoref{tab:met-ambiente}. Cada
+treinamento utilizou uma das duas unidades de processamento gráfico, com
+precisão mista. A extração dos marcadores e os modelos sobre variáveis
+tabulares foram executados nos processadores, com paralelismo entre
+pacientes.
+
+\begin{table}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{tab:met-ambiente} Ambiente computacional}
+	\IBGEtab{}{
+		\begin{tabular}{ll}
+			\toprule
+			Componente                     & Especificação                                              \\
+			\midrule \midrule
+			Unidades de processamento gráfico & 2 $\times$ NVIDIA A100-SXM4, 40\,GB de memória cada     \\
+			Processadores                  & 2 $\times$ AMD EPYC 7742 (128 núcleos, 256 \textit{threads}) \\
+			Memória principal              & 2\,TB                                                      \\
+			Sistema operacional            & Ubuntu 22.04                                               \\
+			Linguagem e bibliotecas        & Python, PyTorch, scikit-learn, NeuroKit2, WFDB             \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{table}
+

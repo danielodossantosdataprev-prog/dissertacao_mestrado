@@ -1,137 +1,145 @@
-% \chapter{Conclusões e Trabalhos Futuros}
-% \label{chap:conclusoes-e-trabalhos-futuros}
-
-% Parte final do texto na qual se apresentam as conclusões apoiadas no desenvolvimento do assunto. É a recapitulação sintética dos resultados obtidos. Pode apresentar recomendações e sugestões para pesquisas futuras.
-
-% %\label{sec:contribuicoes-do-trabalho}
-
-
-
-% %\label{sec:limitacoes}
-
 % ==============================================================================
-% CONCLUSÕES E TRABALHOS FUTUROS
-% Números conforme resultados_redes.tex e resultados_marcadores.tex.
-% Revisar o intervalo das redes (0,48--0,56) quando as CNNs de 2 min terminarem.
+% CONCLUSOES — reestruturadas em 30/10/2026 conforme o roteiro do orientador:
+% cenarios investigados; ganho do processamento do ECG sobre o aprendizado
+% profundo no sinal bruto; clinico versus clinico + ECG; quadro comparativo
+% com os trabalhos relacionados. Versao anterior: historico do git (v27).
 % ==============================================================================
 
 \chapter{Conclusões e Trabalhos Futuros}
 \label{cap:conclusoes}
 
-Esta dissertação investigou se o registro de Holter de 24~horas contém
-informação capaz de identificar, entre pacientes com insuficiência cardíaca
-em ritmo sinusal, aqueles que sofrerão morte súbita cardíaca em quatro anos.
-Sobre os 517 pacientes da coorte MUSIC, com 55 casos, foram comparadas três
-abordagens no mesmo protocolo de validação cruzada por paciente: redes
-neurais treinadas diretamente sobre o sinal das três derivações, modelos
-sobre marcadores eletrocardiográficos extraídos do Holter e modelos sobre
-variáveis clínicas. Por fim, avaliou-se uma quarta via, em que a rede aprende
-primeiro a prever atributos clínicos disponíveis para todos os pacientes e
-sua representação é depois usada na predição da morte súbita.
+Esta dissertação investigou cenários de predição da \gls{MSC} em pacientes
+com insuficiência cardíaca crônica, com base no uso do sinal de \gls{ECG}
+Holter de 24~horas puro, dos parâmetros extraídos do \gls{ECG} e de
+variáveis clínicas. Sobre os 517 pacientes em ritmo sinusal da base
+\gls{MUSIC}, com 55 casos de \gls{MSC} em quatro anos de acompanhamento,
+foram comparados três cenários no mesmo protocolo de validação cruzada por
+paciente: (I) redes neurais profundas que recebem como entrada o sinal de
+\gls{ECG} puro; (II) pré-processamento do sinal, extração de características
+e modelos de aprendizado de máquina clássico; e (III) modelos baseados em
+variáveis clínicas, isoladas e combinadas aos dados extraídos do \gls{ECG}.
 
 \section{Conclusões}
 \label{sec:conc-conclusoes}
 
-A resposta obtida, dentro das condições deste estudo, é negativa para o
-sinal bruto. Nenhuma das redes neurais avaliadas --- redes convolucionais
-de três capacidades, redes residuais de 18, 34 e 50 camadas, uma rede com
-mecanismo de atenção e redes configuradas por busca de hiperparâmetros ---
-discriminou casos e controles de forma distinguível do acaso. As \gls{AUC}
-fora da partição ficaram entre 0,48 e 0,56, sem relação com a capacidade da
-rede, com a duração da janela de entrada ou com a arquitetura, e a variação
-entre duas execuções da mesma rede foi da mesma ordem que a variação entre
-arquiteturas. Os registros de treinamento mostraram, em todos os casos, a
-memorização dos pacientes de treinamento nas primeiras épocas.
+No Cenário I, as redes convolucionais, residuais e com atenção, treinadas
+diretamente sobre o sinal bruto para prever a \gls{MSC}, obtiveram \gls{AUC}
+entre 0,48 e 0,56, sem relação com a capacidade da rede, com a duração da
+janela ou com a arquitetura. A melhor delas, a ResNet-18 mínima, alcançou
+0,562 [0,475--0,642]. Quando a restrição ao ritmo sinusal foi removida, a
+mesma rede passou a discriminar acima do acaso, o que mostra que o
+procedimento aprende quando há um padrão reconhecível no sinal --- no caso, a
+fibrilação atrial --- e justifica a restrição adotada.
 
-Os marcadores eletrocardiográficos tiveram desempenho modesto. Sobre os
-44 resumos dos segmentos de 5~minutos, os modelos alcançaram \gls{AUC}
-entre 0,585 e 0,624, com intervalos que excluem o acaso por pequena margem
-e abaixo do modelo clínico. Quando poucos marcadores foram escolhidos dentro
-de cada partição, a \gls{AUC} foi de 0,580; escolhidos sobre a coorte
-inteira, alcançaram valores maiores, mas otimistas. Já dois marcadores
-definidos antes da análise, pela literatura --- a variação da frequência
-cardíaca ao longo do dia e a carga de ectopia ---, alcançaram 0,647 sobre os
-segmentos de 30~segundos, sem esse otimismo. Os marcadores de segmentos de 30~segundos
-mostraram, em grande parte, diferenças significativas apenas quando cada
-segmento foi tratado como observação independente, efeito da
-pseudorreplicação, e desapareceram quando a análise foi feita por paciente.
+No Cenário II, os modelos baseados em parâmetros extraídos do \gls{ECG}
+obtiveram desempenho superior ao do Cenário I. Com 44 marcadores dos
+segmentos de 5~minutos, a \gls{AUC} ficou entre 0,585 e 0,624; com dois
+marcadores escolhidos com base na literatura --- a variação da frequência
+cardíaca ao longo do dia e a carga de ectopia ---, alcançou 0,647
+[0,563--0,726], 0,085 acima da melhor rede do Cenário I. Observou-se,
+portanto, ganho de desempenho, embora sem significância estatística, do uso
+de modelos baseados em parâmetros extraídos do \gls{ECG}, em especial os
+ligados à frequência cardíaca, em relação às redes neurais profundas que
+recebem como entrada o sinal puro. O resultado também mostrou que escolher
+poucos marcadores observando o desfecho de toda a coorte eleva a \gls{AUC}
+em cerca de 0,05, otimismo que desaparece quando a escolha é feita apenas no
+treinamento.
 
-As variáveis clínicas foram a fonte de informação mais consistente, com
-\gls{AUC} de 0,661 [0,577--0,741], e a adição dos marcadores ou do sinal
-não trouxe ganho significativo. A rede de fusão confirmou esse resultado de
-forma direta: com o extrator de sinal congelado, ela obteve o mesmo
-desempenho que com o extrator treinado com taxa reduzida, e o desempenho
-caiu quando o extrator foi treinado livremente.
+No Cenário III, as seis variáveis clínicas previram a \gls{MSC} com
+\gls{AUC} de 0,661 [0,577--0,741]. Na comparação entre o modelo clínico e o
+modelo clínico somado ao \gls{ECG}, os marcadores acrescentaram um ganho
+pequeno e consistente --- 0,681 [0,604--0,756] com os marcadores do
+protocolo A e entre 0,679 e 0,683 com os dois marcadores pré-especificados
+---, que não atingiu significância estatística. Somadas ao sinal bruto, nas
+redes de fusão, as variáveis clínicas tiveram desempenho inferior ao que
+obtiveram sozinhas (no máximo 0,579). O melhor modelo do trabalho combinou
+as variáveis clínicas com os exames do estudo, como o ecocardiograma e o
+Pro-BNP, e alcançou 0,733 [0,656--0,804].
 
-A estratégia de rótulos substitutos mudou o resultado para o sinal. Treinada
-para prever 45 atributos do ecocardiograma, do \gls{ECG} de repouso, do
-Holter e do laboratório, uma ResNet-18 produziu uma representação que, sem
-nenhuma variável clínica, alcançou \gls{AUC} de 0,682, equivalente à das
-variáveis clínicas, contra 0,508 da rede treinada diretamente para o
-desfecho. Essa representação, contudo, não acrescentou informação aos exames
-medidos (diferença de $-0{,}005$), e os atributos de maior valor
-prognóstico --- tamanho do átrio esquerdo, Pro-BNP e \gls{FEVE} --- foram os
-que a rede aprendeu pior. Sem nenhum rótulo, o aprendizado autossupervisionado
-encontrou apenas padrões fracos (\gls{AUC} de 0,590 no método contrastivo).
-O melhor modelo do trabalho combinou as variáveis clínicas com os exames do
-estudo, em especial o ecocardiograma (\gls{AUC} de 0,733).
+Em síntese, as técnicas de processamento do \gls{ECG} com extração de
+características produziram preditores de \gls{MSC} superiores aos do
+aprendizado profundo aplicado ao sinal bruto, e os melhores modelos
+combinaram as variáveis clínicas com os dados extraídos do \gls{ECG} ou com
+os exames dos pacientes.
 
-Dois resultados complementares ajudam a interpretar o quadro. Quando a
-restrição ao ritmo sinusal foi removida, a mesma rede residual passou a
-discriminar acima do acaso, o que mostra que o pipeline aprende quando há
-um padrão reconhecível no sinal --- no caso, a fibrilação atrial --- e
-justifica a restrição adotada. E, na literatura, o desempenho de um modelo
-de aprendizado profundo pré-treinado em grandes bases caiu para 0,60 no
-subgrupo de insuficiência cardíaca \cite{kim2025deep}, valor próximo dos
-obtidos aqui.
+\section{Comparação com os trabalhos relacionados}
+\label{sec:conc-comparacao}
 
-A conclusão central é, portanto, que, com 33 casos de treinamento por
-partição, não foi possível aprender do sinal do Holter um padrão preditivo
-de morte súbita quando a rede foi treinada diretamente para o desfecho; que o
-sinal contém informação prognóstica comparável à das variáveis clínicas,
-acessível quando o aprendizado é orientado por atributos clínicos, mas que
-essa informação coincide com a dos exames já disponíveis; e que as estimativas otimistas descritas
-na literatura e observadas em etapas iniciais deste trabalho decorrem, em
-boa parte, de escolhas de avaliação: seleção de variáveis sobre a coorte
-inteira, divisões únicas com poucos casos no teste, tratamento de segmentos
-como observações independentes e inclusão de ritmos não sinusais. A
-principal contribuição da dissertação está em quantificar esses efeitos
-sobre os mesmos pacientes e em documentar, com intervalos de confiança, os
-resultados de todas as configurações avaliadas, e não apenas os da melhor.
+O \autoref{qua:conc-comparacao} compara os resultados deste trabalho com os
+dos trabalhos relacionados. O resultado das variáveis clínicas somadas aos
+marcadores (0,681) é próximo ao relatado por \citeonline{swee2026multimodal}
+na mesma base (0,682), embora aquele trabalho inclua pacientes com
+fibrilação atrial e reporte a média entre partições. O desempenho das redes
+treinadas sobre o sinal é coerente com o obtido por \citeonline{kim2025deep}
+no subgrupo de insuficiência cardíaca (0,60), mesmo com um codificador
+pré-treinado em grandes bases. O valor de 0,73 de
+\citeonline{ramirez2017sudden} foi obtido sem validação separada, condição
+que tende a superestimar a discriminação.
+
+\begin{quadro}[h!]
+	\centering
+	\Caption{\label{qua:conc-comparacao} Comparação entre os trabalhos
+		relacionados e esta dissertação}
+	\UFCqua{}{
+		\footnotesize
+		\begin{tabular}{|p{2.3cm}|p{2.6cm}|p{2.9cm}|p{2.9cm}|p{3.1cm}|}
+			\hline
+			\textbf{Trabalho}                                                                                & \textbf{Coorte}              & \textbf{Entrada} &
+			\textbf{Método e validação}                                                                      & \textbf{Resultado principal}                      \\
+			\hline
+			\citeonline{ramirez2017sudden}                                                                   &
+			MUSIC, ritmo sinusal; 597 pacientes, 49 mortes súbitas                                           &
+			Marcadores do Holter (repolarização, turbulência) e clínicos                                     &
+			Cox com seleção regressiva; sem validação separada                                               &
+			Razão de risco 13,8 (alto contra baixo risco); \gls{AUC} 0,73 na fração de ejeção reduzida                                                           \\
+			\hline
+			\citeonline{swee2026multimodal}                                                                  &
+			MUSIC, sem restrição de ritmo; 746 pacientes                                                     &
+			Marcadores de segmentos de 30~s e clínicos                                                       &
+			Aprendizado de máquina; validação cruzada                                                        &
+			\gls{AUC} 0,682 (apenas \gls{ECG}, média entre partições)                                                                                            \\
+			\hline
+			\citeonline{kim2025deep}                                                                         &
+			Coreia; infarto ou insuficiência cardíaca; 1\,108 pacientes, 70 eventos                          &
+			Holter de 24~h, derivação V1                                                                     &
+			Codificador pré-treinado e congelado; validação cruzada em 5 partições                           &
+			\gls{AUC} 0,74 na coorte completa; 0,60 no subgrupo de 223 pacientes com insuficiência cardíaca                                                                                             \\
+			\hline
+			Esta dissertação                                                                                 &
+			MUSIC, ritmo sinusal; 517 pacientes, 55 mortes súbitas em 4 anos                                 &
+			Sinal bruto das três derivações; marcadores extraídos do \gls{ECG}; variáveis clínicas e exames &
+			Três cenários: redes profundas sobre o sinal; marcadores + aprendizado de máquina; clínicas e combinações; validação cruzada em 5 partições &
+			\gls{AUC} 0,48--0,56 (redes); 0,647 (2 marcadores); 0,661 (clínicas); 0,681 (clínicas + marcadores); 0,733 (clínicas + exames)                                                                                                       \\
+			\hline
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor.}
+	}
+\end{quadro}
 
 \section{Limitações}
 \label{sec:conc-limitacoes}
 
-O número de eventos é a principal limitação: 55 casos no total e 11 por
-conjunto de teste tornam os intervalos de confiança largos, de modo que
-diferenças de até 0,1 na \gls{AUC} não podem ser detectadas com segurança.
-A coorte é única, sem validação externa, e cada paciente tem um único
-registro de Holter. A busca de hiperparâmetros não usou validação cruzada
-aninhada, e as redes residuais foram treinadas com uma configuração
-anterior à das redes convolucionais. Por fim, o desfecho foi tratado como
-classificação binária em quatro anos, o que descarta a informação sobre o
-tempo até o evento e exclui os pacientes vivos com seguimento mais curto.
-A rede multitarefa foi treinada com uma única semente, e os pacientes de
-treinamento da segunda etapa foram vistos pela rede na primeira, ainda que
-sem o rótulo de morte súbita.
+A população tem 55 casos de \gls{MSC} no total e 11 por conjunto de teste,
+o que torna os intervalos de confiança largos: diferenças de até 0,1 na
+\gls{AUC} não podem ser detectadas com segurança, como ocorreu com os ganhos
+observados nos Cenários II e III. A coorte é única, sem validação externa, e
+cada paciente tem um único registro de Holter. A busca de hiperparâmetros
+não usou validação cruzada aninhada, e as redes residuais foram treinadas
+com uma configuração anterior à das redes convolucionais. Por fim, o
+desfecho foi tratado como classificação binária em quatro anos, o que
+descarta a informação sobre o tempo até o evento e exclui os pacientes
+vivos com seguimento mais curto.
 
 \section{Trabalhos futuros}
 \label{sec:conc-futuros}
 
-Os resultados apontam para direções em que o problema do número reduzido de
-eventos é contornado, e não apenas enfrentado com arquiteturas maiores:
-
 \begin{enumerate}
-    \item \textbf{Representações pré-treinadas.} Treinar o extrator de
-          características em bases grandes de \gls{ECG}, por aprendizado
-          auto-supervisionado ou com rótulos substitutos abundantes, e ajustar sobre
-          a coorte MUSIC apenas um classificador pequeno, como em
-          \citeonline{kim2025deep}.
-
-    \item \textbf{Foco nos atributos prognósticos.} Na rede multitarefa,
-          dar maior peso ao tamanho do átrio esquerdo, ao Pro-BNP e à
-          \gls{FEVE}, e usar janelas mais longas ou batimentos médios, que
-          preservam melhor a onda P, ligada ao aumento do átrio esquerdo.
+    \item \textbf{Representações pré-treinadas e orientadas por atributos
+          clínicos.} Treinar o extrator de características do sinal em bases
+          grandes de \gls{ECG}, ou orientá-lo a prever atributos clínicos
+          disponíveis para todos os pacientes, e ajustar sobre a coorte
+          apenas um classificador pequeno, como em \citeonline{kim2025deep}.
 
     \item \textbf{Marcadores da repolarização.} Incluir os marcadores que
           \citeonline{ramirez2017sudden} identificaram como os mais informativos
@@ -139,15 +147,10 @@ eventos é contornado, e não apenas enfrentado com arquiteturas maiores:
           onda T ---, que exigem delineação precisa e não foram calculados aqui.
 
     \item \textbf{Análise de sobrevivência.} Modelar o tempo até o evento,
-          com riscos competitivos entre morte súbita e morte por falência de bomba,
-          o que aproveita todos os pacientes e todo o seguimento.
+          com riscos competitivos entre morte súbita e morte por falência de
+          bomba, o que aproveita todos os pacientes e todo o seguimento.
 
     \item \textbf{Validação externa.} Avaliar os modelos em outra coorte de
           pacientes com insuficiência cardíaca e Holter de 24~horas, condição
           necessária para qualquer conclusão sobre generalização.
 \end{enumerate}
-
-
-
-
-
