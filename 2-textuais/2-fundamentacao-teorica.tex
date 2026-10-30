@@ -1064,30 +1064,38 @@ contrapartida, a \gls{AUC} mede apenas a ordenação: um modelo pode ter
 \gls{AUC} elevada e, ainda assim, produzir probabilidades mal calibradas ou
 um \gls{VPP} baixo quando o evento é raro.
 
-\subsection{Curva precisão-revocação e precisão média}
+\subsection{Curva precisão-revocação e área sob a curva}
 \label{subsec:fund-ap}
 
 Quando a classe positiva é rara, a curva ROC pode transmitir uma impressão
 otimista: como a taxa de falsos positivos é calculada sobre os numerosos
 negativos, um número absoluto elevado de falsos positivos pode corresponder a
 uma taxa pequena. A curva precisão-revocação contorna esse efeito ao
-relacionar o \gls{VPP} à sensibilidade, concentrando-se no desempenho sobre a
-classe positiva \cite{saito2015precision, davis2006relationship}.
+relacionar o \gls{VPP} (precisão) à sensibilidade (revocação),
+concentrando-se no desempenho sobre a classe positiva
+\cite{saito2015precision, davis2006relationship}.
 
-A \gls{AP} resume essa curva como a média ponderada do \gls{VPP} obtido em
-cada limiar, com pesos iguais ao incremento de sensibilidade:
+A \gls{AUPRC} resume essa curva pela área sob ela. Como a curva é formada por
+um número finito de pontos, a área precisa ser estimada, e a interpolação
+linear entre pontos vizinhos, adequada no espaço ROC, superestima a área no
+espaço precisão-revocação \cite{davis2006relationship}. Neste trabalho, a
+\gls{AUPRC} foi estimada pela soma do \gls{VPP} em cada limiar, ponderada
+pelo incremento de sensibilidade:
 
 \begin{equation}
-	\mathrm{AP} = \sum_{q} \left( \mathrm{Sens}_q - \mathrm{Sens}_{q-1} \right) \mathrm{VPP}_q,
+	\mathrm{AUPRC} \approx \sum_{q} \left( \mathrm{Sens}_q - \mathrm{Sens}_{q-1} \right) \mathrm{VPP}_q,
 	\label{eq:ap}
 \end{equation}
 
 \noindent
 em que $\mathrm{VPP}_q$ e $\mathrm{Sens}_q$ são o \gls{VPP} e a sensibilidade
-no $q$-ésimo limiar, percorridos em ordem decrescente. Diferentemente da \gls{AUC}, a \gls{AP}
-depende da prevalência: o valor de referência de um classificador aleatório
-não é 0,5, mas a própria prevalência $\pi$, igual a 0,106 nesta coorte. Uma
-\gls{AP} só indica capacidade discriminativa quando supera esse valor.
+no $q$-ésimo limiar, percorridos em ordem decrescente. Esse estimador, que
+não interpola entre os pontos, é o implementado na biblioteca
+\textit{scikit-learn}, na qual recebe o nome de \textit{average precision}.
+Diferentemente da \gls{AUC}, a \gls{AUPRC} depende da prevalência: o valor de
+referência de um classificador aleatório não é 0,5, mas a própria
+prevalência $\pi$, igual a 0,106 nesta coorte. Uma \gls{AUPRC} só indica
+capacidade discriminativa quando supera esse valor.
 
 \subsection{Escolha do limiar de decisão}
 \label{subsec:fund-youden}

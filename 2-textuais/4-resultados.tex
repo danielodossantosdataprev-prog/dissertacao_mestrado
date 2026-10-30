@@ -12,7 +12,7 @@ pacientes, com intervalo de confiança de 95\,\% por \textit{bootstrap}. A
 coluna ``Partições'' das tabelas traz a média e o desvio-padrão da \gls{AUC}
 nas cinco partições da validação cruzada: a média indica o desempenho típico
 em cada conjunto de teste, e o desvio-padrão, quanto o resultado depende de
-quais pacientes caíram em cada partição. A \gls{AP} resume a curva
+quais pacientes caíram em cada partição. A \gls{AUPRC} resume a curva
 precisão-revocação; seu valor sob classificação ao acaso é igual à
 prevalência, 0,106.
 
@@ -269,7 +269,7 @@ aplicação do limiar de decisão escolhido na validação interna.
 		\setlength{\tabcolsep}{4pt}
 		\begin{tabular}{llcccccccc}
 			\toprule
-			Rede & Janela & \gls{AUC} & \gls{AP} & Sens. & Espec. & \gls{VPP} & \gls{VPN} & F1 & Acurácia \\
+			Rede & Janela & \gls{AUC} & \gls{AUPRC} & Sens. & Espec. & \gls{VPP} & \gls{VPN} & F1 & Acurácia \\
 			\midrule \midrule
 			CNN mínima & 2 min & 0,523 & 0,139 & 0,582 & 0,448 & 0,111 & 0,900 & 0,187 & 0,462 \\
 			CNN simples & 2 min & 0,486 & 0,121 & 0,364 & 0,645 & 0,109 & 0,895 & 0,167 & 0,615 \\
@@ -298,7 +298,7 @@ aplicação do limiar de decisão escolhido na validação interna.
 	}{
 	\Fonte{elaborado pelo autor (2026). Limiar de decisão escolhido pelo índice
 	de Youden na validação interna de cada partição. Referência sob
-	classificação aleatória: \gls{AP} e \gls{VPP} iguais à prevalência
+	classificação aleatória: \gls{AUPRC} e \gls{VPP} iguais à prevalência
 	(0,106); \gls{VPN} igual a 0,894.}
 }
 \end{table}
@@ -464,7 +464,7 @@ em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
 		\begin{tabular}{lrcrr}
 			\toprule
 			Modelo                          & \multicolumn{1}{c}{Variáveis} & \gls{AUC} [\glsadd{IC}IC 95\,\%] &
-			\multicolumn{1}{c}{Partições}   & \multicolumn{1}{c}{\gls{AP}}                                                      \\
+			\multicolumn{1}{c}{Partições}   & \multicolumn{1}{c}{\gls{AUPRC}}                                                      \\
 			\midrule \midrule
 			Clínicas (referência)           & 6                             & 0,661 [0,577--0,741]  & 0,673 $\pm$ 0,114 & 0,233 \\
 			\midrule
@@ -479,7 +479,7 @@ em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
 		\end{tabular}
 	}{
 		\Fonte{elaborado pelo autor (2026). Partições: média $\pm$
-			desvio-padrão da \gls{AUC} nas cinco partições. \gls{AP} de referência
+			desvio-padrão da \gls{AUC} nas cinco partições. \gls{AUPRC} de referência
 			(acaso): 0,106.}
 	}
 \end{table}
