@@ -218,11 +218,14 @@ sem ajuste adicional.
 \label{subsec:met-clinicas}
 
 Nos experimentos que combinam o sinal a variáveis clínicas, foram empregadas
-seis: idade, gênero, classe funcional \gls{NYHA}, presença de ondas Q de necrose,
-taquicardia ventricular não sustentada (TVNS)\glsadd{TVNS}\glsunset{TVNS} e taquiarritmia supraventricular
-paroxística. As variáveis contínuas --- idade --- e as ordinais foram
-padronizadas pela média e pelo desvio-padrão do conjunto de treinamento de
-cada partição.
+seis, de três tipos: a idade, variável numérica de valor inteiro, em anos; a
+classe funcional \gls{NYHA}, variável categórica ordinal; e quatro variáveis
+binárias, codificadas como 0 (ausente) ou 1 (presente) --- gênero (1 =
+masculino), presença de ondas Q de necrose no \gls{ECG} de repouso,
+taquicardia ventricular não sustentada (TVNS)\glsadd{TVNS}\glsunset{TVNS} e
+taquiarritmia supraventricular paroxística. A idade e a classe \gls{NYHA}
+foram padronizadas pela média e pelo desvio-padrão do conjunto de
+treinamento de cada partição.
 
 Duas particularidades da coorte merecem registro. A classe funcional \gls{NYHA}
 assume apenas os valores II e III, comportando-se, na prática, como variável

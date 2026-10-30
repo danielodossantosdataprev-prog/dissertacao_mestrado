@@ -11,11 +11,11 @@ among 517 patients in sinus rhythm from the public MUSIC database
 (PhysioNet). The three scenarios were compared in stratified five-fold cross-validation with patient-level splits, by the area under the ROC curve (AUC) for SCD prediction, with 95\,\% confidence intervals (CI). In the first, deep learning models ---
 convolutional, residual (ResNet-18 to ResNet-50) and attention networks ---
 were trained directly on the raw Holter signal, in 15 configurations. In the
-second, models based only on markers extracted by ECG processing, from
+second, feature learning, markers extracted by digital ECG processing from
 5-minute and 30-second segments --- heart rate variability (SDNN, RMSSD, LF
 and HF power, Poincaré and entropy), ectopy (ectopic burden, couplets and
-pauses) and beat morphology (QRS, QT and P and T waves) ---, were used in L1-
-and L2-penalized logistic regression, principal component analysis and
+pauses) and beat morphology (QRS, QT and P and T waves) --- were
+the input of machine learning models: L1- and L2-penalized logistic regression, principal component analysis and
 random forest. In the third, six clinical variables (age, sex, NYHA class, Q
 waves, non-sustained ventricular tachycardia and paroxysmal supraventricular
 tachyarrhythmia) were used alone, with the
@@ -26,10 +26,9 @@ literature before the analysis, the variation of heart rate over the day and
 the ectopic burden, 0.085 above the best network (0.562). The clinical
 variables predicted SCD with AUC 0.661 (CI: 0.58--0.74); combined with the
 markers they reached 0.681 (CI: 0.60--0.76), and with the fusion networks at
-most 0.579. With the study exams --- echocardiography, Pro-BNP, resting ECG
-and Holter measurements provided by the database ---, they reached 0.733 (CI: 0.66--0.80), the best result. Thus, ECG processing yielded
+most 0.579. Thus, ECG processing yielded
 better SCD predictors than deep learning on the raw signal, and the best
-models combine the ECG markers with the clinical variables and exams.
+models combine the ECG markers with the clinical variables.
 
 \textbf{Keywords:} Sudden Cardiac Death. Holter ECG. Deep Learning. Heart Rate
 Variability. Heart Failure. Risk Stratification.

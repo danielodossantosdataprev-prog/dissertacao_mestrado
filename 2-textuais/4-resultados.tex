@@ -29,18 +29,22 @@ cardíaca --- sobrevivem também à correção de Bonferroni.
 			Marcador                                 & \multicolumn{1}{c}{Controles} & \multicolumn{1}{c}{Casos} &
 			\multicolumn{1}{c}{$p$}                                                                                      \\
 			\midrule \midrule
-			Potência HF, desvio-padrão               & 0,01                          & 0,02                      & 0,001 \\
+			Potência HF, desvio-padrão (u.a.)        & 0,01                          & 0,02                      & 0,001 \\
 			Frequência cardíaca, desvio-padrão (bpm) & 7,84                          & 6,28                      & 0,001 \\
-			Potência HF, média                       & 0,01                          & 0,02                      & 0,001 \\
-			SD1/SD2, média                           & 0,46                          & 0,56                      & 0,006 \\
-			LF/HF, média                             & 2,07                          & 1,50                      & 0,008 \\
-			Entropia amostral, média                 & 1,10                          & 0,97                      & 0,013 \\
+			Potência HF, média (u.a.)                & 0,01                          & 0,02                      & 0,001 \\
+			SD1/SD2, média (adimensional)            & 0,46                          & 0,56                      & 0,006 \\
+			LF/HF, média (adimensional)              & 2,07                          & 1,50                      & 0,008 \\
+			Entropia amostral, média (adimensional)  & 1,10                          & 0,97                      & 0,013 \\
 			Amplitude da derivação Y, média (mV)     & 0,78                          & 0,95                      & 0,030 \\
-			Entropia amostral, desvio-padrão         & 0,45                          & 0,39                      & 0,034 \\
+			Entropia amostral, desvio-padrão (adim.) & 0,45                          & 0,39                      & 0,034 \\
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). Valores são medianas em cada grupo.}
+		\Fonte{elaborado pelo autor (2026). Valores são medianas em cada grupo.
+			u.a.: unidades arbitrárias; o NeuroKit2 normaliza o espectro de potência
+			pelo seu valor máximo, de modo que as potências LF e HF são relativas.
+			bpm: batimentos por minuto. Média e desvio-padrão referem-se aos segmentos
+			de 5~minutos de cada paciente.}
 	}
 \end{table}
 
@@ -104,7 +108,14 @@ A \autoref{tab:res-a-selecao} compara as duas formas de escolher poucos
 marcadores descritas na \autoref{subsec:met-comparacoes-marcadores}. A
 partir da análise univariada da coorte inteira, foram escolhidos a média da
 potência HF, o desvio-padrão da frequência cardíaca, a média da entropia
-amostral e a média da razão SD1/SD2. Esses quatro marcadores alcançaram
+amostral e a média da razão SD1/SD2. Seguindo os critérios da
+\autoref{subsec:met-comparacoes-marcadores} --- significância no teste de
+Mann-Whitney, interpretação fisiológica e baixa redundância ---, foram
+deixados de fora, entre os oito marcadores da \autoref{tab:res-a-univariada},
+o desvio-padrão da potência HF e a razão LF/HF, redundantes com a média da
+potência HF; o desvio-padrão da entropia amostral, redundante com a sua
+média; e a amplitude da derivação Y, que depende da posição dos eletrodos e
+do biotipo do paciente, e não da atividade elétrica associada ao risco. Esses quatro marcadores alcançaram
 \gls{AUC} de 0,627, e os dois primeiros, isoladamente, 0,647. Somados às
 variáveis clínicas, produziram os maiores valores deste trabalho, 0,684 e
 0,689.

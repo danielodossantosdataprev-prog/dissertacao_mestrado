@@ -10,11 +10,12 @@ clínicas. A predição foi formulada como uma
 classificação binária por paciente: distinguir os 55 pacientes que morreram
 de MSC dos 462 que sobreviveram a quatro anos de seguimento, em 517 pacientes
 em ritmo sinusal da base pública MUSIC (PhysioNet). Os três cenários foram comparados em validação cruzada estratificada em cinco partições por paciente, pela área sob a curva ROC (AUC) da predição de MSC, com intervalo de confiança de 95\,\% (IC). No primeiro, redes convolucionais, residuais (ResNet-18 a ResNet-50) e com
-atenção foram treinadas sobre o sinal bruto do Holter, em 15 configurações. No segundo, modelos baseados unicamente em marcadores
-do ECG, extraídos em segmentos de 5~minutos e 30~segundos --- variabilidade da frequência cardíaca (SDNN, RMSSD, potências
+atenção foram treinadas sobre o sinal bruto do Holter, em 15 configurações. No segundo, de aprendizado de características, marcadores extraídos por
+processamento digital do ECG em segmentos de 5~minutos e 30~segundos --- variabilidade da frequência cardíaca (SDNN, RMSSD, potências
 LF e HF, Poincaré e entropia), ectopia (carga de batimentos ectópicos,
-dupletes e pausas) e morfologia do batimento (QRS, QT e ondas P e T) ---,
-foram usados em regressão logística com penalização L1 e L2, análise de
+dupletes e pausas) e morfologia do batimento (QRS, QT e ondas P e T) ---
+foram a entrada de modelos de aprendizado de máquina: regressão logística
+com penalização L1 e L2, análise de
 componentes principais e floresta aleatória. No terceiro, seis variáveis
 clínicas (idade, sexo, classe NYHA, ondas Q, taquicardia ventricular não sustentada
 e taquiarritmia paroxística) foram usadas
@@ -24,13 +25,9 @@ marcadores obtiveram AUC entre 0,58 e 0,62 com 44 marcadores e de 0,647
 análise, a variação da frequência cardíaca ao longo do dia e a carga de
 ectopia, 0,085 acima da melhor rede (0,562). As variáveis clínicas previram a
 MSC com AUC de 0,661 (IC: 0,58--0,74); combinadas aos marcadores, chegaram a
-0,681 (IC: 0,60--0,76), e às redes de fusão, a no máximo 0,579. Com os exames
-do estudo --- ecocardiograma, Pro-BNP, ECG de repouso e medidas de Holter
-fornecidas pela base ---, alcançaram 0,733
-(IC: 0,66--0,80), o melhor resultado. Assim, o processamento do ECG produziu
+0,681 (IC: 0,60--0,76), e às redes de fusão, a no máximo 0,579. Assim, o processamento do ECG produziu
 preditores de MSC superiores ao aprendizado profundo sobre o sinal bruto, e
-os melhores modelos combinam os marcadores do ECG com as variáveis clínicas e
-os exames.
+os melhores modelos combinam os marcadores do ECG com as variáveis clínicas.
 
 \textbf{Palavras-chave:} Morte Súbita Cardíaca. ECG Holter. Aprendizado
 Profundo. Variabilidade da Frequência Cardíaca. Insuficiência Cardíaca.
