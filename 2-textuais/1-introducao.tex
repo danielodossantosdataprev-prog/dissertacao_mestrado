@@ -91,25 +91,34 @@ classificador pequeno com os poucos eventos disponíveis \cite{kim2025deep}.
 \label{sec:intro-lacunas}
 
 A predição de \gls{MSC} difere das tarefas diagnósticas em que as redes
-profundas se destacaram. Nas tarefas diagnósticas, o padrão a ser
-reconhecido está presente no traçado e há dezenas de milhares de exemplos
-rotulados; na predição de um evento futuro, não se sabe de antemão se o
-traçado contém o padrão, e as coortes com desfecho adjudicado reúnem poucas
-centenas de pacientes. Nessas condições, a escolha entre aprender
-diretamente do sinal ou de medidas extraídas dele não é óbvia e precisa ser
-avaliada empiricamente.
+profundas se destacaram. Nas tarefas diagnósticas, o padrão procurado está
+presente no traçado no momento do exame e há dezenas de milhares de
+exemplos rotulados. Na predição de \gls{MSC}, o evento ocorre meses ou anos
+depois do Holter, e não se sabe se o registro daquele dia já contém algum
+sinal do que vai acontecer; além disso, as coortes com causa de óbito
+adjudicada reúnem poucas centenas de pacientes. Nessas condições, a escolha
+entre aprender diretamente do sinal ou de medidas extraídas dele não é óbvia
+e precisa ser avaliada empiricamente.
 
-Três lacunas motivam este trabalho. A primeira é a falta de comparações
-diretas, sobre os mesmos pacientes e sob o mesmo protocolo, entre redes
-profundas aplicadas ao sinal bruto, modelos baseados em marcadores extraídos
-do \gls{ECG} e modelos baseados em variáveis clínicas. A segunda é a
-presença, em parte dos estudos, de escolhas de avaliação que tornam as
-estimativas otimistas, como calcular as métricas sobre trechos do sinal e
-não sobre pacientes, ou selecionar variáveis observando o desfecho de toda a
-coorte \cite{kapoor2023leakage}. A terceira é a inclusão de pacientes com
-fibrilação atrial, ritmo facilmente reconhecível no sinal e associado a pior
-prognóstico, que pode elevar a discriminação sem que o modelo capte
-marcadores de vulnerabilidade elétrica ventricular \cite{swee2026multimodal}.
+Três lacunas motivam este trabalho. A primeira é que os estudos anteriores
+avaliaram, cada um, uma única abordagem, em coortes e com protocolos
+diferentes, o que impede saber qual delas prevê melhor a \gls{MSC}. Faltam
+comparações diretas, nos mesmos pacientes e com a mesma forma de avaliação,
+entre redes profundas aplicadas ao sinal bruto, modelos baseados em
+marcadores extraídos do \gls{ECG} e modelos baseados em variáveis clínicas.
+
+A segunda é que parte dos estudos adota escolhas de avaliação que inflam o
+desempenho estimado. Uma delas é calcular as métricas sobre trechos do
+sinal, e não sobre pacientes: como um mesmo exame fornece centenas de
+trechos, cada paciente passa a contar centenas de vezes. Outra é selecionar
+as variáveis observando o desfecho de toda a coorte, inclusive dos pacientes
+usados no teste \cite{kapoor2023leakage}. Neste trabalho, os trechos são
+usados no treinamento, mas toda avaliação é feita por paciente.
+
+A terceira é a inclusão de pacientes com fibrilação atrial, ritmo
+facilmente reconhecível no sinal e associado a pior prognóstico, que pode
+elevar a discriminação sem que o modelo capte marcadores de vulnerabilidade
+elétrica ventricular \cite{swee2026multimodal}.
 
 \section{Objetivos}
 \label{sec:intro-objetivo}
