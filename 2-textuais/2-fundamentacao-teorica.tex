@@ -33,8 +33,11 @@ verticalmente ao longo do tempo, dificultando a comparação de amplitudes
 entre batimentos.
 
 A \textit{interferência da rede elétrica} manifesta-se como componente
-senoidal na frequência de alimentação --- 50\,Hz na Europa, onde foi
-adquirida a base empregada neste trabalho --- e em seus harmônicos.
+senoidal na frequência de alimentação e em seus harmônicos. Essa frequência
+é de 50\,Hz na Espanha, onde foi adquirida a base empregada neste trabalho,
+e de 60\,Hz no Brasil. Como está acima da frequência de corte superior do
+filtro adotado (40\,Hz), essa interferência é removida pela própria
+filtragem passa-faixa, sem necessidade de um filtro específico.
 
 O \textit{ruído muscular}, decorrente da atividade elétrica dos músculos
 esqueléticos, ocupa banda larga, predominantemente acima de 20\,Hz. No
@@ -375,25 +378,32 @@ estimativa: com cerca de 35 batimentos em 30~segundos, um único intervalo
 anômalo pesa sobre o \gls{SDNN} e o \gls{RMSSD} muito mais que em 5~minutos.
 
 \begin{table}[h!]
-	\captionsetup{width=14cm}
+	\captionsetup{width=15.5cm}
 	\Caption{\label{tab:fund-duracao-marcadores} Marcadores calculáveis em
 		segmentos de 5 minutos e de 30 segundos}
 	\IBGEtab{}{
-		\begin{tabular}{lcc}
+		\small
+		\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{6.3cm}}
 			\toprule
-			Marcador                      & 5 minutos                    & 30 segundos              \\
+			Marcador                      & 5 minutos       & 30 segundos                      & Motivo \\
 			\midrule \midrule
-			SDNN, RMSSD, pNN50, SD1, SD2  & sim                          & sim, com maior variância \\
-			Potência LF, HF e razão LF/HF & sim                          & não                      \\
-			Potência VLF                  & não (exige registros longos) & não                      \\
-			Entropia amostral             & sim                          & não                      \\
-			QRS, QT, QTc                  & sim                          & sim                      \\
-			Indicadores de ectopia        & sim                          & sim                      \\
+			SDNN, RMSSD, pNN50, SD1, SD2  & calculável      & calculável, com maior variância  & Dependem apenas das diferenças entre batimentos; com cerca de 35 batimentos em 30~s, um único intervalo anômalo pesa muito sobre o resultado. \\
+			\midrule
+			Potência LF, HF e razão LF/HF & calculável      & não calculável                   & Análise espectral: as oscilações da banda LF (0,04--0,15\,Hz) duram até 25~s, e um trecho de 30~s contém pouco mais de um ciclo. Recomendam-se ao menos 2~minutos para a LF. \\
+			\midrule
+			Potência VLF                  & não calculável  & não calculável                   & As oscilações da banda VLF (0,0033--0,04\,Hz) duram até 5~minutos; sua estimativa em registros curtos não é recomendada. \\
+			\midrule
+			Entropia amostral             & calculável      & não calculável                   & Mede a regularidade da série de intervalos e exige algumas centenas de pontos para ser estável. \\
+			\midrule
+			QRS, QT, QTc                  & calculável      & calculável                       & Medidas de cada batimento, obtidas em qualquer trecho que contenha batimentos. \\
+			\midrule
+			Indicadores de ectopia        & calculável      & calculável                       & Contagens de batimentos precoces e pausas, possíveis em qualquer trecho. \\
 			\bottomrule
 		\end{tabular}
 	}{
 		\Fonte{elaborado pelo autor (2026), com base em
-			\citeonline{taskforce1996heart}.}
+			\citeonline{taskforce1996heart}. Calculável: o marcador pode ser
+			estimado de forma confiável com a duração indicada.}
 	}
 \end{table}
 
