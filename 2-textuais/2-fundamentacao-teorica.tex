@@ -391,7 +391,7 @@ anômalo pesa sobre o \gls{SDNN} e o \gls{RMSSD} muito mais que em 5~minutos.
 			\midrule
 			Potência LF, HF e razão LF/HF & calculável      & não calculável                   & Análise espectral: as oscilações da banda LF (0,04--0,15\,Hz) duram até 25~s, e um trecho de 30~s contém pouco mais de um ciclo. Recomendam-se ao menos 2~minutos para a LF. \\
 			\midrule
-			Potência VLF                  & não calculável  & não calculável                   & As oscilações da banda VLF (0,0033--0,04\,Hz) duram até 5~minutos; sua estimativa em registros curtos não é recomendada. \\
+			Potência VLF                  & calculável, pouco confiável & não calculável     & As oscilações da banda VLF (0,0033--0,04\,Hz) duram até 5~minutos: um segmento de 5~minutos contém no máximo um ciclo, e a estimativa em registros curtos não é recomendada. \\
 			\midrule
 			Entropia amostral             & calculável      & não calculável                   & Mede a regularidade da série de intervalos e exige algumas centenas de pontos para ser estável. \\
 			\midrule
@@ -403,7 +403,9 @@ anômalo pesa sobre o \gls{SDNN} e o \gls{RMSSD} muito mais que em 5~minutos.
 	}{
 		\Fonte{elaborado pelo autor (2026), com base em
 			\citeonline{taskforce1996heart}. Calculável: o marcador pode ser
-			estimado de forma confiável com a duração indicada.}
+			estimado de forma confiável com a duração indicada. Não calculável: o
+			marcador não foi calculado naquela duração, e não foi obtido de outra
+			forma.}
 	}
 \end{table}
 

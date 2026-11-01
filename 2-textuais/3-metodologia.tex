@@ -1230,7 +1230,7 @@ períodos do registro, incluindo o ciclo dia--noite.
 			\gls{pNN50} & Porcentagem de diferenças sucessivas maiores que 50\,ms & \% & Tônus vagal \\
 			SD1 e SD2 & Dispersões do gráfico de Poincaré (\autoref{eq:poincare}) & ms & Variabilidade de curto e de longo prazo \\
 			SD1/SD2 & Razão entre as duas dispersões & --- & Forma da nuvem de Poincaré \\
-			\gls{VLF}, \gls{LF}, \gls{HF}, LF/HF & Potência espectral por faixa (só em 5~minutos) & ms$^2$ & Modulação autonômica por mecanismo \\
+			\gls{VLF}, \gls{LF}, \gls{HF}, LF/HF & Potência espectral por faixa (só em 5~minutos) & u.a.$^{a}$ & Modulação autonômica por mecanismo \\
 			Entropia amostral & Regularidade da sequência de intervalos (só em 5~minutos) & --- & Complexidade do ritmo \\
 			\midrule
 			\multicolumn{4}{l}{\textit{Ectopia e pausas (pelo ritmo, sem distinguir a origem)}} \\
@@ -1252,7 +1252,9 @@ períodos do registro, incluindo o ciclo dia--noite.
 		\end{tabular}
 	}{
 		\Fonte{elaborado pelo autor (2026), com base em
-			\citeonline{taskforce1996heart}.}
+			\citeonline{taskforce1996heart}. $^{a}$Unidades arbitrárias: o
+			NeuroKit2 normaliza o espectro de potência pelo seu valor máximo, de
+			modo que as potências são relativas; a razão LF/HF é adimensional.}
 	}
 \end{table}
 
