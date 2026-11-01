@@ -1135,8 +1135,23 @@ consideravelmente sem que o modelo tenha mudado de forma relevante. Por isso,
 o critério de seleção é a média móvel da \gls{AUC} nas três últimas épocas:
 os pesos são salvos sempre que essa média supera o melhor valor anterior, e
 o treinamento é interrompido quando ela deixa de melhorar por um número
-pré-definido de épocas. A taxa de aprendizado decai ao longo das épocas
-segundo uma função cosseno.
+pré-definido de épocas.
+
+A taxa de aprendizado decai ao longo das épocas segundo uma função cosseno
+\cite{loshchilov2017sgdr}. Ela parte do valor inicial $\eta_{\max} =
+10^{-4}$ e diminui suavemente até próximo de zero na última época prevista:
+
+\begin{equation}
+	\eta_t = \frac{\eta_{\max}}{2}\left(1 + \cos\frac{\pi\, t}{T}\right),
+	\label{eq:cosseno}
+\end{equation}
+
+\noindent
+em que $\eta_t$ é a taxa de aprendizado na época $t$ e $T$ é o número máximo
+de épocas. O decaimento permite passos maiores no início do treinamento,
+quando a rede ainda está longe de uma boa solução, e ajustes finos no fim.
+Com a parada antecipada, o treinamento costuma ser interrompido antes de a
+taxa chegar a zero.
 
 \subsubsection{Avaliação no teste}
 
