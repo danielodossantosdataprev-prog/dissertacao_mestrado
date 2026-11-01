@@ -43,6 +43,41 @@ dia inacessíveis a um traçado de repouso de poucos segundos. Terceiro, a
 adjudicação do mecanismo de óbito permite isolar a morte de origem elétrica,
 que é o objeto deste trabalho.
 
+\begin{figure}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{fig:fluxograma-coorte} Fluxograma de seleção da coorte}
+	\UFCfig{}{
+		\makebox[\linewidth]{\begin{tikzpicture}[
+				x=1cm, y=1cm,
+				etapa/.style={draw, rounded corners=2pt, fill=gray!8, align=center,
+						text width=5.6cm, minimum height=1.0cm, font=\small},
+				exclui/.style={draw, rounded corners=2pt, fill=red!6, align=left,
+						text width=6.6cm, font=\small},
+				final/.style={etapa, fill=green!8, line width=0.8pt},
+				seta/.style={-{Stealth[length=2.2mm]}, thick},
+			]
+			\node[etapa] (n0) at (0, 0)     {Pacientes na base MUSIC\\\textbf{992}};
+			\node[etapa] (n1) at (0, -2.3)  {Em ritmo sinusal\\\textbf{710}};
+			\node[etapa] (n2) at (0, -4.9)  {Óbito por MSC ou vivo\\\textbf{608}};
+			\node[etapa] (n3) at (0, -7.5)  {Casos + controles\\\textbf{587}};
+			\node[final] (n4) at (0, -10.1) {Coorte final: \textbf{517}\\55 casos (MSC) e 462 controles};
+			\foreach \a/\b in {n0/n1, n1/n2, n2/n3, n3/n4} \draw[seta] (\a) -- (\b);
+			\node[exclui] (e1) at (6.9, -1.15) {\textbf{Critério 1} --- excluídos 282:\\ritmo não sinusal no Holter\\(fibrilação/\textit{flutter} atrial, marcapasso)};
+			\node[exclui] (e2) at (6.9, -3.6)  {\textbf{Critério 2} --- excluídos 102:\\35 óbitos de causa não cardíaca\\67 óbitos por falência de bomba};
+			\node[exclui] (e3) at (6.9, -6.2)  {\textbf{Critério 3} --- excluídos 21:\\\emph{apenas vivos} com seguimento inferior a\\4 anos (1\,460 dias); não se aplica aos\\óbitos por MSC};
+			\node[exclui] (e4) at (6.9, -8.8)  {\textbf{Sinal} --- excluídos 70:\\47 sem registro de Holter\\23 sem as três derivações (X, Y e Z)};
+			\draw[seta] (0, -1.15) -- (e1.west);
+			\draw[seta] (0, -3.6)  -- (e2.west);
+			\draw[seta] (0, -6.2)  -- (e3.west);
+			\draw[seta] (0, -8.8)  -- (e4.west);
+		\end{tikzpicture}}
+	}{
+		\Fonte{elaborado pelo autor (2026).}
+	}
+\end{figure}
+
+\FloatBarrier
+
 \subsection{Definição da população e critérios de seleção}
 \label{subsec:met-criterios}
 
@@ -92,38 +127,7 @@ quais 55 casos de \gls{MSC} e 462 controles, com prevalência de 10,6\,\%.
 
 
 
-\begin{figure}[h!]
-	\captionsetup{width=14cm}
-	\Caption{\label{fig:fluxograma-coorte} Fluxograma de seleção da coorte}
-	\UFCfig{}{
-		\makebox[\linewidth]{\begin{tikzpicture}[
-				x=1cm, y=1cm,
-				etapa/.style={draw, rounded corners=2pt, fill=gray!8, align=center,
-						text width=5.6cm, minimum height=1.0cm, font=\small},
-				exclui/.style={draw, rounded corners=2pt, fill=red!6, align=left,
-						text width=6.6cm, font=\small},
-				final/.style={etapa, fill=green!8, line width=0.8pt},
-				seta/.style={-{Stealth[length=2.2mm]}, thick},
-			]
-			\node[etapa] (n0) at (0, 0)     {Pacientes na base MUSIC\\\textbf{992}};
-			\node[etapa] (n1) at (0, -2.3)  {Em ritmo sinusal\\\textbf{710}};
-			\node[etapa] (n2) at (0, -4.9)  {Óbito por MSC ou vivo\\\textbf{608}};
-			\node[etapa] (n3) at (0, -7.5)  {Casos + controles\\\textbf{587}};
-			\node[final] (n4) at (0, -10.1) {Coorte final: \textbf{517}\\55 casos (MSC) e 462 controles};
-			\foreach \a/\b in {n0/n1, n1/n2, n2/n3, n3/n4} \draw[seta] (\a) -- (\b);
-			\node[exclui] (e1) at (6.9, -1.15) {\textbf{Critério 1} --- excluídos 282:\\ritmo não sinusal no Holter\\(fibrilação/\textit{flutter} atrial, marcapasso)};
-			\node[exclui] (e2) at (6.9, -3.6)  {\textbf{Critério 2} --- excluídos 102:\\35 óbitos de causa não cardíaca\\67 óbitos por falência de bomba};
-			\node[exclui] (e3) at (6.9, -6.2)  {\textbf{Critério 3} --- excluídos 21:\\\emph{apenas vivos} com seguimento inferior a\\4 anos (1\,460 dias); não se aplica aos\\óbitos por MSC};
-			\node[exclui] (e4) at (6.9, -8.8)  {\textbf{Sinal} --- excluídos 70:\\47 sem registro de Holter\\23 sem as três derivações (X, Y e Z)};
-			\draw[seta] (0, -1.15) -- (e1.west);
-			\draw[seta] (0, -3.6)  -- (e2.west);
-			\draw[seta] (0, -6.2)  -- (e3.west);
-			\draw[seta] (0, -8.8)  -- (e4.west);
-		\end{tikzpicture}}
-	}{
-		\Fonte{elaborado pelo autor (2026).}
-	}
-\end{figure}
+
 
 
 
