@@ -289,10 +289,10 @@ aplicação do limiar de decisão escolhido na validação interna.
 			Convolucional, busca & 1 min & 0,556 & 0,189 & 0,509 & 0,552 & 0,119 & 0,904 & 0,193 & 0,547 \\
 			Residual, busca & 1 min & 0,496 & 0,122 & 0,455 & 0,565 & 0,111 & 0,897 & 0,178 & 0,553 \\
 			\midrule
-			Fusão, treino conjunto & 2 min & 0,516 & 0,141 & 0,418 & 0,548 & 0,099 & 0,888 & 0,160 & 0,534 \\
-			Fusão, taxa reduzida & 2 min & 0,579 & 0,180 & 0,455 & 0,673 & 0,142 & 0,912 & 0,216 & 0,650 \\
-			Fusão, extrator congelado & 2 min & 0,577 & 0,146 & 0,727 & 0,424 & 0,131 & 0,929 & 0,222 & 0,456 \\
-			Fusão, treino conjunto & 10 s & 0,491 & 0,113 & 0,400 & 0,569 & 0,100 & 0,889 & 0,159 & 0,551 \\
+			Concatenação, treino conjunto & 2 min & 0,516 & 0,141 & 0,418 & 0,548 & 0,099 & 0,888 & 0,160 & 0,534 \\
+			Concatenação, taxa reduzida & 2 min & 0,579 & 0,180 & 0,455 & 0,673 & 0,142 & 0,912 & 0,216 & 0,650 \\
+			Concatenação, extrator congelado & 2 min & 0,577 & 0,146 & 0,727 & 0,424 & 0,131 & 0,929 & 0,222 & 0,456 \\
+			Concatenação, treino conjunto & 10 s & 0,491 & 0,113 & 0,400 & 0,569 & 0,100 & 0,889 & 0,159 & 0,551 \\
 			\bottomrule
 		\end{tabular}
 	}{
@@ -316,7 +316,7 @@ do limiar, e não uma capacidade de separação: as redes de maior
 sensibilidade são as de menor especificidade. A acurácia, entre 0,38 e 0,66,
 fica sempre abaixo dos 0,894 obtidos pela classificação trivial de todos os
 pacientes como controles, o que ilustra por que ela não é adequada com
-classes desbalanceadas. A rede de fusão com extrator congelado obteve a
+classes desbalanceadas. A rede com concatenação com extrator congelado obteve a
 maior sensibilidade (0,727) com \gls{VPN} de 0,929, mas à custa de
 especificidade de 0,424.
 
@@ -354,10 +354,10 @@ seis e dez sobreviventes foram classificados como de alto risco.
 			Convolucional, busca & 1 min & -- & 28 & 27 & 207 & 255 \\
 			Residual, busca & 1 min & -- & 25 & 30 & 201 & 261 \\
 			\midrule
-			Fusão, treino conjunto & 2 min & 0,062 & 23 & 32 & 209 & 253 \\
-			Fusão, taxa reduzida & 2 min & 0,489 & 25 & 30 & 151 & 311 \\
-			Fusão, extrator congelado & 2 min & 0,447 & 40 & 15 & 266 & 196 \\
-			Fusão, treino conjunto & 10 s & 0,026 & 22 & 33 & 199 & 263 \\
+			Concatenação, treino conjunto & 2 min & 0,062 & 23 & 32 & 209 & 253 \\
+			Concatenação, taxa reduzida & 2 min & 0,489 & 25 & 30 & 151 & 311 \\
+			Concatenação, extrator congelado & 2 min & 0,447 & 40 & 15 & 266 & 196 \\
+			Concatenação, treino conjunto & 10 s & 0,026 & 22 & 33 & 199 & 263 \\
 			\bottomrule
 		\end{tabular}
 	}{
@@ -374,8 +374,7 @@ seis e dez sobreviventes foram classificados como de alto risco.
 \subsection{Síntese}
 \label{subsec:res-redes-sintese}
 
-Em 15 configurações avaliadas no protocolo principal --- as quatro redes de
-fusão com as variáveis clínicas são discutidas no Cenário III
+Em 15 configurações avaliadas no protocolo principal --- as quatro redes com variáveis clínicas concatenadas são discutidas no Cenário III
 (\autoref{sec:res-cenario3}) ---, nenhuma rede treinada
 sobre o sinal do Holter discriminou casos e controles de forma distinguível
 do acaso. Os valores de \gls{AUC} fora da partição ficaram entre 0,48 e
@@ -759,10 +758,10 @@ acrescentaram, portanto, um ganho pequeno e consistente às variáveis
 clínicas, que não atingiu significância estatística com os pacientes
 disponíveis.
 
-\subsection{Combinação com o sinal: rede de fusão}
+\subsection{Combinação com o sinal: rede profunda com variáveis clínicas concatenadas}
 \label{subsec:res-redes-fusao}
 
-A rede de fusão combina o extrator da ResNet-18 com um ramo que recebe seis
+A rede com concatenação combina o extrator da ResNet-18 com um ramo que recebe seis
 variáveis clínicas --- idade, sexo, classe funcional da \gls{NYHA}, ondas Q, taquicardia ventricular não sustentada e taquiarritmia supraventricular paroxística ---,
 totalizando 3\,987\,041 parâmetros, dos quais 10\,656
 pertencem ao ramo clínico. A \autoref{tab:res-fusao} compara as três
@@ -770,7 +769,7 @@ estratégias de treinamento descritas na \autoref{subsec:met-fusao}.
 
 \begin{table}[h!]
 	\captionsetup{width=15cm}
-	\Caption{\label{tab:res-fusao} Desempenho da rede de fusão segundo a
+	\Caption{\label{tab:res-fusao} Desempenho da rede com concatenação segundo a
 		estratégia de treinamento do extrator de sinal}
 	\IBGEtab{}{
 		\begin{tabular}{llcc}
@@ -795,7 +794,7 @@ Quando o extrator de sinal é congelado, a rede ajusta apenas o ramo clínico e
 o classificador, e a \gls{AUC} chega a 0,577. Quando o extrator aprende com
 taxa reduzida, o resultado é praticamente o mesmo (0,579). Quando o extrator
 é treinado livremente, junto com o restante da rede, a \gls{AUC} cai para
-0,516. Ou seja, o desempenho da rede de fusão vem das variáveis
+0,516. Ou seja, o desempenho da rede com concatenação vem das variáveis
 clínicas, e o sinal, quando treinado, introduz variabilidade que prejudica a
 discriminação em vez de acrescentar informação. Para referência, o modelo
 logístico sobre as variáveis clínicas, sem nenhuma informação do sinal,
@@ -809,7 +808,7 @@ A \autoref{tab:res-sintese-cenarios} reúne o melhor resultado de cada
 cenário. O processamento do \gls{ECG} com extração de características
 superou o aprendizado profundo sobre o sinal bruto, e os melhores modelos
 combinaram as variáveis clínicas aos dados extraídos do \gls{ECG} ou aos
-exames. Combinadas ao sinal bruto, nas redes de fusão, as variáveis clínicas
+exames. Combinadas ao sinal bruto, nas redes com concatenação, as variáveis clínicas
 tiveram desempenho inferior ao que obtiveram sozinhas.
 
 \begin{table}[h!]
@@ -826,7 +825,7 @@ tiveram desempenho inferior ao que obtiveram sozinhas.
 			II      & 44 marcadores, PCA (4) + logística (5~min)      & 0,624 [0,535--0,708]  \\
 			III     & Seis variáveis clínicas                         & 0,661 [0,577--0,741]  \\
 			III     & Clínicas + marcadores (L1)                      & 0,681 [0,604--0,756]  \\
-			III     & Clínicas + rede de fusão (taxa reduzida)        & 0,579 [0,492--0,669]  \\
+			III     & ResNet-18 + clínicas concatenadas (taxa reduzida)        & 0,579 [0,492--0,669]  \\
 			III     & Clínicas + todos os exames                      & 0,733 [0,656--0,804]  \\
 			\bottomrule
 		\end{tabular}

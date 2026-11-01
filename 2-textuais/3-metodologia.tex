@@ -244,7 +244,7 @@ foram descartados, por concentrarem artefatos de calibração do equipamento,
 de acomodação do paciente e de retirada dos eletrodos.
 
 As posições das janelas foram definidas de modo distinto no treinamento e na
-avaliação. Nas redes residuais e de fusão, cada uma das 250 janelas de
+avaliação. Nas redes residuais e com concatenação, cada uma das 250 janelas de
 treinamento por paciente teve sua
 posição sorteada a cada época, de forma independente, ao longo do trecho
 útil do registro. O procedimento expõe o modelo a recortes diferentes a cada
@@ -326,7 +326,7 @@ construídas e as escolhas de treinamento efetivamente adotadas.
 \label{subsec:met-arquiteturas}
 
 As arquiteturas foram organizadas em três famílias, avaliadas em ordem
-crescente de complexidade, e a rede de fusão com as variáveis clínicas, que
+crescente de complexidade, e a rede profunda com variáveis clínicas concatenadas, que
 compartilha o mesmo extrator e é avaliada no Cenário III
 (\autoref{sec:met-cenario3}). A \autoref{tab:met-arquiteturas} resume cada uma
 delas.
@@ -373,7 +373,7 @@ delas.
 			\midrule
 			Atenção       & ResNet-18 + \textit{Transformer} & 1\,491\,553                    & 2 min               \\
 			\midrule
-			Fusão         & ResNet-18 + ramo clínico         & 3\,987\,041                    & 2 min + 6 variáveis \\
+			Concatenação  & ResNet-18 + variáveis clínicas  & 3\,987\,041                    & 2 min + 6 variáveis \\
 			\bottomrule
 		\end{tabular}
 	}{
@@ -832,7 +832,7 @@ arquitetura, e não o de escolhas acessórias de configuração. Os valores
 adotados foram fixados a partir das primeiras execuções e mantidos ao longo
 dos experimentos; são apresentados a seguir, acompanhados da justificativa
 correspondente. Duas configurações foram empregadas: a das redes residuais,
-de atenção e de fusão, e a das redes convolucionais, que estendeu o número
+de atenção e com concatenação, e a das redes convolucionais, que estendeu o número
 de épocas e de janelas. As diferenças entre elas são indicadas nas tabelas.
 
 
@@ -867,7 +867,7 @@ A \autoref{tab:config-sinal} reúne os parâmetros de representação.
 		\end{tabular}
 	}{
 		\Fonte{elaborado pelo autor (2026). Nota: quando há dois valores, o primeiro
-			refere-se às redes residuais, de atenção e de fusão, e o segundo, às redes
+			refere-se às redes residuais, de atenção e com concatenação, e o segundo, às redes
 			convolucionais.}
 	}
 \end{table}
@@ -923,7 +923,7 @@ comuns a todas as arquiteturas, salvo o número de épocas e a paciência.
 		\end{tabular}
 	}{
 		\Fonte{elaborado pelo autor (2026). Nota: em épocas e paciência, o primeiro valor
-			refere-se às redes residuais, de atenção e de fusão, e o segundo, às redes
+			refere-se às redes residuais, de atenção e com concatenação, e o segundo, às redes
 			convolucionais.}
 	}
 \end{table}
@@ -1569,21 +1569,20 @@ da \autoref{subsec:met-pre-especificados}. O ganho de cada combinação sobre
 o modelo apenas clínico foi estimado pela diferença de \gls{AUC} com
 \textit{bootstrap} pareado (\autoref{eq:delta-auc}).
 
-\subsection{Combinação com o sinal: rede de fusão}
+\subsection{Combinação com o sinal: rede profunda com variáveis clínicas concatenadas}
 \label{subsec:met-fusao-arquitetura}
 
-A combinação das variáveis clínicas com o sinal bruto foi avaliada por uma
-rede de fusão: a ResNet-18 do Cenário I com um segundo ramo, que recebe as
+A combinação das variáveis clínicas com o sinal bruto foi avaliada por uma rede neural profunda com variáveis clínicas concatenadas: a ResNet-18 do Cenário I com um segundo ramo, que recebe as
 seis variáveis clínicas. As representações dos dois ramos são concatenadas
 antes do classificador, e a rede é treinada para prever a \gls{MSC} pelo
 mesmo protocolo das redes do Cenário I. Para medir a contribuição de cada
 modalidade, a mesma arquitetura foi treinada também apenas com o ramo
 clínico.
 
-\subsubsection{Estratégias de treinamento da rede de fusão}
+\subsubsection{Estratégias de treinamento da rede com concatenação}
 \label{subsec:met-fusao}
 
-Na rede de fusão, o ramo do sinal tem cerca de 4 milhões de parâmetros,
+Na rede com concatenação, o ramo do sinal tem cerca de 4 milhões de parâmetros,
 enquanto o ramo clínico recebe apenas seis variáveis. Treinados juntos com a
 mesma taxa de aprendizado, o ramo do sinal tende a dominar o ajuste e a
 memorizar os pacientes de treinamento antes que o ramo clínico contribua.
