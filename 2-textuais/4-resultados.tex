@@ -494,7 +494,8 @@ A \autoref{tab:res-a-selecao} compara as duas formas de escolher poucos
 marcadores descritas na \autoref{subsec:met-comparacoes-marcadores}. A
 partir da análise univariada da coorte inteira, foram escolhidos a média da
 potência HF, o desvio-padrão da frequência cardíaca, a média da entropia
-amostral e a média da razão SD1/SD2. Seguindo os critérios da
+amostral e a média da razão SD1/SD2. Todos os modelos da tabela são
+regressões logísticas com penalização L2 ($C = 1$). Seguindo os critérios da
 \autoref{subsec:met-comparacoes-marcadores} --- significância no teste de
 Mann-Whitney, interpretação fisiológica e baixa redundância ---, foram
 deixados de fora, entre os oito marcadores da \autoref{tab:res-a-univariada},
@@ -511,28 +512,37 @@ variáveis clínicas, produziram os maiores valores deste trabalho, 0,684 e
 	\Caption{\label{tab:res-a-selecao} Efeito da forma de seleção dos
 		marcadores no protocolo A}
 	\IBGEtab{}{
-		\begin{tabular}{llcc}
+		\begin{tabular}{lllcc}
 			\toprule
-			Seleção            & Modelo                  & \gls{AUC} [IC 95\,\%] & $\Delta$ sobre clínicas [IC 95\,\%] \\
+			Seleção            & Variáveis                       & Modelo       & \gls{AUC} [IC 95\,\%] & $\Delta$ sobre clínicas [IC 95\,\%] \\
 			\midrule \midrule
-			Coorte inteira     & 4 marcadores            & 0,627 [0,541--0,710]  & ---                                 \\
-			Coorte inteira     & 2 marcadores            & 0,647 [0,559--0,727]  & ---                                 \\
-			Coorte inteira     & clínicas + 4 marcadores & 0,684 [0,601--0,762]  & $+0{,}023$ [$-0{,}027$; $+0{,}078$] \\
-			Coorte inteira     & clínicas + 2 marcadores & 0,689 [0,607--0,769]  & $+0{,}027$ [$-0{,}022$; $+0{,}081$] \\
+			Coorte inteira     & 4 marcadores$^{a}$              & Logística L2 & 0,627 [0,541--0,710]  & ---                                 \\
+			Coorte inteira     & 2 marcadores$^{b}$              & Logística L2 & 0,647 [0,559--0,727]  & ---                                 \\
+			Coorte inteira     & clínicas + 4 marcadores$^{a}$   & Logística L2 & 0,684 [0,601--0,762]  & $+0{,}023$ [$-0{,}027$; $+0{,}078$] \\
+			Coorte inteira     & clínicas + 2 marcadores$^{b}$   & Logística L2 & 0,689 [0,607--0,769]  & $+0{,}027$ [$-0{,}022$; $+0{,}081$] \\
 			\midrule
-			Dentro da partição & 4 marcadores            & 0,580 [0,497--0,660]  & ---                                 \\
-			Dentro da partição & clínicas + 4 marcadores & 0,640 [0,553--0,726]  & $-0{,}021$ [$-0{,}094$; $+0{,}060$] \\
+			Dentro da partição & 4 marcadores$^{c}$              & Logística L2 & 0,580 [0,497--0,660]  & ---                                 \\
+			Dentro da partição & 6 variáveis$^{d}$               & Logística L2 & 0,640 [0,553--0,726]  & $-0{,}021$ [$-0{,}094$; $+0{,}060$] \\
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). Logística L2 com $C = 1$, classes
+			ponderadas, imputação pela mediana e padronização ajustadas no
+			treinamento de cada partição. $^{a}$Média da potência HF,
+			desvio-padrão da frequência cardíaca, média da entropia amostral e
+			média da razão SD1/SD2. $^{b}$Média da potência HF e desvio-padrão da
+			frequência cardíaca. $^{c}$Os quatro, entre os 44 marcadores, com maior
+			estatística F no treinamento de cada partição. $^{d}$As seis, entre as
+			seis variáveis clínicas e os 44 marcadores, com maior estatística F no
+			treinamento de cada partição.}
 	}
 \end{table}
 
 Quando a seleção foi refeita dentro de cada partição, sem acesso ao
 desfecho dos pacientes de teste, a \gls{AUC} dos quatro marcadores caiu para
-0,580, com intervalo que inclui o acaso, e a combinação com as variáveis
-clínicas ficou abaixo do modelo clínico isolado. A diferença de cerca de
+0,580, com intervalo que inclui o acaso. Quando as seis variáveis foram
+escolhidas dentro da partição entre as clínicas e os marcadores, a
+\gls{AUC} de 0,640 ficou abaixo do modelo clínico isolado. A diferença de cerca de
 0,05 entre as duas formas de seleção estima o otimismo introduzido por
 escolher os marcadores olhando o desfecho de toda a coorte. Os valores
 obtidos com seleção dentro da partição são, por isso, os que melhor

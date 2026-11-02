@@ -1527,8 +1527,12 @@ significância no teste de Mann-Whitney sobre a coorte inteira, pela
 interpretação fisiológica e pela baixa redundância entre si. Como essa
 escolha utilizou o desfecho de todos os pacientes, inclusive dos que mais
 tarde compõem cada conjunto de teste, ela é otimista por construção. Na
-segunda, a seleção dos quatro marcadores mais associados ao desfecho foi
-refeita dentro de cada partição, usando apenas os pacientes de treinamento.
+segunda, a seleção dos quatro marcadores mais associados ao desfecho, pela
+estatística F da análise de variância, foi refeita dentro de cada partição,
+usando apenas os pacientes de treinamento; para a combinação com as
+variáveis clínicas, foram selecionadas da mesma forma seis variáveis entre
+as clínicas e os marcadores. Em ambas as formas, o modelo foi a regressão
+logística com penalização L2 ($C = 1$).
 A diferença entre as duas estima o otimismo introduzido pela seleção.
 
 No protocolo B, além dos modelos sobre os resumos por paciente, foram
