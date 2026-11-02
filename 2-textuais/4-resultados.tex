@@ -420,6 +420,16 @@ porque o desfecho pertence ao paciente, e não ao segmento
 (\autoref{subsec:fund-agregacao}). São esses resumos por paciente que
 entram nos testes estatísticos e nos modelos.
 
+Embora o Holter registre três derivações (X, Y e Z), nos protocolos A e B
+cada marcador tem um \textit{único valor} por segmento, medido em uma só
+derivação: no protocolo A, a de maior desvio-padrão naquele segmento,
+escolhida segmento a segmento; no protocolo B, sempre a derivação Y. A
+única exceção é a amplitude do sinal, registrada separadamente em cada uma
+das três derivações. Os marcadores não são, portanto, triplicados por
+derivação. Apenas na análise dos marcadores pré-especificados
+(\autoref{subsec:res-pre-especificados}) os marcadores foram recalculados
+em cada derivação, e cada derivação deu origem a um modelo separado.
+
 Os resultados de cada protocolo seguem a mesma ordem. Primeiro, cada
 marcador é comparado isoladamente entre casos e controles, para verificar
 se algum deles, sozinho, difere entre os grupos. Depois, os marcadores são
@@ -750,10 +760,16 @@ três marcadores que resistiram à correção para comparações múltiplas.
 \subsection{Marcadores pré-especificados (segmentos de 30 segundos)}
 \label{subsec:res-pre-especificados}
 
-Os dois marcadores pré-especificados --- variação da frequência cardíaca
-média ao longo do dia e carga de ectopia --- alcançaram, sozinhos, \gls{AUC}
-entre 0,635 e 0,660 conforme a derivação --- 0,647 [0,563--0,726] na
-derivação de melhor qualidade ---, próximas das seis variáveis
+Nesta análise, os dois marcadores pré-especificados --- variação da
+frequência cardíaca média ao longo do dia e carga de ectopia --- foram
+calculados em cada derivação, e cada versão foi avaliada em um modelo
+próprio, com os dois marcadores daquela derivação: um modelo com os valores
+da derivação X, outro com os da Y, outro com os da Z e um quarto com os da
+derivação de melhor qualidade em cada segmento (a de maior fração de
+intervalos \gls{NN}). As derivações não foram somadas em um mesmo modelo.
+Sozinhos, os dois marcadores alcançaram \gls{AUC} entre 0,635 e 0,660
+conforme a derivação --- 0,647 [0,563--0,726] na derivação de melhor
+qualidade ---, próximas das seis variáveis
 clínicas. Os casos apresentaram
 menor variação da frequência ao longo do dia (desvio-padrão de 7,0 contra
 8,5\,bpm) e maior carga de ectopia. Quando todos os marcadores foram usados com

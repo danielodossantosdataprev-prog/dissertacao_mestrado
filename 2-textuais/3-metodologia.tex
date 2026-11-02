@@ -1210,7 +1210,8 @@ e a delineação dos batimentos.
 			Margem descartada      & 1 hora em cada extremidade  & 1 hora em cada extremidade   \\
 			Segmentos por paciente & cerca de 21                 & cerca de 636 (máximo de 660) \\
 			Tempo analisado        & cerca de 1 h 45 min         & cerca de 5 h 20 min          \\
-			Derivação              & a de maior amplitude        & Y                            \\
+			Derivação dos marcadores & a de maior desvio-padrão, em cada segmento & Y          \\
+			Amplitude do sinal     & X, Y e Z, separadamente     & X, Y e Z, separadamente      \\
 			Correção de artefatos  & sim                         & não                          \\
 			Base da \gls{VFC}      & intervalos RR filtrados     & intervalos NN                \\
 			Domínio da frequência  & sim                         & não                          \\
@@ -1294,7 +1295,11 @@ e de retirada dos eletrodos. Foram obtidos 11\,071 segmentos dos 517
 pacientes, com mediana de 22 por paciente (mínimo de 16).
 
 Em cada segmento, os picos R foram detectados na derivação de maior
-desvio-padrão, que tende a apresentar a melhor relação sinal-ruído, com a
+desvio-padrão naquele segmento, que tende a apresentar a melhor relação
+sinal-ruído, e todos os marcadores de ritmo e de morfologia foram medidos
+nessa mesma derivação. Cada marcador tem, assim, um único valor por
+segmento, e não um valor por derivação; a exceção é a amplitude, registrada
+em cada uma das três derivações. Os picos foram detectados com a
 correção de artefatos do NeuroKit2 \cite{lipponen2019robust}. Intervalos RR
 fora da faixa de 300 a 2\,000\,ms, ou afastados mais de 40\,\% da mediana do
 segmento, foram descartados, e segmentos com menos de 30 picos ou 20
@@ -1332,7 +1337,10 @@ segmentos de 30~segundos não sobrepostos. Para reduzir o custo
 computacional, extraiu-se um segmento de 30~segundos a cada 2~minutos de
 registro, mantidas as margens de 1~hora, o que resultou em 328\,807
 segmentos, com mediana de 652 por paciente. Os picos R foram detectados na
-derivação Y, como no trabalho de referência, após a limpeza do sinal pelo
+derivação Y, como no trabalho de referência, e todos os marcadores de ritmo
+e de morfologia foram medidos nessa derivação, com um único valor por
+segmento; apenas a amplitude foi registrada também nas derivações X e Z. A
+detecção foi feita após a limpeza do sinal pelo
 método padrão do NeuroKit2 e \textit{sem} correção de artefatos: a correção
 substitui os batimentos ectópicos por batimentos interpolados e apagaria
 justamente os eventos que os indicadores de ectopia procuram contar.
@@ -1548,15 +1556,18 @@ observação dos resultados, todas as doze são reportadas.
 \label{subsec:met-pre-especificados}
 
 Os marcadores do protocolo B foram recalculados em cada uma das três
-derivações. Em cada segmento, os marcadores de uma derivação foram descartados
+derivações, de modo que cada marcador passou a ter três versões, uma por
+derivação. Em cada segmento, os marcadores de uma derivação foram descartados
 quando menos de 80\,\% de seus intervalos RR foram classificados como
 \gls{NN}, e os marcadores de ritmo foram tomados também da derivação com a
 maior fração de intervalos \gls{NN}. Para evitar a seleção de variáveis sobre
 os dados, definiu-se, com base na literatura, um modelo com dois marcadores:
 o desvio-padrão da frequência cardíaca média entre os segmentos, que mede sua
-variação ao longo do dia, e a carga de ectopia. O modelo foi ajustado por
-regressão logística com penalização L2, sem seleção, sozinho e com as
-variáveis clínicas.
+variação ao longo do dia, e a carga de ectopia. O modelo foi ajustado separadamente para cada versão
+dos marcadores --- derivação X, Y, Z e derivação de melhor qualidade ---,
+sempre com os dois marcadores de uma única derivação, por regressão
+logística com penalização L2, sem seleção, sozinho e com as variáveis
+clínicas.
 
 
 
