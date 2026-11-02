@@ -1497,6 +1497,18 @@ não eram ruído aleatório: resultavam de batimentos ectópicos e de picos não
 detectados, que inflam as diferenças sucessivas. Tratá-los como ausentes
 teria removido seletivamente os segmentos com ectopia.
 
+A \autoref{tab:met-auditoria-nn} compara as duas versões. As colunas
+``Todos os RR'' referem-se à primeira versão, em que o RMSSD e o SDNN de
+cada segmento foram calculados com todos os intervalos RR plausíveis,
+inclusive os que envolvem batimentos ectópicos; as colunas ``NN'', à versão
+final, em que apenas os intervalos entre batimentos normais entram no
+cálculo. Para cada versão, a tabela traz duas informações sobre os 328\,807
+segmentos: a \textit{porcentagem de segmentos com valor acima de 200\,ms},
+limite raramente ultrapassado pela variabilidade de batimentos sinusais em
+30~segundos e usado aqui como indicador de valores contaminados; e a
+\textit{mediana} do marcador, isto é, o valor que divide os segmentos ao
+meio, com metade abaixo e metade acima dele.
+
 Com o cálculo restrito aos intervalos NN, as proporções caíram para
 2,21\,\% e 2,94\,\%, e as medianas do RMSSD e do SDNN passaram de 41,7 para
 23,9\,ms e de 44,0 para 29,5\,ms, respectivamente
@@ -1524,7 +1536,14 @@ segmentos, e a largura do QRS em 98,7\,\%.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). Todos os RR: primeira versão da
+			extração, com todos os intervalos plausíveis, incluindo os de
+			batimentos ectópicos; NN: versão final, apenas com intervalos entre
+			batimentos normais. Acima de 200\,ms: porcentagem dos 328\,807
+			segmentos de 30~s em que o marcador ultrapassou 200\,ms, valor
+			implausível para batimentos sinusais. Mediana: valor central do
+			marcador entre todos os segmentos (metade dos segmentos abaixo,
+			metade acima).}
 	}
 \end{table}
 
