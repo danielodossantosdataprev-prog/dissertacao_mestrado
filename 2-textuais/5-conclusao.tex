@@ -64,6 +64,33 @@ cruzada em cinco partições e pela \gls{AUC} geral.
 
 \FloatBarrier
 
+A \autoref{fig:conc-roc} compara as curvas ROC do melhor modelo de cada
+abordagem para o qual as predições individuais foram preservadas. A
+curva da rede sobre o sinal bruto (Cenário I) fica próxima da diagonal; a
+dos marcadores extraídos do \gls{ECG} (Cenário II) afasta-se dela; e a das
+variáveis clínicas somadas aos marcadores (Cenário III) é a mais distante,
+sobretudo na faixa de baixa taxa de falsos positivos. A rede que recebe o
+sinal bruto junto com as variáveis clínicas fica entre as duas primeiras.
+
+\begin{figure}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{fig:conc-roc} Curvas ROC do melhor modelo de cada
+		abordagem}
+	\UFCfig{}{
+		\includegraphics[width=13cm]{figuras/roc_cenarios_melhores.pdf}
+	}{
+		\Fonte{elaborado pelo autor (2026). Predições fora da partição dos 517
+			pacientes. Cenário II: PCA (4) + logística sobre os resumos dos
+			segmentos de 30~s (protocolo B); Cenário III: variáveis clínicas
+			com os marcadores do protocolo A (logística L1) e ResNet-18 com as
+			variáveis clínicas concatenadas (extrator congelado). Na legenda,
+			\gls{AUC} geral e intervalo de confiança de 95\,\% por
+			\textit{bootstrap}.}
+	}
+\end{figure}
+
+\FloatBarrier
+
 No Cenário I, as redes convolucionais, residuais e com atenção, treinadas
 diretamente sobre o sinal bruto para prever a \gls{MSC}, obtiveram \gls{AUC}
 entre 0,48 e 0,56. Os três melhores resultados vieram de redes pequenas ---

@@ -402,6 +402,31 @@ um padrão que distinguisse os pacientes que sofreram \gls{MSC}; as medidas
 extraídas do \gls{ECG} no Cenário II, apresentadas a seguir, tiveram
 desempenho superior.
 
+A \autoref{fig:res-roc-cenario1} mostra as curvas ROC das três melhores
+redes, construídas com as predições fora da partição dos 517 pacientes. As
+três curvas acompanham de perto a diagonal, que corresponde à classificação
+ao acaso: em nenhum ponto de operação as redes alcançam, ao mesmo tempo,
+sensibilidade e especificidade elevadas. O pequeno afastamento da diagonal
+no início das curvas, até cerca de 25\,\% de sensibilidade, indica que as
+redes ordenam corretamente alguns poucos casos, mas não a maioria deles.
+
+\begin{figure}[h!]
+	\captionsetup{width=14cm}
+	\Caption{\label{fig:res-roc-cenario1} Curvas ROC das três melhores redes
+		do Cenário I}
+	\UFCfig{}{
+		\includegraphics[width=13cm]{figuras/roc_cenario1.pdf}
+	}{
+		\Fonte{elaborado pelo autor (2026). Predições fora da partição dos 517
+			pacientes; a linha pontilhada cinza é a classificação ao acaso. Na
+			legenda, \gls{AUC} geral e intervalo de confiança de 95\,\% por
+			\textit{bootstrap}; os limites diferem na terceira casa decimal dos
+			do texto por usarem outro sorteio.}
+	}
+\end{figure}
+
+\FloatBarrier
+
 \section{Cenário II: aprendizado de características do ECG}
 \label{sec:res-cenario2}
 \label{sec:res-marcadores}
