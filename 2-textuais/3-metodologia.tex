@@ -1164,10 +1164,11 @@ probabilidades de suas janelas.
 \subsubsection{Consolidação das cinco rodadas}
 
 Os resultados de cada arquitetura são reportados de duas formas
-complementares. A primeira é a média e o desvio-padrão das métricas das
-cinco partições, que indicam a estabilidade do modelo: desvios elevados
+complementares. A primeira, chamada nas tabelas de \gls{AUC} por
+partição, é a média e o desvio-padrão das métricas das cinco partições, que indicam a estabilidade do modelo: desvios elevados
 sinalizam que o resultado depende de quais pacientes caíram em cada
-partição. A segunda reúne as predições fora da partição dos 517 pacientes em
+partição. A segunda, chamada de \gls{AUC} geral e adotada como medida
+principal, reúne as predições fora da partição dos 517 pacientes em
 uma única curva ROC, cuja \gls{AUC} recebe um intervalo de confiança de
 95\,\% por \textit{bootstrap} com $B^{*} = 1\,000$ reamostragens de
 pacientes. Para as métricas dependentes de limiar dessa curva agrupada,

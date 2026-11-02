@@ -144,7 +144,7 @@ desvio-padrão da \gls{AUC} entre as cinco partições.
 	\IBGEtab{}{
 		\begin{tabular}{llcc}
 			\toprule
-			Variáveis                              & Modelo                    & \gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%] \\
+			Variáveis                              & Modelo                    & \gls{AUC} por partição & \gls{AUC} geral [IC 95\,\%] \\
 			\midrule \midrule
 			44 marcadores                          & Logística L1              & 0,605 $\pm$ 0,088   & 0,587 [0,516--0,657] \\
 			44 marcadores                          & Logística L2              & 0,611 $\pm$ 0,094   & 0,602 [0,534--0,665] \\
@@ -159,7 +159,7 @@ desvio-padrão da \gls{AUC} entre as cinco partições.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). $^{a}$Desvio-padrão da frequência
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado). $^{a}$Desvio-padrão da frequência
 			cardíaca entre os segmentos, carga de ectopia, número médio de
 			dupletes e maior pausa média, definidos de antemão
 			(\autoref{subsec:met-pre-especificados}).}

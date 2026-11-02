@@ -6,13 +6,28 @@ Os resultados são apresentados na mesma ordem da metodologia: o Cenário I,
 de aprendizado profundo sobre o sinal bruto; o Cenário II, de aprendizado
 de características extraídas do \gls{ECG}; e o Cenário III, de modelos
 baseados em variáveis clínicas e em sua combinação com o \gls{ECG}. Em
-todos, a métrica principal é a \gls{AUC} da predição de \gls{MSC} contra
-sobrevivência, calculada sobre as predições fora da partição dos 517
-pacientes, com intervalo de confiança de 95\,\% por \textit{bootstrap}. A
-coluna ``Partições'' das tabelas traz a média e o desvio-padrão da \gls{AUC}
-nas cinco partições da validação cruzada: a média indica o desempenho típico
-em cada conjunto de teste, e o desvio-padrão, quanto o resultado depende de
-quais pacientes caíram em cada partição. A \gls{AUPRC} resume a curva
+todos, a métrica é a \gls{AUC} da predição de \gls{MSC} contra
+sobrevivência, e várias tabelas a apresentam de duas formas, ambas obtidas
+da mesma validação cruzada em cinco partições:
+
+\begin{itemize}
+	\item \textit{\gls{AUC} geral}, a medida principal: cada paciente é
+	predito uma única vez, pelo modelo treinado sem ele; as predições dos
+	517 pacientes são reunidas e a \gls{AUC} é calculada uma só vez sobre
+	elas, com intervalo de confiança de 95\,\% por \textit{bootstrap};
+	\item \textit{\gls{AUC} por partição}: a \gls{AUC} é calculada
+	separadamente em cada um dos cinco conjuntos de teste, com cerca de 103
+	pacientes e 11 casos cada, e apresentada como média $\pm$
+	desvio-padrão. A média é próxima da \gls{AUC} geral, e o desvio-padrão
+	indica quanto o resultado varia conforme os pacientes que caíram em cada
+	partição.
+\end{itemize}
+
+\noindent
+Por exemplo, para a ResNet-18 mínima, ``0,569 $\pm$ 0,067'' e ``0,562 [0,475--0,642]'' descrevem o
+mesmo modelo: a primeira é a média das cinco \gls{AUC} parciais, e a
+segunda, a \gls{AUC} geral com seu intervalo de confiança. Quando uma
+tabela traz um único valor de \gls{AUC}, trata-se da \gls{AUC} geral. A \gls{AUPRC} resume a curva
 precisão-revocação; seu valor sob classificação ao acaso é igual à
 prevalência, 0,106.
 
@@ -25,7 +40,7 @@ Esta seção apresenta o desempenho das redes neurais treinadas diretamente
 sobre o sinal das três derivações do Holter. Todas foram avaliadas pelo mesmo
 protocolo: cinco partições estratificadas sobre os 517 pacientes, com 309 ou
 310 pacientes de treinamento, 104 de validação interna e 103 ou 104 de teste
-em cada partição. O valor principal é a \gls{AUC} fora da partição,
+em cada partição. O valor principal é a \gls{AUC} geral,
 calculada sobre as predições dos 517 pacientes, cada um predito pelo modelo
 que não o viu no treinamento, com intervalo de confiança de 95\,\% obtido por
 \textit{bootstrap}. A média e o desvio-padrão da \gls{AUC} entre as cinco
@@ -46,7 +61,7 @@ rede e a duração da janela de entrada.
 		\begin{tabular}{llrcc}
 			\toprule
 			Rede                & Janela                                 & \multicolumn{1}{c}{Parâmetros} &
-			\gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%]                                                                             \\
+			\gls{AUC} por partição & \gls{AUC} geral [IC 95\,\%]                                                                             \\
 			\midrule \midrule
 			Mínima              & 2 min                                  & 14\,425                        & 0,543 $\pm$ 0,059 & 0,523 [0,440--0,612] \\
 			Simples             & 2 min                                  & 109\,361                       & 0,500 $\pm$ 0,067 & 0,486 [0,402--0,578] \\
@@ -58,7 +73,7 @@ rede e a duração da janela de entrada.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado).}
 	}
 \end{table}
 
@@ -89,7 +104,7 @@ mantêm os quatro estágios de dois blocos e variam o número de canais.
 		\begin{tabular}{llrcc}
 			\toprule
 			Rede                & Janela                                 & \multicolumn{1}{c}{Parâmetros} &
-			\gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%]                                                                             \\
+			\gls{AUC} por partição & \gls{AUC} geral [IC 95\,\%]                                                                             \\
 			\midrule \midrule
 			ResNet-18 mínima    & 5,12 s                                 & 78\,169                        & 0,569 $\pm$ 0,067 & 0,562 [0,475--0,642] \\
 			ResNet-18 reduzida  & 2 min                                  & 1\,029\,985                    & 0,516 $\pm$ 0,102 & 0,504 [0,420--0,588] \\
@@ -98,7 +113,7 @@ mantêm os quatro estágios de dois blocos e variam o número de canais.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado).}
 	}
 \end{table}
 
@@ -127,7 +142,7 @@ básico pelo bloco de gargalo (\autoref{sec:fund-resnet}).
 			\toprule
 			Rede                             & \multicolumn{1}{c}{Parâmetros}         &
 			\multicolumn{1}{c}{Por paciente} &
-			\gls{AUC} partições              & \gls{AUC} fora da partição [IC 95\,\%]                                                      \\
+			\gls{AUC} por partição              & \gls{AUC} geral [IC 95\,\%]                                                      \\
 			\midrule \midrule
 			ResNet-18                        & 3\,976\,385                            & 12\,869 & 0,528 $\pm$ 0,088 & 0,508 [0,431--0,588] \\
 			ResNet-34                        & 7\,350\,721                            & 23\,789 & 0,540 $\pm$ 0,039 & 0,514 [0,429--0,601] \\
@@ -135,7 +150,7 @@ básico pelo bloco de gargalo (\autoref{sec:fund-resnet}).
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). Parâmetros por paciente de
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado). Parâmetros por paciente de
 			treinamento (309 pacientes).}
 	}
 \end{table}
@@ -153,7 +168,7 @@ sinal informação adicional.
 Na rede com atenção, as características extraídas pela ResNet-18 ao
 longo da janela são relacionadas entre si por um codificador
 \textit{Transformer} antes do agrupamento (\autoref{sec:fund-atencao}),
-totalizando 1\,491\,553 parâmetros. A \gls{AUC} fora da partição foi de
+totalizando 1\,491\,553 parâmetros. A \gls{AUC} geral foi de
 0,493 [0,419--0,577], com média entre partições de 0,512 $\pm$ 0,041. A
 modelagem explícita das relações temporais dentro da janela de 2~minutos,
 portanto, não acrescentou capacidade discriminativa à ResNet-18.
@@ -179,14 +194,14 @@ cinco partições do protocolo.
 		\begin{tabular}{llrcc}
 			\toprule
 			Rede                & Janela                                 & \multicolumn{1}{c}{Parâmetros} &
-			\gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%]                                                                             \\
+			\gls{AUC} por partição & \gls{AUC} geral [IC 95\,\%]                                                                             \\
 			\midrule \midrule
 			Convolucional$^{a}$ & 1 min                                  & 473\,417                       & 0,574 $\pm$ 0,112 & 0,556 [0,464--0,647] \\
 			Residual$^{b}$      & 1 min                                  & 1\,818\,049                    & 0,510 $\pm$ 0,079 & 0,496 [0,411--0,584] \\
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). $^{a}$Quatro blocos com 24, 48, 96 e
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado). $^{a}$Quatro blocos com 24, 48, 96 e
 			96 canais, núcleo de 31 amostras e agrupamento por média.
 			$^{b}$ResNet com quatro estágios de um bloco, 64 canais iniciais e
 			agrupamento por máximo.}
@@ -227,7 +242,7 @@ parte, determinada pelo acaso.
 A ResNet-18 mínima, com janela de 5,12~segundos, foi treinada duas vezes
 sobre as mesmas partições, alterando-se apenas o tamanho do lote (2\,000 e
 1\,000 janelas) e o número de janelas sorteadas por paciente (500 e 850). A
-\gls{AUC} fora da partição passou de 0,562 [0,475--0,642] para 0,480
+\gls{AUC} geral passou de 0,562 [0,475--0,642] para 0,480
 [0,403--0,557]. Essa diferença de 0,08 entre duas execuções da mesma
 arquitetura é maior que a diferença entre a rede de melhor e a de pior
 desempenho entre as redes convolucionais e residuais avaliadas.
@@ -242,7 +257,7 @@ interpretada como evidência de superioridade de uma sobre as outras.
 Para verificar se o pipeline é capaz de extrair do sinal alguma informação
 associada ao desfecho, a ResNet-18 foi treinada também sobre a coorte sem o
 critério de ritmo sinusal, com 703 pacientes e 85 casos. Nessa coorte, a
-\gls{AUC} fora da partição foi de 0,575 [0,511--0,642], o único intervalo
+\gls{AUC} geral foi de 0,575 [0,511--0,642], o único intervalo
 entre as redes que exclui 0,5 (média entre partições de 0,601 $\pm$ 0,049).
 Esse ganho não pode ser atribuído a um marcador de morte súbita: a coorte
 ampliada inclui pacientes em fibrilação atrial, um ritmo facilmente
@@ -377,7 +392,7 @@ seis e dez sobreviventes foram classificados como de alto risco.
 Em 15 configurações avaliadas no protocolo principal --- as quatro redes com variáveis clínicas concatenadas são discutidas no Cenário III
 (\autoref{sec:res-cenario3}) ---, nenhuma rede treinada
 sobre o sinal do Holter discriminou casos e controles de forma distinguível
-do acaso. Os valores de \gls{AUC} fora da partição ficaram entre 0,48 e
+do acaso. Os valores de \gls{AUC} geral ficaram entre 0,48 e
 0,56, sem relação com a capacidade da rede, com a duração da janela ou com a
 presença de mecanismos de atenção, e a variação entre execuções da mesma rede
 foi da mesma ordem que a variação entre arquiteturas. A melhor rede, a
@@ -511,8 +526,8 @@ em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
 	\IBGEtab{}{
 		\begin{tabular}{lrcrr}
 			\toprule
-			Modelo                          & \multicolumn{1}{c}{Variáveis} & \gls{AUC} [\glsadd{IC}IC 95\,\%] &
-			\multicolumn{1}{c}{Partições}   & \multicolumn{1}{c}{\gls{AUPRC}}                                                      \\
+			Modelo                          & \multicolumn{1}{c}{Variáveis} & \gls{AUC} geral [\glsadd{IC}IC 95\,\%] &
+			\multicolumn{1}{c}{\gls{AUC} por partição}   & \multicolumn{1}{c}{\gls{AUPRC}}                                                      \\
 			\midrule \midrule
 			Clínicas (referência)           & 6                             & 0,661 [0,577--0,741]  & 0,673 $\pm$ 0,114 & 0,233 \\
 			\midrule
@@ -526,7 +541,7 @@ em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). Partições: média $\pm$
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado). Partições: média $\pm$
 			desvio-padrão da \gls{AUC} nas cinco partições. \gls{AUPRC} de referência
 			(acaso): 0,106.}
 	}
@@ -703,7 +718,7 @@ continua sendo a dos 517 pacientes.
 	\IBGEtab{}{
 		\begin{tabular}{lcc}
 			\toprule
-			Modelo                     & \gls{AUC} [IC 95\,\%] & Partições         \\
+			Modelo                     & \gls{AUC} geral [IC 95\,\%] & \gls{AUC} por partição \\
 			\midrule \midrule
 			Logística L2               & 0,563 [0,461--0,663]  & 0,569 $\pm$ 0,079 \\
 			PCA (6) + logística        & 0,532 [0,442--0,616]  & 0,537 $\pm$ 0,031 \\
@@ -712,7 +727,7 @@ continua sendo a dos 517 pacientes.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). Cada segmento é uma linha de treinamento, com o rótulo do seu paciente; a probabilidade do paciente é a média das probabilidades de seus segmentos, e a \gls{AUC} é calculada sobre os 517 pacientes. PCA (6): seis componentes principais.}
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado). Cada segmento é uma linha de treinamento, com o rótulo do seu paciente; a probabilidade do paciente é a média das probabilidades de seus segmentos, e a \gls{AUC} é calculada sobre os 517 pacientes. PCA (6): seis componentes principais.}
 	}
 \end{table}
 
@@ -742,8 +757,7 @@ o mesmo quadro, com o melhor resultado em 0,583 [0,483--0,674].
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). Valores de \gls{AUC} das predições
-			fora da partição.}
+		\Fonte{elaborado pelo autor (2026). Valores de \gls{AUC} geral.}
 	}
 \end{table}
 
@@ -888,8 +902,8 @@ estratégias de treinamento descritas na \autoref{subsec:met-fusao}.
 	\IBGEtab{}{
 		\begin{tabular}{llcc}
 			\toprule
-			Estratégia                & Janela & \gls{AUC} partições &
-			\gls{AUC} fora da partição [IC 95\,\%]                                          \\
+			Estratégia                & Janela & \gls{AUC} por partição &
+			\gls{AUC} geral [IC 95\,\%]                                          \\
 			\midrule \midrule
 			Treinamento conjunto      & 2 min  & 0,534 $\pm$ 0,090   & 0,516 [0,433--0,603] \\
 			Taxa reduzida no extrator & 2 min  & 0,578 $\pm$ 0,046   & 0,579 [0,492--0,669] \\
@@ -898,7 +912,7 @@ estratégias de treinamento descritas na \autoref{subsec:met-fusao}.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). $^{a}$142\,241 parâmetros
+		\Fonte{elaborado pelo autor (2026). \gls{AUC} geral: calculada uma única vez sobre as predições de todos os pacientes, cada um predito pelo modelo que não o usou no treinamento (medida principal). \gls{AUC} por partição: média e desvio-padrão das cinco \gls{AUC} calculadas separadamente em cada conjunto de teste (estabilidade do resultado). $^{a}$142\,241 parâmetros
 			treináveis; o extrator de sinal permanece com os pesos iniciais.}
 	}
 \end{table}
