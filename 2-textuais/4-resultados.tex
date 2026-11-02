@@ -759,10 +759,21 @@ continua sendo a dos 517 pacientes.
 
 \subsubsection{Modelos sobre os resumos por paciente}
 
-A \autoref{tab:res-b-paciente} apresenta as doze configurações avaliadas
-sobre os resumos por paciente da extração corrigida. Onze delas tiveram
-intervalo de confiança que inclui 0,5. A única exceção, a análise de
-componentes principais sobre o conjunto B, com \gls{AUC} de 0,619
+Nesta análise, cada paciente é representado por uma única linha com os
+resumos dos seus segmentos, e foram testadas doze configurações: três
+conjuntos de variáveis, de tamanho crescente, combinados com quatro modelos
+(\autoref{subsec:met-comparacoes-marcadores}). O conjunto 1 contém apenas o
+valor típico de cada marcador (32 variáveis); o conjunto 2 acrescenta
+quanto o marcador varia ao longo do dia (64 variáveis); e o conjunto 3
+reúne todos os resumos (122 variáveis). Os modelos são a logística L2, a
+logística L1, a análise de componentes principais com quatro componentes
+seguida de logística e a floresta aleatória. Na
+\autoref{tab:res-b-paciente}, cada linha é um conjunto e cada coluna, um
+modelo; cada célula é a \gls{AUC} geral de uma configuração.
+
+Onze das doze configurações tiveram intervalo de confiança que inclui 0,5.
+A única exceção, a análise de componentes principais sobre o conjunto 2,
+com \gls{AUC} de 0,619
 [0,537--0,700], é a melhor de doze tentativas e deve ser interpretada com a
 correspondente cautela. A versão da extração anterior à correção NN produziu
 o mesmo quadro, com o melhor resultado em 0,583 [0,483--0,674].
@@ -777,13 +788,17 @@ o mesmo quadro, com o melhor resultado em 0,583 [0,483--0,674].
 			Conjunto                   & \multicolumn{1}{c}{Variáveis} & Logística L2 & Logística L1 &
 			PCA (4) + logística        & Floresta aleatória                                                          \\
 			\midrule \midrule
-			A (mediana)                & 32                            & 0,552        & 0,550        & 0,563 & 0,532 \\
-			B (A + dispersão e fração) & 64                            & 0,540        & 0,548        & 0,619 & 0,562 \\
-			C (todos os resumos)       & 122                           & 0,545        & 0,550        & 0,548 & 0,582 \\
+			1 (valor típico)            & 32                            & 0,552        & 0,550        & 0,563 & 0,532 \\
+			2 (1 + variação)            & 64                            & 0,540        & 0,548        & 0,619 & 0,562 \\
+			3 (todos os resumos)        & 122                           & 0,545        & 0,550        & 0,548 & 0,582 \\
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026). Valores de \gls{AUC} geral.}
+		\Fonte{elaborado pelo autor (2026). Valores de \gls{AUC} geral. Conjunto
+			1: mediana de cada marcador contínuo e média de cada contagem;
+			conjunto 2: conjunto 1 com o intervalo interquartil e a fração de
+			segmentos com evento; conjunto 3: todos os resumos, incluindo os
+			percentis 10 e 90 (\autoref{subsec:met-protocolo-b}).}
 	}
 \end{table}
 

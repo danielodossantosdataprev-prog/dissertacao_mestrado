@@ -1556,11 +1556,32 @@ fração de segmentos com pelo menos um evento. Os limites fisiológicos não
 foram aplicados nesta etapa, pois os resumos por mediana e percentis são
 robustos aos valores extremos remanescentes.
 
+Cada resumo responde a uma pergunta diferente sobre os cerca de 636
+segmentos do paciente. A \textit{mediana} indica o valor típico do marcador
+ao longo do registro; o \textit{intervalo interquartil}, a diferença entre
+os percentis 75 e 25, indica quanto ele varia ao longo do dia; os
+\textit{percentis 10 e 90} descrevem os valores baixos e altos que o
+marcador atinge; e, nas contagens de ectopia, a \textit{fração de segmentos
+com evento} indica em que parte do registro a ectopia esteve presente.
+
 A partir desses resumos, foram definidos três conjuntos de variáveis, de
-dimensão crescente: o conjunto A, apenas com a mediana de cada marcador
-contínuo e a média de cada contagem (32 variáveis); o conjunto B, que
-acrescenta o intervalo interquartil e a fração de segmentos com evento
-(64 variáveis); e o conjunto C, com todos os resumos (122 variáveis).
+tamanho crescente, numerados para não serem confundidos com os protocolos
+A e B:
+
+\begin{itemize}
+	\item \textit{conjunto 1} (32 variáveis): apenas o valor típico --- a
+	mediana de cada marcador contínuo e a média de cada contagem;
+	\item \textit{conjunto 2} (64 variáveis): o conjunto 1 acrescido da
+	variação --- o intervalo interquartil de cada marcador contínuo e a
+	fração de segmentos com evento de cada contagem;
+	\item \textit{conjunto 3} (122 variáveis): todos os resumos, incluindo
+	os percentis 10 e 90.
+\end{itemize}
+
+\noindent
+A comparação entre os conjuntos verifica se acrescentar informação sobre a
+variação dos marcadores ao longo do dia melhora a discriminação, ou se o
+aumento do número de variáveis apenas favorece o sobreajuste.
 
 \subsection{Número de variáveis e risco de sobreajuste}
 \label{subsec:met-numero-variaveis}
@@ -1670,9 +1691,11 @@ No protocolo B, além dos modelos sobre os resumos por paciente, foram
 treinados modelos diretamente sobre os segmentos, cada um rotulado com o
 desfecho de seu paciente, com as probabilidades dos segmentos agregadas por
 paciente pela \autoref{eq:agregacao-paciente} antes da avaliação. Para os
-resumos por paciente, os três conjuntos de variáveis A, B e C da
-\autoref{subsec:met-protocolo-b} foram combinados com quatro modelos, o que
-resulta em doze configurações. Como a melhor delas é escolhida após a
+resumos por paciente, cada um dos três conjuntos de variáveis da
+\autoref{subsec:met-protocolo-b} foi combinado com cada um dos quatro
+modelos da \autoref{subsec:met-modelos-tabulares} --- logística L2,
+logística L1, \gls{PCA} (4) + logística e floresta aleatória ---, o que
+resulta em $3 \times 4 = 12$ configurações. Como a melhor delas é escolhida após a
 observação dos resultados, todas as doze são reportadas.
 
 \subsection{Marcadores pré-especificados nas três derivações}
