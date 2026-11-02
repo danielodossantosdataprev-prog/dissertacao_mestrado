@@ -266,40 +266,40 @@ aplicação do limiar de decisão escolhido na validação interna.
 	pacientes}
 	\IBGEtab{}{
 		\footnotesize
-		\setlength{\tabcolsep}{3pt}
-		\begin{tabular}{llcccccccc}
+		\setlength{\tabcolsep}{2.2pt}
+		\begin{tabular}{lllcccccccc}
 			\toprule
-			Rede & Janela & \gls{AUC} & \gls{AUPRC} & Sens. & Espec. & \gls{VPP} & \gls{VPN} & F1 & Acurácia \\
+			Rede & Entrada & Janela & \gls{AUC} & \gls{AUPRC} & Sens. & Espec. & \gls{VPP} & \gls{VPN} & F1 & Acur. \\
 			\midrule \midrule
-			CNN mínima & 2 min & 0,523 & 0,139 & 0,582 & 0,448 & 0,111 & 0,900 & 0,187 & 0,462 \\
-			CNN simples & 2 min & 0,486 & 0,121 & 0,364 & 0,645 & 0,109 & 0,895 & 0,167 & 0,615 \\
-			CNN média & 2 min & 0,485 & 0,126 & 0,309 & 0,688 & 0,106 & 0,893 & 0,157 & 0,648 \\
-			CNN mínima & 10 s & 0,554 & 0,132 & 0,691 & 0,346 & 0,112 & 0,904 & 0,192 & 0,383 \\
-			CNN simples & 10 s & 0,491 & 0,119 & 0,400 & 0,530 & 0,092 & 0,881 & 0,150 & 0,516 \\
-			CNN média & 10 s & 0,485 & 0,110 & 0,455 & 0,485 & 0,095 & 0,882 & 0,157 & 0,482 \\
+			CNN mínima & ECG & 2 min & 0,523 & 0,139 & 0,582 & 0,448 & 0,111 & 0,900 & 0,187 & 0,462 \\
+			CNN simples & ECG & 2 min & 0,486 & 0,121 & 0,364 & 0,645 & 0,109 & 0,895 & 0,167 & 0,615 \\
+			CNN média & ECG & 2 min & 0,485 & 0,126 & 0,309 & 0,688 & 0,106 & 0,893 & 0,157 & 0,648 \\
+			CNN mínima & ECG & 10 s & 0,554 & 0,132 & 0,691 & 0,346 & 0,112 & 0,904 & 0,192 & 0,383 \\
+			CNN simples & ECG & 10 s & 0,491 & 0,119 & 0,400 & 0,530 & 0,092 & 0,881 & 0,150 & 0,516 \\
+			CNN média & ECG & 10 s & 0,485 & 0,110 & 0,455 & 0,485 & 0,095 & 0,882 & 0,157 & 0,482 \\
 			\midrule
-			ResNet-18 mínima & 5,12 s & 0,562 & 0,160 & 0,455 & 0,654 & 0,135 & 0,910 & 0,208 & 0,632 \\
-			ResNet-18 reduzida & 2 min & 0,504 & 0,117 & 0,582 & 0,437 & 0,110 & 0,898 & 0,184 & 0,453 \\
-			ResNet-18 completa & 2 min & 0,508 & 0,121 & 0,455 & 0,461 & 0,091 & 0,877 & 0,152 & 0,460 \\
-			ResNet-18 completa & 5,12 s & 0,492 & 0,129 & 0,582 & 0,442 & 0,110 & 0,899 & 0,186 & 0,456 \\
-			ResNet-34 & 2 min & 0,514 & 0,122 & 0,509 & 0,517 & 0,112 & 0,898 & 0,183 & 0,516 \\
-			ResNet-50 & 2 min & 0,536 & 0,137 & 0,455 & 0,511 & 0,100 & 0,887 & 0,163 & 0,505 \\
-			ResNet-18 + Transformer & 2 min & 0,493 & 0,134 & 0,291 & 0,703 & 0,105 & 0,893 & 0,154 & 0,660 \\
+			ResNet-18 mínima & ECG & 5,12 s & 0,562 & 0,160 & 0,455 & 0,654 & 0,135 & 0,910 & 0,208 & 0,632 \\
+			ResNet-18 reduzida & ECG & 2 min & 0,504 & 0,117 & 0,582 & 0,437 & 0,110 & 0,898 & 0,184 & 0,453 \\
+			ResNet-18 completa & ECG & 2 min & 0,508 & 0,121 & 0,455 & 0,461 & 0,091 & 0,877 & 0,152 & 0,460 \\
+			ResNet-18 completa & ECG & 5,12 s & 0,492 & 0,129 & 0,582 & 0,442 & 0,110 & 0,899 & 0,186 & 0,456 \\
+			ResNet-34 & ECG & 2 min & 0,514 & 0,122 & 0,509 & 0,517 & 0,112 & 0,898 & 0,183 & 0,516 \\
+			ResNet-50 & ECG & 2 min & 0,536 & 0,137 & 0,455 & 0,511 & 0,100 & 0,887 & 0,163 & 0,505 \\
+			ResNet-18 + Transformer & ECG & 2 min & 0,493 & 0,134 & 0,291 & 0,703 & 0,105 & 0,893 & 0,154 & 0,660 \\
 			\midrule
-			Convolucional, busca & 1 min & 0,556 & 0,189 & 0,509 & 0,552 & 0,119 & 0,904 & 0,193 & 0,547 \\
-			Residual, busca & 1 min & 0,496 & 0,122 & 0,455 & 0,565 & 0,111 & 0,897 & 0,178 & 0,553 \\
+			CNN (Optuna) & ECG & 1 min & 0,556 & 0,189 & 0,509 & 0,552 & 0,119 & 0,904 & 0,193 & 0,547 \\
+			ResNet (Optuna) & ECG & 1 min & 0,496 & 0,122 & 0,455 & 0,565 & 0,111 & 0,897 & 0,178 & 0,553 \\
 			\midrule
-			Concatenação, conjunto & 2 min & 0,516 & 0,141 & 0,418 & 0,548 & 0,099 & 0,888 & 0,160 & 0,534 \\
-			Concatenação, taxa reduzida & 2 min & 0,579 & 0,180 & 0,455 & 0,673 & 0,142 & 0,912 & 0,216 & 0,650 \\
-			Concatenação, congelado & 2 min & 0,577 & 0,146 & 0,727 & 0,424 & 0,131 & 0,929 & 0,222 & 0,456 \\
-			Concatenação, conjunto & 10 s & 0,491 & 0,113 & 0,400 & 0,569 & 0,100 & 0,889 & 0,159 & 0,551 \\
+			ResNet-18, conjunto & ECG + clínicos & 2 min & 0,516 & 0,141 & 0,418 & 0,548 & 0,099 & 0,888 & 0,160 & 0,534 \\
+			ResNet-18, taxa reduzida & ECG + clínicos & 2 min & 0,579 & 0,180 & 0,455 & 0,673 & 0,142 & 0,912 & 0,216 & 0,650 \\
+			ResNet-18, congelada & ECG + clínicos & 2 min & 0,577 & 0,146 & 0,727 & 0,424 & 0,131 & 0,929 & 0,222 & 0,456 \\
+			ResNet-18, conjunto & ECG + clínicos & 10 s & 0,491 & 0,113 & 0,400 & 0,569 & 0,100 & 0,889 & 0,159 & 0,551 \\
 			\bottomrule
 		\end{tabular}
 	}{
 	\Fonte{elaborado pelo autor (2026). Limiar de decisão escolhido pelo índice
 	de Youden na validação interna de cada partição. Referência sob
 	classificação aleatória: \gls{AUPRC} e \gls{VPP} iguais à prevalência
-	(0,106); \gls{VPN} igual a 0,894. Concatenação: ResNet-18 com variáveis clínicas concatenadas; conjunto: treinamento conjunto; congelado: extrator de sinal congelado.}
+	(0,106); \gls{VPN} igual a 0,894. Entrada: ECG = só o sinal bruto; ECG + clínicos = sinal bruto com as seis variáveis clínicas concatenadas (\autoref{subsec:met-fusao}). Optuna: hiperparâmetros escolhidos por busca bayesiana (\autoref{subsec:res-redes-optuna}). Acur.: acurácia. Conjunto: extrator e ramo clínico treinados juntos; taxa reduzida: extrator com taxa de aprendizado menor; congelada: extrator de sinal congelado.}
 }
 \end{table}
 
@@ -332,32 +332,32 @@ seis e dez sobreviventes foram classificados como de alto risco.
 	confusão agregada das redes neurais sobre os 517 pacientes}
 	\IBGEtab{}{
 		\footnotesize
-		\begin{tabular}{llccccc}
+		\begin{tabular}{lllccccc}
 			\toprule
-			Rede & Janela & Limiar & VP & FN & FP & VN \\
+			Rede & Entrada & Janela & Limiar & VP & FN & FP & VN \\
 			\midrule \midrule
-			CNN mínima & 2 min & 0,460 & 32 & 23 & 255 & 207 \\
-			CNN simples & 2 min & 0,409 & 20 & 35 & 164 & 298 \\
-			CNN média & 2 min & 0,357 & 17 & 38 & 144 & 318 \\
-			CNN mínima & 10 s & 0,348 & 38 & 17 & 302 & 160 \\
-			CNN simples & 10 s & 0,246 & 22 & 33 & 217 & 245 \\
-			CNN média & 10 s & 0,268 & 25 & 30 & 238 & 224 \\
+			CNN mínima & ECG & 2 min & 0,460 & 32 & 23 & 255 & 207 \\
+			CNN simples & ECG & 2 min & 0,409 & 20 & 35 & 164 & 298 \\
+			CNN média & ECG & 2 min & 0,357 & 17 & 38 & 144 & 318 \\
+			CNN mínima & ECG & 10 s & 0,348 & 38 & 17 & 302 & 160 \\
+			CNN simples & ECG & 10 s & 0,246 & 22 & 33 & 217 & 245 \\
+			CNN média & ECG & 10 s & 0,268 & 25 & 30 & 238 & 224 \\
 			\midrule
-			ResNet-18 mínima & 5,12 s & 0,489 & 25 & 30 & 160 & 302 \\
-			ResNet-18 reduzida & 2 min & 0,092 & 32 & 23 & 260 & 202 \\
-			ResNet-18 completa & 2 min & 0,058 & 25 & 30 & 249 & 213 \\
-			ResNet-18 completa & 5,12 s & 0,186 & 32 & 23 & 258 & 204 \\
-			ResNet-34 & 2 min & 0,154 & 28 & 27 & 223 & 239 \\
-			ResNet-50 & 2 min & 0,032 & 25 & 30 & 226 & 236 \\
-			ResNet-18 + Transformer & 2 min & 0,040 & 16 & 39 & 137 & 325 \\
+			ResNet-18 mínima & ECG & 5,12 s & 0,489 & 25 & 30 & 160 & 302 \\
+			ResNet-18 reduzida & ECG & 2 min & 0,092 & 32 & 23 & 260 & 202 \\
+			ResNet-18 completa & ECG & 2 min & 0,058 & 25 & 30 & 249 & 213 \\
+			ResNet-18 completa & ECG & 5,12 s & 0,186 & 32 & 23 & 258 & 204 \\
+			ResNet-34 & ECG & 2 min & 0,154 & 28 & 27 & 223 & 239 \\
+			ResNet-50 & ECG & 2 min & 0,032 & 25 & 30 & 226 & 236 \\
+			ResNet-18 + Transformer & ECG & 2 min & 0,040 & 16 & 39 & 137 & 325 \\
 			\midrule
-			Convolucional, busca & 1 min & -- & 28 & 27 & 207 & 255 \\
-			Residual, busca & 1 min & -- & 25 & 30 & 201 & 261 \\
+			CNN (Optuna) & ECG & 1 min & -- & 28 & 27 & 207 & 255 \\
+			ResNet (Optuna) & ECG & 1 min & -- & 25 & 30 & 201 & 261 \\
 			\midrule
-			Concatenação, conjunto & 2 min & 0,062 & 23 & 32 & 209 & 253 \\
-			Concatenação, taxa reduzida & 2 min & 0,489 & 25 & 30 & 151 & 311 \\
-			Concatenação, congelado & 2 min & 0,447 & 40 & 15 & 266 & 196 \\
-			Concatenação, conjunto & 10 s & 0,026 & 22 & 33 & 199 & 263 \\
+			ResNet-18, conjunto & ECG + clínicos & 2 min & 0,062 & 23 & 32 & 209 & 253 \\
+			ResNet-18, taxa reduzida & ECG + clínicos & 2 min & 0,489 & 25 & 30 & 151 & 311 \\
+			ResNet-18, congelada & ECG + clínicos & 2 min & 0,447 & 40 & 15 & 266 & 196 \\
+			ResNet-18, conjunto & ECG + clínicos & 10 s & 0,026 & 22 & 33 & 199 & 263 \\
 			\bottomrule
 		\end{tabular}
 	}{
@@ -366,7 +366,7 @@ seis e dez sobreviventes foram classificados como de alto risco.
 	classificados como de alto risco; VN: controles classificados como de
 	baixo risco. Total de 55 casos e 462 controles. Limiar: mediana dos
 	limiares de Youden das cinco partições; não registrado nas redes
-	configuradas por busca.}
+	configuradas pelo Optuna. Entrada e nomes das redes como na \autoref{tab:res-redes-limiar}.}
 }
 \end{table}
 
