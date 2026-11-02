@@ -1687,6 +1687,42 @@ conforme o que cada modelo precisa escolher:
 	procedimento do Cenário I, pois é uma rede neural.
 \end{itemize}
 
+A \autoref{tab:met-particoes} mostra a divisão dos pacientes em cada uma
+das cinco rodadas. Cada paciente aparece no conjunto de teste exatamente
+uma vez, de modo que os cinco conjuntos de teste somam os 517 pacientes e
+os 55 casos.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:met-particoes} Divisão dos pacientes em cada rodada
+		da validação cruzada}
+	\IBGEtab{}{
+		\begin{tabular}{ccccc}
+			\toprule
+			& & \multicolumn{1}{c}{Cenários II e III} & \multicolumn{2}{c}{Cenário I (redes neurais)} \\
+			\cmidrule(lr){3-3} \cmidrule(lr){4-5}
+			Rodada & Teste & Treinamento & Treinamento & Validação interna \\
+			\midrule \midrule
+			1 & 104 (11) & 413 (44) & 309 (33) & 104 (11) \\
+			2 & 104 (11) & 413 (44) & 309 (33) & 104 (11) \\
+			3 & 103 (11) & 414 (44) & 310 (33) & 104 (11) \\
+			4 & 103 (11) & 414 (44) & 310 (33) & 104 (11) \\
+			5 & 103 (11) & 414 (44) & 310 (33) & 104 (11) \\
+			\midrule
+			Total & 517 (55) & --- & --- & --- \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). Número de pacientes e, entre
+			parênteses, de casos de \gls{MSC}. Em cada rodada, o conjunto de
+			teste é uma das cinco partições, e as outras quatro (413 ou 414
+			pacientes) são usadas para o desenvolvimento do modelo: inteiras
+			como treinamento nos Cenários II e III, ou divididas em 75\,\% de
+			treinamento e 25\,\% de validação interna no Cenário I. O modelo é
+			reiniciado a cada rodada.}
+	}
+\end{table}
+
 Todos os scripts geram as partições pelo mesmo procedimento e com a mesma
 semente. Como cada script parte de uma tabela de dados própria --- o
 registro de Holter, os resumos dos marcadores ou as variáveis clínicas ---,
