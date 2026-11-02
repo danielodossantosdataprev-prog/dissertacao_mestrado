@@ -266,7 +266,7 @@ aplicação do limiar de decisão escolhido na validação interna.
 	pacientes}
 	\IBGEtab{}{
 		\footnotesize
-		\setlength{\tabcolsep}{4pt}
+		\setlength{\tabcolsep}{3pt}
 		\begin{tabular}{llcccccccc}
 			\toprule
 			Rede & Janela & \gls{AUC} & \gls{AUPRC} & Sens. & Espec. & \gls{VPP} & \gls{VPN} & F1 & Acurácia \\
@@ -289,17 +289,17 @@ aplicação do limiar de decisão escolhido na validação interna.
 			Convolucional, busca & 1 min & 0,556 & 0,189 & 0,509 & 0,552 & 0,119 & 0,904 & 0,193 & 0,547 \\
 			Residual, busca & 1 min & 0,496 & 0,122 & 0,455 & 0,565 & 0,111 & 0,897 & 0,178 & 0,553 \\
 			\midrule
-			Concatenação, treino conjunto & 2 min & 0,516 & 0,141 & 0,418 & 0,548 & 0,099 & 0,888 & 0,160 & 0,534 \\
+			Concatenação, conjunto & 2 min & 0,516 & 0,141 & 0,418 & 0,548 & 0,099 & 0,888 & 0,160 & 0,534 \\
 			Concatenação, taxa reduzida & 2 min & 0,579 & 0,180 & 0,455 & 0,673 & 0,142 & 0,912 & 0,216 & 0,650 \\
-			Concatenação, extrator congelado & 2 min & 0,577 & 0,146 & 0,727 & 0,424 & 0,131 & 0,929 & 0,222 & 0,456 \\
-			Concatenação, treino conjunto & 10 s & 0,491 & 0,113 & 0,400 & 0,569 & 0,100 & 0,889 & 0,159 & 0,551 \\
+			Concatenação, congelado & 2 min & 0,577 & 0,146 & 0,727 & 0,424 & 0,131 & 0,929 & 0,222 & 0,456 \\
+			Concatenação, conjunto & 10 s & 0,491 & 0,113 & 0,400 & 0,569 & 0,100 & 0,889 & 0,159 & 0,551 \\
 			\bottomrule
 		\end{tabular}
 	}{
 	\Fonte{elaborado pelo autor (2026). Limiar de decisão escolhido pelo índice
 	de Youden na validação interna de cada partição. Referência sob
 	classificação aleatória: \gls{AUPRC} e \gls{VPP} iguais à prevalência
-	(0,106); \gls{VPN} igual a 0,894.}
+	(0,106); \gls{VPN} igual a 0,894. Concatenação: ResNet-18 com variáveis clínicas concatenadas; conjunto: treinamento conjunto; congelado: extrator de sinal congelado.}
 }
 \end{table}
 
@@ -354,10 +354,10 @@ seis e dez sobreviventes foram classificados como de alto risco.
 			Convolucional, busca & 1 min & -- & 28 & 27 & 207 & 255 \\
 			Residual, busca & 1 min & -- & 25 & 30 & 201 & 261 \\
 			\midrule
-			Concatenação, treino conjunto & 2 min & 0,062 & 23 & 32 & 209 & 253 \\
+			Concatenação, conjunto & 2 min & 0,062 & 23 & 32 & 209 & 253 \\
 			Concatenação, taxa reduzida & 2 min & 0,489 & 25 & 30 & 151 & 311 \\
-			Concatenação, extrator congelado & 2 min & 0,447 & 40 & 15 & 266 & 196 \\
-			Concatenação, treino conjunto & 10 s & 0,026 & 22 & 33 & 199 & 263 \\
+			Concatenação, congelado & 2 min & 0,447 & 40 & 15 & 266 & 196 \\
+			Concatenação, conjunto & 10 s & 0,026 & 22 & 33 & 199 & 263 \\
 			\bottomrule
 		\end{tabular}
 	}{
