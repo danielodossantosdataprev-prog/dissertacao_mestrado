@@ -22,38 +22,89 @@ variáveis clínicas, isoladas e combinadas aos dados extraídos do \gls{ECG}.
 \section{Conclusões}
 \label{sec:conc-conclusoes}
 
+A \autoref{tab:conc-melhores} reúne os três melhores resultados de cada
+cenário, todos avaliados nos mesmos 517 pacientes, nas mesmas cinco
+partições e pela \gls{AUC} das predições fora da partição.
+
+\begin{table}[h!]
+	\captionsetup{width=16cm}
+	\Caption{\label{tab:conc-melhores} Os três melhores resultados de cada
+		cenário}
+	\IBGEtab{}{
+		\footnotesize
+		\begin{tabular}{clllc}
+			\toprule
+			Cenário & & Modelo & Entrada & \gls{AUC} [IC 95\,\%] \\
+			\midrule \midrule
+			I   & 1.º & ResNet-18 mínima                         & \gls{ECG} bruto, janelas de 5,12~s       & 0,562 [0,475--0,642] \\
+			    & 2.º & \gls{CNN} configurada pelo Optuna         & \gls{ECG} bruto, janelas de 1~min        & 0,556 [0,464--0,647] \\
+			    & 3.º & \gls{CNN} mínima                          & \gls{ECG} bruto, janelas de 10~s         & 0,554 [0,467--0,634] \\
+			\midrule
+			II  & 1.º & Logística L2                              & 2 marcadores pré-especificados$^{a}$ (30~s) & 0,647 [0,563--0,726] \\
+			    & 2.º & \gls{PCA} (4) + logística                 & 44 marcadores, protocolo A (5~min)       & 0,624 [0,535--0,708] \\
+			    & 3.º & \gls{PCA} (4) + logística                 & 64 resumos, protocolo B (30~s)           & 0,619 [0,537--0,700] \\
+			\midrule
+			III & 1.º & Logística L2                              & Exames do estudo$^{b}$                   & 0,738 [0,666--0,809] \\
+			    & 2.º & Logística L2                              & Clínicas + exames do estudo$^{b}$        & 0,733 [0,656--0,804] \\
+			    & 3.º & Logística L2                              & Clínicas + ecocardiograma                & 0,720 [0,640--0,789] \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). $^{a}$Desvio-padrão da frequência
+			cardíaca entre os segmentos e carga de ectopia, na derivação de
+			melhor qualidade; as versões calculadas nas derivações X, Y e Z
+			ficaram entre 0,635 e 0,660 e foram contadas como um único modelo.
+			Os resultados com marcadores escolhidos observando o desfecho de
+			toda a coorte, otimistas por construção, não foram considerados.
+			$^{b}$Ecocardiograma, Pro-BNP, laudo do \gls{ECG} de repouso e
+			medidas do Holter tabuladas pelo estudo. Referências: seis variáveis
+			clínicas, 0,661 [0,577--0,741]; acaso, 0,5.}
+	}
+\end{table}
+
+\FloatBarrier
+
 No Cenário I, as redes convolucionais, residuais e com atenção, treinadas
 diretamente sobre o sinal bruto para prever a \gls{MSC}, obtiveram \gls{AUC}
-entre 0,48 e 0,56, sem relação com a capacidade da rede, com a duração da
-janela ou com a arquitetura. A melhor delas, a ResNet-18 mínima, alcançou
-0,562 [0,475--0,642]. Quando a restrição ao ritmo sinusal foi removida, a
-mesma rede passou a discriminar acima do acaso, o que mostra que o
-procedimento aprende quando há um padrão reconhecível no sinal --- no caso, a
-fibrilação atrial --- e justifica a restrição adotada.
+entre 0,48 e 0,56. Os três melhores resultados vieram de redes pequenas ---
+a ResNet-18 mínima (0,562), a \gls{CNN} configurada pela busca de
+hiperparâmetros (0,556) e a \gls{CNN} mínima (0,554) ---, separados por
+menos de 0,01 e com intervalos de confiança que incluem o acaso. Não houve
+relação com a capacidade da rede, com a duração da janela ou com a
+arquitetura: redes maiores, como a ResNet-50 e a ResNet-18 com
+\textit{Transformer}, ficaram entre 0,49 e 0,54. Quando a restrição ao ritmo
+sinusal foi removida, a melhor rede passou a discriminar acima do acaso, o
+que mostra que o procedimento aprende quando há um padrão reconhecível no
+sinal --- no caso, a fibrilação atrial --- e justifica a restrição adotada.
 
 No Cenário II, os modelos baseados em parâmetros extraídos do \gls{ECG}
-obtiveram desempenho superior ao do Cenário I. Com 44 marcadores dos
-segmentos de 5~minutos, a \gls{AUC} ficou entre 0,585 e 0,624; com dois
-marcadores escolhidos com base na literatura --- a variação da frequência
-cardíaca ao longo do dia e a carga de ectopia ---, alcançou 0,647
-[0,563--0,726], 0,085 acima da melhor rede do Cenário I. Observou-se,
-portanto, ganho de desempenho, embora sem significância estatística, do uso
-de modelos baseados em parâmetros extraídos do \gls{ECG}, em especial os
-ligados à frequência cardíaca, em relação às redes neurais profundas que
-recebem como entrada o sinal puro. O resultado também mostrou que escolher
-poucos marcadores observando o desfecho de toda a coorte eleva a \gls{AUC}
-em cerca de 0,05, otimismo que desaparece quando a escolha é feita apenas no
-treinamento.
+obtiveram desempenho superior ao do Cenário I nos três primeiros lugares. O
+melhor resultado veio de apenas dois marcadores escolhidos de antemão com
+base na literatura --- a variação da frequência cardíaca ao longo do dia e a
+carga de ectopia ---, com \gls{AUC} de 0,647 [0,563--0,726], 0,085 acima da
+melhor rede do Cenário I. Os dois seguintes reduziram os marcadores a
+quatro componentes principais: 0,624 com os 44 marcadores dos segmentos de
+5~minutos e 0,619 com os resumos dos segmentos de 30~segundos. Os três
+superam a melhor rede, mas o ganho não atingiu significância estatística.
+Os resultados indicam que a informação está concentrada em poucos
+marcadores ligados à frequência cardíaca: quando muitos marcadores entram
+no modelo, ou quando são selecionados sem acesso ao desfecho dos pacientes
+de teste, a \gls{AUC} cai para perto de 0,58. Escolher poucos marcadores
+observando o desfecho de toda a coorte eleva a \gls{AUC} em cerca de 0,05,
+otimismo que desaparece quando a escolha é feita apenas no treinamento.
 
-No Cenário III, as seis variáveis clínicas previram a \gls{MSC} com
-\gls{AUC} de 0,661 [0,577--0,741]. Na comparação entre o modelo clínico e o
+No Cenário III, os três melhores resultados de todo o trabalho vieram dos
+exames do estudo: sozinhos, alcançaram 0,738 [0,666--0,809]; somados às
+seis variáveis clínicas, 0,733 [0,656--0,804]; e, considerando apenas o
+ecocardiograma somado às variáveis clínicas, 0,720 [0,640--0,789]. As seis
+variáveis clínicas sozinhas obtiveram 0,661 [0,577--0,741], valor superior
+ao de todas as redes do Cenário I. Na comparação entre o modelo clínico e o
 modelo clínico somado ao \gls{ECG}, os marcadores acrescentaram um ganho
 pequeno e consistente --- 0,681 [0,604--0,756] com os marcadores do
 protocolo A e entre 0,679 e 0,683 com os dois marcadores pré-especificados
----, que não atingiu significância estatística. Somadas ao sinal bruto, nas redes com concatenação, as variáveis clínicas tiveram desempenho inferior ao que
-obtiveram sozinhas (no máximo 0,579). O melhor modelo do trabalho combinou
-as variáveis clínicas com os exames do estudo, como o ecocardiograma e o
-Pro-BNP, e alcançou 0,733 [0,656--0,804].
+---, que não atingiu significância estatística. Somadas ao sinal bruto, nas
+redes com concatenação, as variáveis clínicas tiveram desempenho inferior
+ao que obtiveram sozinhas (no máximo 0,579).
 
 Em síntese, as técnicas de processamento do \gls{ECG} com extração de
 características produziram preditores de \gls{MSC} superiores aos do
@@ -108,7 +159,7 @@ que tende a superestimar a discriminação.
 			MUSIC, ritmo sinusal; 517 pacientes, 55 mortes súbitas em 4 anos                                 &
 			Sinal bruto das três derivações; marcadores extraídos do \gls{ECG}; variáveis clínicas e exames &
 			Três cenários: redes profundas sobre o sinal; marcadores + aprendizado de máquina; clínicas e combinações; validação cruzada em 5 partições &
-			\gls{AUC} 0,48--0,56 (redes); 0,647 (2 marcadores); 0,661 (clínicas); 0,681 (clínicas + marcadores); 0,733 (clínicas + exames)                                                                                                       \\
+			Melhores \gls{AUC}: 0,562 (I, redes); 0,647 (II, 2 marcadores); 0,738 (III, exames); 0,681 (clínicas + marcadores)                                                                                                       \\
 			\hline
 		\end{tabular}
 	}{

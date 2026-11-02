@@ -141,46 +141,10 @@ discriminação útil.
 \section{Comparação e posicionamento deste trabalho}
 \label{sec:trab-comparacao}
 
-O \autoref{qua:trab-comparacao} resume os três trabalhos. A comparação com
-os resultados desta dissertação é apresentada nas conclusões
-(\autoref{qua:conc-comparacao}).
+A comparação dos resultados desses trabalhos com os desta dissertação é
+apresentada nas conclusões (\autoref{sec:conc-comparacao}).
 
-\begin{quadro}[h!]
-	\centering
-	\Caption{\label{qua:trab-comparacao} Comparação entre os trabalhos
-		relacionados}
-	\UFCqua{}{
-		\footnotesize
-		\begin{tabular}{|p{2.3cm}|p{2.6cm}|p{2.9cm}|p{2.9cm}|p{3.1cm}|}
-			\hline
-			\textbf{Trabalho}                                                                                & \textbf{Coorte}              & \textbf{Entrada} &
-			\textbf{Método e validação}                                                                      & \textbf{Resultado principal}                      \\
-			\hline
-			\citeonline{ramirez2017sudden}                                                                   &
-			MUSIC, ritmo sinusal; 597 pacientes, 49 mortes súbitas                                           &
-			Marcadores do Holter (repolarização, turbulência) e clínicos                                     &
-			Cox com seleção regressiva; sem validação separada                                               &
-			Razão de risco 13,8 (alto contra baixo risco); \gls{AUC} 0,73 na fração de ejeção reduzida                                                           \\
-			\hline
-			\citeonline{swee2026multimodal}                                                                  &
-			MUSIC, sem restrição de ritmo; 746 pacientes                                                     &
-			Marcadores de segmentos de 30~s e clínicos                                                       &
-			Aprendizado de máquina; validação cruzada                                                        &
-			\gls{AUC} 0,682 (apenas \gls{ECG}, média entre partições)                                                                                            \\
-			\hline
-			\citeonline{kim2025deep}                                                                         &
-			Coreia; infarto ou insuficiência cardíaca; 1\,108 pacientes, 70 eventos                          &
-			Holter de 24~h, derivação V1                                                                     &
-			Codificador pré-treinado e congelado; validação cruzada em 5 partições                           &
-			\gls{AUC} 0,74 na coorte completa; 0,60 no subgrupo de 223 pacientes com insuficiência cardíaca                                                                                             \\
-			\hline
-\end{tabular}
-	}{
-		\Fonte{elaborado pelo autor.}
-	}
-\end{quadro}
-
-A comparação revela um padrão. Os desempenhos mais altos foram obtidos em
+Os três trabalhos revelam um padrão. Os desempenhos mais altos foram obtidos em
 condições que favorecem a discriminação: avaliação nos mesmos dados usados
 para selecionar as variáveis \cite{ramirez2017sudden}, coortes que incluem
 ritmos não sinusais \cite{swee2026multimodal} ou populações em que
