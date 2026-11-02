@@ -1464,8 +1464,9 @@ marcador isoladamente difere entre casos e controles, e uma etapa de
 modelagem, que verifica se os marcadores, em conjunto, discriminam os
 grupos e se acrescentam informação às variáveis clínicas. Todos os modelos
 seguem o protocolo de validação cruzada descrito na
-\autoref{subsec:fund-validacao-cruzada}, com as mesmas cinco partições
-estratificadas das redes neurais, e são avaliados pela \gls{AUC} das
+\autoref{subsec:fund-validacao-cruzada}, com cinco partições
+estratificadas geradas como descrito na \autoref{subsec:met-particionamento},
+e são avaliados pela \gls{AUC} das
 predições fora da partição, com intervalo de confiança por
 \textit{bootstrap} com $B^{*} = 2\,000$ reamostragens.
 
@@ -1586,7 +1587,8 @@ clínicas.
 O terceiro cenário avalia, para fins de comparação e análise, modelos
 baseados nas variáveis clínicas descritas na \autoref{subsec:met-clinicas}
 e a combinação dessas variáveis com os dados extraídos do \gls{ECG}. Todos
-os modelos usam as mesmas cinco partições dos cenários anteriores.
+os modelos seguem a validação cruzada em cinco partições descrita na
+\autoref{subsec:met-particionamento}.
 
 \subsection{Modelos baseados em variáveis clínicas}
 \label{subsec:met-modelos-clinicos}
@@ -1654,17 +1656,49 @@ abordagens, e não a escolhas de avaliação.
 \subsection{Particionamento}
 \label{subsec:met-particionamento}
 
-A coorte foi dividida em cinco partições estratificadas pelo desfecho, com
-divisão no nível do paciente: cada indivíduo pertence a uma única partição, e
-as janelas são extraídas apenas após a divisão. Cada partição contém 103 ou
-104 pacientes, com 11 casos.
+Os três cenários usam validação cruzada estratificada em cinco partições
+(\autoref{subsec:fund-validacao-cruzada}). As partições foram geradas pela
+classe \texttt{StratifiedKFold} da biblioteca scikit-learn
+\cite{pedregosa2011scikit}, com embaralhamento e semente aleatória fixa
+(42), estratificadas pelo desfecho e no nível do paciente: cada indivíduo
+pertence a uma única partição, e as janelas ou segmentos do seu registro só
+são extraídos depois da divisão. Cada partição contém 103 ou 104 pacientes,
+com 11 casos. Em cada uma das cinco rodadas, uma partição é o conjunto de
+teste e as outras quatro, com 413 ou 414 pacientes e 44 casos, são usadas
+para o desenvolvimento do modelo.
 
-Em cada rodada da validação cruzada, uma partição constitui o conjunto de
-teste e as quatro restantes, com 413 ou 414 pacientes, são subdivididas: 75\,\%
-compõem o conjunto de treinamento e 25\,\% a validação interna, também com
-estratificação pelo desfecho. A validação interna define a época de parada do
-treinamento e o limiar de decisão, que é então aplicado ao conjunto de teste
-sem ajuste adicional.
+O uso das quatro partições de desenvolvimento difere entre os cenários,
+conforme o que cada modelo precisa escolher:
+
+\begin{itemize}
+	\item \textit{Cenário I (redes neurais)}: as quatro partições são
+	subdivididas, também com estratificação, em 75\,\% para o treinamento e
+	25\,\% para a validação interna. A validação interna define a época de
+	parada e o limiar de decisão, aplicados ao teste sem ajuste adicional
+	(\autoref{subsec:met-protocolo-redes});
+	\item \textit{Cenários II e III (aprendizado de máquina clássico)}: as
+	quatro partições inteiras formam o treinamento. Esses modelos não têm
+	épocas a escolher, e seus hiperparâmetros foram fixados de antemão; o
+	limiar de decisão, quando reportado, é obtido pelo índice de Youden nas
+	predições do próprio treinamento. Quando há seleção de variáveis ou
+	escolha de hiperparâmetros a partir dos dados, ela é refeita dentro do
+	treinamento de cada partição, sem acesso ao teste;
+	\item \textit{Rede com concatenação (Cenário III)}: segue o
+	procedimento do Cenário I, pois é uma rede neural.
+\end{itemize}
+
+Todos os scripts geram as partições pelo mesmo procedimento e com a mesma
+semente. Como cada script parte de uma tabela de dados própria --- o
+registro de Holter, os resumos dos marcadores ou as variáveis clínicas ---,
+com os pacientes em ordem diferente, a composição de cada partição pode
+variar de um cenário para outro, embora o número de pacientes e de casos
+por partição seja o mesmo. Por isso, as comparações pareadas, em que a
+diferença de \gls{AUC} é estimada paciente a paciente
+(\autoref{eq:delta-auc}), foram feitas apenas entre modelos avaliados no
+mesmo script e, portanto, nas mesmas partições --- por exemplo, o modelo
+clínico e o modelo clínico com marcadores. As comparações entre cenários
+são feitas pelos valores de \gls{AUC} geral e seus intervalos de confiança,
+sem teste pareado.
 
 \subsection{Validação e agregação por paciente}
 \label{subsec:config-avaliacao}
