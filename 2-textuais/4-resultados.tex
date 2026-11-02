@@ -391,6 +391,45 @@ desempenho superior.
 \label{sec:res-cenario2}
 \label{sec:res-marcadores}
 
+No segundo cenário, o modelo não recebe o sinal do Holter, mas medidas
+calculadas a partir dele --- os marcadores eletrocardiográficos da
+\autoref{tab:fund-biomarcadores}, como a frequência cardíaca, a
+variabilidade da frequência cardíaca, a contagem de batimentos ectópicos e
+as durações do QRS e do QT. Como o registro tem 24~horas, os marcadores não
+são calculados sobre o registro inteiro, mas sobre trechos curtos dele, os
+\textit{segmentos}. A forma de escolher esses trechos foi chamada de
+\textit{protocolo}, e foram usados dois (\autoref{tab:met-protocolos}):
+
+\begin{itemize}
+	\item \textit{protocolo A}: um segmento de 5~minutos no início de cada
+	hora, cerca de 21 por paciente. Segmentos longos permitem calcular as
+	medidas espectrais (potências VLF, LF e HF) e a entropia amostral, que
+	não são confiáveis em trechos curtos;
+	\item \textit{protocolo B}: um segmento de 30~segundos a cada 2~minutos,
+	cerca de 636 por paciente, seguindo o desenho de
+	\citeonline{swee2026multimodal}. Segmentos curtos e frequentes
+	acompanham o ritmo ao longo do dia e contam os batimentos ectópicos com
+	mais detalhe, mas não permitem as medidas espectrais.
+\end{itemize}
+
+\noindent
+Em ambos, cada marcador é calculado em cada segmento e, em seguida, os
+segmentos de um paciente são resumidos em uma única linha --- por exemplo,
+a média e o desvio-padrão da frequência cardíaca entre os segmentos ---,
+porque o desfecho pertence ao paciente, e não ao segmento
+(\autoref{subsec:fund-agregacao}). São esses resumos por paciente que
+entram nos testes estatísticos e nos modelos.
+
+Os resultados de cada protocolo seguem a mesma ordem. Primeiro, cada
+marcador é comparado isoladamente entre casos e controles, para verificar
+se algum deles, sozinho, difere entre os grupos. Depois, os marcadores são
+combinados em modelos de aprendizado de máquina clássico
+(\autoref{subsec:met-modelos-tabulares}), avaliados pela mesma validação
+cruzada por paciente do Cenário~I. Por fim, a
+\autoref{subsec:res-pre-especificados} avalia poucos marcadores escolhidos
+de antemão pela literatura, e a \autoref{subsec:res-marcadores-sintese}
+reúne os resultados.
+
 \subsection{Protocolo A: segmentos de 5 minutos}
 \label{subsec:res-protocolo-a}
 
