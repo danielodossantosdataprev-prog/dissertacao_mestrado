@@ -82,7 +82,9 @@ objetivo de prever morte súbita e morte por falência de bomba a partir da
 integração de marcadores do Holter com variáveis clínicas. Em vez de
 marcadores calculados sobre o registro inteiro, os autores extraíram
 marcadores de segmentos de 30~segundos não sobrepostos, com detecção dos
-picos R na derivação Y, e treinaram modelos de aprendizado de máquina sobre
+picos R na derivação Y, e processaram a sequência de segmentos de cada
+paciente com uma rede convolucional temporal em um arcabouço de aprendizado
+de múltiplas instâncias, além de modelos de aprendizado de máquina sobre
 essas representações. O desenho desses segmentos foi adotado no
 protocolo~B desta dissertação (\autoref{subsec:met-protocolo-b}).
 

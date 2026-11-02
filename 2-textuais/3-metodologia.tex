@@ -1563,7 +1563,11 @@ quando menos de 80\,\% de seus intervalos RR foram classificados como
 maior fração de intervalos \gls{NN}. Para evitar a seleção de variáveis sobre
 os dados, definiu-se, com base na literatura, um modelo com dois marcadores:
 o desvio-padrão da frequência cardíaca média entre os segmentos, que mede sua
-variação ao longo do dia, e a carga de ectopia. O modelo foi ajustado separadamente para cada versão
+variação ao longo do dia, e a carga de ectopia. Definiu-se também um
+conjunto de quatro marcadores, que acrescenta aos dois anteriores o número
+médio de dupletes e a maior pausa média entre os segmentos, outros
+indicadores de instabilidade do ritmo, usado na replicação da
+\autoref{tab:res-replicacao-swee}. O modelo foi ajustado separadamente para cada versão
 dos marcadores --- derivação X, Y, Z e derivação de melhor qualidade ---,
 sempre com os dois marcadores de uma única derivação, por regressão
 logística com penalização L2, sem seleção, sozinho e com as variáveis

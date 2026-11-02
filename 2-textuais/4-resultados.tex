@@ -824,6 +824,68 @@ principal deste trabalho é a \gls{AUC} das predições agrupadas. Na mesma
 métrica, a média entre partições, os modelos por segmento deste trabalho
 alcançaram entre 0,537 e 0,576.
 
+Para separar o efeito da coorte do efeito do método, a extração foi
+repetida nas condições de \citeonline{swee2026multimodal}: os mesmos
+critérios de seleção daquele trabalho --- Holter disponível, desfecho de
+sobrevivência, morte súbita ou morte por falência de bomba, ausência de
+dispositivo implantável prévio e de transplante ---, que resultam em 746
+pacientes e 74 mortes súbitas, sem restrição de ritmo; apenas a derivação
+Y; segmentos de 30~segundos contíguos, cerca de 2\,500 por paciente (1\,884\,569
+no total); e filtro passa-faixa Butterworth de quarta ordem do NeuroKit2.
+Os marcadores foram calculados pelo mesmo extrator do protocolo~B e
+resumidos por paciente pela média e pelo desvio-padrão, e os modelos foram
+os mesmos deste trabalho. A \autoref{tab:res-replicacao-swee} apresenta os
+resultados na métrica de \citeonline{swee2026multimodal}, a média e o
+desvio-padrão da \gls{AUC} entre as cinco partições.
+
+\begin{table}[h!]
+	\captionsetup{width=15cm}
+	\Caption{\label{tab:res-replicacao-swee} Replicação nas condições de
+		\citeonline{swee2026multimodal}: 746 pacientes, derivação Y,
+		segmentos de 30 segundos contíguos}
+	\IBGEtab{}{
+		\begin{tabular}{llcc}
+			\toprule
+			Variáveis                              & Modelo                    & \gls{AUC} partições & \gls{AUC} fora da partição [IC 95\,\%] \\
+			\midrule \midrule
+			44 marcadores                          & Logística L1              & 0,605 $\pm$ 0,088   & 0,587 [0,516--0,657] \\
+			44 marcadores                          & Logística L2              & 0,611 $\pm$ 0,094   & 0,602 [0,534--0,665] \\
+			44 marcadores                          & \gls{PCA} (4) + logística & 0,580 $\pm$ 0,099   & 0,571 [0,498--0,644] \\
+			44 marcadores                          & Floresta aleatória        & 0,566 $\pm$ 0,113   & 0,559 [0,488--0,633] \\
+			4 marcadores pré-especificados$^{a}$   & Logística L2              & 0,659 $\pm$ 0,078   & 0,657 [0,595--0,719] \\
+			\midrule
+			Seis variáveis clínicas                & Logística L2              & 0,659 $\pm$ 0,082   & 0,657 [0,592--0,724] \\
+			Clínicas + 4 marcadores$^{a}$          & Logística L2              & 0,694 $\pm$ 0,102   & 0,683 [0,618--0,748] \\
+			\midrule
+			\multicolumn{2}{l}{\citeonline{swee2026multimodal}, apenas \gls{ECG}} & 0,682 $\pm$ 0,030 & --- \\
+			\bottomrule
+		\end{tabular}
+	}{
+		\Fonte{elaborado pelo autor (2026). $^{a}$Desvio-padrão da frequência
+			cardíaca entre os segmentos, carga de ectopia, número médio de
+			dupletes e maior pausa média, definidos de antemão
+			(\autoref{subsec:met-pre-especificados}).}
+	}
+\end{table}
+
+Os resultados reproduzem, na coorte de \citeonline{swee2026multimodal}, o
+quadro observado nos 517 pacientes em ritmo sinusal. Com os 44 marcadores,
+a \gls{AUC} média entre partições ficou entre 0,566 e 0,611, e o melhor
+modelo apenas de \gls{ECG} foi o de quatro marcadores pré-especificados,
+com 0,659 $\pm$ 0,078, cerca de 0,02 abaixo do valor de referência.
+Segmentos contíguos e o filtro de quarta ordem não alteraram o desempenho:
+a mesma análise com um segmento a cada 2~minutos e filtro de terceira ordem
+produziu 0,606 $\pm$ 0,112 com logística L1 e 0,656 $\pm$ 0,090 com os
+quatro marcadores. A diferença restante não parece, portanto, decorrer da
+extração dos marcadores, mas do modelo: \citeonline{swee2026multimodal}
+não resumem os segmentos por paciente, e sim processam a sequência de
+segmentos das 24~horas com uma rede convolucional temporal em um arcabouço
+de aprendizado de múltiplas instâncias, que pode capturar a evolução dos
+marcadores ao longo do registro. Outra diferença está na dispersão entre
+partições, de $\pm$0,030 naquele trabalho contra $\pm$0,08 a $\pm$0,11
+aqui, o que sugere um esquema de validação diferente, não descrito em
+detalhe no material disponível.
+
 
 % ==============================================================================
 % RESULTADOS — Redes neurais sobre o sinal de Holter

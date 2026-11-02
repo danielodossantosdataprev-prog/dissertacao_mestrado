@@ -116,10 +116,14 @@ os exames dos pacientes.
 \label{sec:conc-comparacao}
 
 O \autoref{qua:conc-comparacao} compara os resultados deste trabalho com os
-dos trabalhos relacionados. O resultado das variáveis clínicas somadas aos
-marcadores (0,681) é próximo ao relatado por \citeonline{swee2026multimodal}
-na mesma base (0,682), embora aquele trabalho inclua pacientes com
-fibrilação atrial e reporte a média entre partições. O desempenho das redes
+dos trabalhos relacionados. \citeonline{swee2026multimodal} relatam 0,682
+$\pm$ 0,030 apenas com o \gls{ECG}, na mesma base. Repetida nas condições
+daquele trabalho --- 746 pacientes sem restrição de ritmo, derivação Y e
+segmentos de 30~segundos contíguos ---, a abordagem desta dissertação
+alcançou 0,659 $\pm$ 0,078 com quatro marcadores pré-especificados e 0,605
+$\pm$ 0,088 com todos os marcadores, na mesma métrica. A diferença
+remanescente é atribuída ao modelo sequencial empregado por aqueles
+autores, e não à extração dos marcadores. O desempenho das redes
 treinadas sobre o sinal é coerente com o obtido por \citeonline{kim2025deep}
 no subgrupo de insuficiência cardíaca (0,60), mesmo com um codificador
 pré-treinado em grandes bases. O valor de 0,73 de
@@ -144,9 +148,9 @@ que tende a superestimar a discriminação.
 			Razão de risco 13,8 (alto contra baixo risco); \gls{AUC} 0,73 na fração de ejeção reduzida                                                           \\
 			\hline
 			\citeonline{swee2026multimodal}                                                                  &
-			MUSIC, sem restrição de ritmo; 746 pacientes                                                     &
+			MUSIC, sem restrição de ritmo; 746 pacientes, 74 mortes súbitas                                  &
 			Marcadores de segmentos de 30~s e clínicos                                                       &
-			Aprendizado de máquina; validação cruzada                                                        &
+			Rede convolucional temporal sobre a sequência de segmentos (múltiplas instâncias); validação cruzada &
 			\gls{AUC} 0,682 (apenas \gls{ECG}, média entre partições)                                                                                            \\
 			\hline
 			\citeonline{kim2025deep}                                                                         &
@@ -185,6 +189,15 @@ vivos com seguimento mais curto.
 \label{sec:conc-futuros}
 
 \begin{enumerate}
+    \item \textbf{Modelos sequenciais sobre os marcadores dos segmentos.}
+          Em vez de resumir os segmentos de cada paciente pela média e pelo
+          desvio-padrão, modelar a sequência de marcadores das 24~horas com
+          redes temporais, como a rede convolucional temporal em aprendizado
+          de múltiplas instâncias de \citeonline{swee2026multimodal}. A
+          replicação nas condições daquele trabalho
+          (\autoref{tab:res-replicacao-swee}) indicou que a diferença de
+          desempenho está no modelo, e não na extração dos marcadores.
+
     \item \textbf{Representações pré-treinadas e orientadas por atributos
           clínicos.} Treinar o extrator de características do sinal em bases
           grandes de \gls{ECG}, ou orientá-lo a prever atributos clínicos
