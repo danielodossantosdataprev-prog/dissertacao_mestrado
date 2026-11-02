@@ -551,23 +551,43 @@ representam o desempenho esperado em pacientes novos.
 \subsection{Protocolo B: segmentos de 30 segundos}
 \label{subsec:res-protocolo-b}
 
-\subsubsection{Pseudorreplicação}
+\subsubsection{Comparação dos marcadores: segmento ou paciente como unidade}
+\label{subsubsec:res-b-unidade}
 
-A pseudorreplicação consiste em tratar segmentos de um mesmo paciente como
-observações independentes (\autoref{subsec:fund-agregacao}). A revisão
-estatística no nível do segmento foi realizada sobre a primeira
-versão da extração, anterior à correção pelos intervalos NN. A
-\autoref{tab:res-b-pseudorreplicacao} mostra como a unidade de análise
-altera as conclusões. Tratando os 328\,807 segmentos como observações
-independentes, 22 dos 24 marcadores diferiram entre casos e controles com
-$p < 0{,}05$. No nível do paciente, apenas dois --- a razão SD1/SD2 e a
-amplitude da derivação Y --- atingiram esse limiar, e nenhum permaneceu
-significativo após as correções para comparações múltiplas.
+Antes de qualquer modelo, verificou-se, marcador a marcador, se os valores
+dos casos diferem dos valores dos controles. Para isso, é preciso decidir o
+que conta como uma observação. No protocolo B, cada paciente tem cerca de
+636 segmentos de 30~segundos, e há duas formas de fazer a comparação:
+
+\begin{itemize}
+	\item \textit{por segmento}: cada um dos 328\,807 segmentos entra como
+	uma observação, com o rótulo do seu paciente;
+	\item \textit{por paciente}: os segmentos de cada paciente são primeiro
+	resumidos pela média, e a comparação é feita entre os 55 valores dos
+	casos e os 462 valores dos controles.
+\end{itemize}
+
+\noindent
+A forma correta é a segunda. Os segmentos de um mesmo paciente não são
+observações independentes: repetem a mesma pessoa, o mesmo coração e o
+mesmo desfecho. Contá-los separadamente equivale a fingir que a amostra tem
+328\,807 pacientes, quando tem 517. Esse erro é chamado de
+\textit{pseudorreplicação} (\autoref{subsec:fund-agregacao}).
+
+O efeito do erro aparece no valor-$p$. O valor-$p$ indica quão provável
+seria observar uma diferença do tamanho encontrada se casos e controles
+fossem, na verdade, iguais; abaixo de 0,05, a diferença é considerada
+significativa. Como o valor-$p$ diminui à medida que o número de observações
+cresce, multiplicar artificialmente as observações torna significativas
+diferenças pequenas demais para ter valor prático. A
+\autoref{tab:res-b-pseudorreplicacao} mostra o resultado, obtido na primeira
+versão da extração (anterior à correção pelos intervalos NN), com o teste de
+Mann-Whitney.
 
 \begin{table}[h!]
 	\captionsetup{width=13cm}
-	\Caption{\label{tab:res-b-pseudorreplicacao} Marcadores significativos
-		segundo a unidade de análise (24 marcadores)}
+	\Caption{\label{tab:res-b-pseudorreplicacao} Número de marcadores, entre 24, com diferença
+		significativa entre casos e controles segundo a unidade de análise}
 	\IBGEtab{}{
 		\begin{tabular}{lc}
 			\toprule
@@ -580,28 +600,57 @@ significativo após as correções para comparações múltiplas.
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). Teste de Mann-Whitney. Por segmento: cada segmento de 30~s conta como uma observação (análise incorreta, incluída para comparação). Por paciente: cada paciente conta uma vez, com a média de seus segmentos. Benjamini-Hochberg e Bonferroni: correções para os 24 testes feitos ao mesmo tempo.}
 	}
 \end{table}
 
-O contraste ilustra o problema discutido na
-\autoref{subsec:fund-agregacao}. Com centenas de segmentos por paciente,
-diferenças mínimas entre os grupos tornam-se estatisticamente
-significativas, embora o número real de unidades independentes seja 517.
-Foram identificados ainda 26 pares de marcadores redundantes, entre os
-quais o RMSSD e o SD1 ($\rho = 0{,}97$), coerentemente com a relação
-algébrica entre ambos (\autoref{eq:poincare}).
+Contando os segmentos como observações, 22 dos 24 marcadores pareceriam
+diferentes entre casos e controles. Contando cada paciente uma única vez,
+apenas dois --- a razão SD1/SD2 e a amplitude da derivação Y --- tiveram
+$p < 0{,}05$. Como 24 testes foram feitos ao mesmo tempo, espera-se que
+cerca de um deles fique abaixo de 0,05 apenas por acaso; as correções de
+Benjamini-Hochberg e de Bonferroni ajustam os valores-$p$ para isso, e, após
+elas, nenhum marcador permaneceu significativo.
 
-\subsubsection{Modelos treinados por segmento}
+A conclusão é que, no nível correto de análise, nenhum marcador dos
+segmentos de 30~segundos separa, sozinho, os pacientes que sofreram morte
+súbita dos demais; a aparente significância da análise por segmento é
+consequência do número inflado de observações. A mesma análise identificou
+26 pares de marcadores redundantes, isto é, que medem praticamente a mesma
+coisa, como o RMSSD e o SD1 (correlação de 0,97), o que é esperado pela
+relação algébrica entre ambos (\autoref{eq:poincare}).
 
-Os modelos treinados diretamente sobre os segmentos, com as probabilidades
-agregadas por paciente, permaneceram próximos do acaso
-(\autoref{tab:res-b-segmento}). Nenhum intervalo de confiança excluiu 0,5.
+\subsubsection{Modelos treinados sobre cada segmento}
+\label{subsubsec:res-b-segmento}
+
+Há também duas formas de treinar um modelo com os segmentos. Na primeira,
+apresentada adiante, cada paciente é resumido em uma única linha de
+marcadores e o modelo aprende com 517 linhas. Na segunda, apresentada aqui,
+o modelo aprende diretamente com os segmentos: cada segmento de 30~segundos
+é uma linha de treinamento, com os seus 24 marcadores e o rótulo do
+paciente a que pertence (1 para morte súbita, 0 para os demais). Assim, os
+cerca de 636 segmentos de um paciente com morte súbita são todos rotulados
+como 1, e os de um sobrevivente, todos como 0.
+
+Na avaliação, o modelo atribui uma probabilidade de morte súbita a cada
+segmento do paciente de teste, e a probabilidade do paciente é a média das
+probabilidades de seus segmentos (\autoref{eq:agregacao-paciente}). A
+\gls{AUC} é então calculada sobre os 517 pacientes, e não sobre os
+segmentos, para não repetir o problema descrito na seção anterior. A
+divisão em partições também é feita por paciente, de modo que nenhum
+segmento de um paciente de teste é visto no treinamento.
+
+Os resultados estão na \autoref{tab:res-b-segmento}. Os quatro modelos
+ficaram entre 0,53 e 0,56, e todos os intervalos de confiança incluem 0,5,
+o valor do acaso. Treinar com centenas de milhares de segmentos, portanto,
+não fez os marcadores de 30~segundos distinguirem os pacientes de alto
+risco: o número de exemplos aumenta, mas a informação sobre o desfecho
+continua sendo a dos 517 pacientes.
 
 \begin{table}[h!]
 	\captionsetup{width=13cm}
-	\Caption{\label{tab:res-b-segmento} Modelos treinados por segmento de
-		30 segundos e avaliados por paciente}
+	\Caption{\label{tab:res-b-segmento} Modelos treinados sobre cada
+		segmento de 30 segundos e avaliados por paciente}
 	\IBGEtab{}{
 		\begin{tabular}{lcc}
 			\toprule
@@ -614,7 +663,7 @@ agregadas por paciente, permaneceram próximos do acaso
 			\bottomrule
 		\end{tabular}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). Cada segmento é uma linha de treinamento, com o rótulo do seu paciente; a probabilidade do paciente é a média das probabilidades de seus segmentos, e a \gls{AUC} é calculada sobre os 517 pacientes. PCA (6): seis componentes principais.}
 	}
 \end{table}
 
