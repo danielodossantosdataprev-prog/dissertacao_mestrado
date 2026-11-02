@@ -691,9 +691,62 @@ Duas variantes de bloco foram empregadas neste trabalho, ilustradas na
 	\captionsetup{width=16cm}
 	\Caption{\label{fig:blocos-residuais} Blocos residuais básico (tipo a) e de gargalo (tipo b)}
 	\UFCfig{}{
-		\fbox{\includegraphics[width=16cm]{figuras/arquitetura_resnet.jpg}}
+		\begin{tikzpicture}[
+				font=\footnotesize,
+				cv/.style={draw, rounded corners=2pt, fill=blue!8, minimum width=3.6cm, minimum height=0.55cm, align=center},
+				bn/.style={draw, rounded corners=2pt, fill=green!8, minimum width=3.6cm, minimum height=0.45cm},
+				re/.style={draw, rounded corners=2pt, fill=orange!12, minimum width=3.6cm, minimum height=0.45cm},
+				soma/.style={draw, circle, inner sep=1pt, font=\normalsize},
+				seta/.style={-{Stealth[length=2mm]}, thick},
+				node distance=0.12cm
+			]
+			% ---- (a) bloco basico ----
+			\node[font=\small\bfseries] (ta) {(a) Bloco básico ($E = 1$)};
+			\node[below=0.35cm of ta] (xa) {$\mathbf{x}$};
+			\node[cv, below=0.35cm of xa] (a1) {Convolução, núcleo 3};
+			\node[bn, below=of a1] (a2) {Normalização em lote};
+			\node[re, below=of a2] (a3) {ReLU};
+			\node[cv, below=0.3cm of a3] (a4) {Convolução, núcleo 3};
+			\node[bn, below=of a4] (a5) {Normalização em lote};
+			\node[soma, below=0.4cm of a5] (sa) {$+$};
+			\node[re, below=0.3cm of sa] (a6) {ReLU};
+			\node[below=0.3cm of a6] (ya) {$\mathbf{y}$};
+			\draw[seta] (xa) -- (a1);
+			\draw[seta] (a3) -- (a4);
+			\draw[seta] (a5) -- (sa);
+			\draw[seta] (sa) -- (a6);
+			\draw[seta] (a6) -- (ya);
+			\draw[seta] ([yshift=-0.12cm]xa.south) -- ++(2.35,0) |- (sa.east)
+			node[pos=0.25, right, align=left, font=\scriptsize] {atalho:\\identidade ou\\projeção 1\,$\times$\,1};
+			% ---- (b) bloco de gargalo ----
+			\node[font=\small\bfseries, right=4.6cm of ta] (tb) {(b) Bloco de gargalo ($E = 4$)};
+			\node[below=0.35cm of tb] (xb) {$\mathbf{x}$};
+			\node[cv, below=0.35cm of xb] (b1) {Convolução, núcleo 1\\(reduz canais)};
+			\node[bn, below=of b1] (b2) {Normalização em lote};
+			\node[re, below=of b2] (b3) {ReLU};
+			\node[cv, below=0.25cm of b3] (b4) {Convolução, núcleo 3};
+			\node[bn, below=of b4] (b5) {Normalização em lote};
+			\node[re, below=of b5] (b6) {ReLU};
+			\node[cv, below=0.25cm of b6] (b7) {Convolução, núcleo 1\\(expande canais $\times 4$)};
+			\node[bn, below=of b7] (b8) {Normalização em lote};
+			\node[soma, below=0.3cm of b8] (sb) {$+$};
+			\node[re, below=0.25cm of sb] (b9) {ReLU};
+			\node[below=0.25cm of b9] (yb) {$\mathbf{y}$};
+			\draw[seta] (xb) -- (b1);
+			\draw[seta] (b3) -- (b4);
+			\draw[seta] (b6) -- (b7);
+			\draw[seta] (b8) -- (sb);
+			\draw[seta] (sb) -- (b9);
+			\draw[seta] (b9) -- (yb);
+			\draw[seta] ([yshift=-0.12cm]xb.south) -- ++(2.35,0) |- (sb.east)
+			node[pos=0.25, right, align=left, font=\scriptsize] {atalho:\\identidade ou\\projeção 1\,$\times$\,1};
+		\end{tikzpicture}
 	}{
-		\Fonte{adaptado de \citeonline{he2016deep}.}
+		\Fonte{elaborado pelo autor (2026), adaptado de
+			\citeonline{he2016deep}. O atalho é a identidade quando entrada e
+			saída têm as mesmas dimensões e uma convolução de núcleo 1 seguida
+			de normalização em lote quando o bloco muda o número de canais ou
+			usa passo 2 (\autoref{eq:residual-projecao}).}
 	}
 \end{figure}
 

@@ -633,7 +633,63 @@ precede quatro estágios de blocos residuais:
 A cada estágio, portanto, o comprimento temporal é dividido por dois e a
 profundidade da representação, multiplicada por dois --- progressão distinta
 da adotada na rede convolucional da \autoref{sec:fund-cnn}, que divide o
-comprimento por quatro a cada bloco.
+comprimento por quatro a cada bloco. A \autoref{fig:resnet-arquitetura} ilustra o fluxo na ResNet-18
+completa.
+
+\begin{figure}[h!]
+	\captionsetup{width=16cm}
+	\Caption{\label{fig:resnet-arquitetura} Arquitetura da ResNet-18
+		unidimensional}
+	\UFCfig{}{
+		\begin{tikzpicture}[
+				font=\footnotesize,
+				caixa/.style={draw, rounded corners=2pt, align=center, minimum height=1.05cm, inner sep=3pt},
+				est/.style={caixa, fill=blue!8, text width=2.05cm},
+				ini/.style={caixa, fill=blue!15, text width=2.05cm},
+				pool/.style={caixa, fill=orange!12, text width=2.5cm},
+				clf/.style={caixa, fill=green!8, text width=2.05cm},
+				io/.style={caixa, fill=gray!10, text width=1.75cm},
+				seta/.style={-{Stealth[length=2.2mm]}, thick},
+				node distance=0.28cm
+			]
+			\node[io] (in) {\textbf{Entrada}\\ECG X, Y, Z\\$[3 \times 24\,000]$};
+			\node[ini, right=of in] (st) {\textbf{Etapa inicial}\\conv. 7, passo 2\\agrup. máx. 3, passo 2\\$[64 \times 6\,000]$};
+			\node[est, right=of st] (e1) {\textbf{Estágio 1}\\2 blocos básicos\\$[64 \times 6\,000]$};
+			\node[est, right=of e1] (e2) {\textbf{Estágio 2}\\2 blocos, passo 2\\$[128 \times 3\,000]$};
+			\node[est, right=of e2] (e3) {\textbf{Estágio 3}\\2 blocos, passo 2\\$[256 \times 1\,500]$};
+			\node[est, below=0.75cm of e3] (e4) {\textbf{Estágio 4}\\2 blocos, passo 2\\$[512 \times 750]$};
+			\node[pool, left=0.45cm of e4] (gp) {\textbf{Agrupamento global}\\média e máximo: $[1\,024]$};
+			\node[clf, left=0.45cm of gp] (cl) {\textbf{Classificador}\\$1\,024 \rightarrow 64 \rightarrow 1$};
+			\node[io, left=0.45cm of cl, text width=2.05cm] (out) {\textbf{Sigmoide}\\probabilidade de \gls{MSC}};
+			\draw[seta] (in) -- (st);
+			\draw[seta] (st) -- (e1);
+			\draw[seta] (e1) -- (e2);
+			\draw[seta] (e2) -- (e3);
+			\draw[seta] (e3) -- (e4);
+			\draw[seta] (e4) -- (gp);
+			\draw[seta] (gp) -- (cl);
+			\draw[seta] (cl) -- (out);
+			\draw[decorate, decoration={brace, amplitude=5pt, raise=3pt}, thick, gray]
+			(e1.north west) -- (e3.north east) node[midway, above=9pt, gray!80!black, align=center]
+			{\textbf{Blocos residuais} (\autoref{fig:blocos-residuais}a): a cada estágio,\\comprimento $\div 2$ e canais $\times 2$};
+			\node[draw, dashed, gray!80!black, rounded corners=2pt, fill=blue!3, align=left,
+				font=\scriptsize, anchor=north west, text width=14.6cm, inner sep=4pt]
+			at ([yshift=-0.35cm]e4.south -| in.west)
+			{\textbf{Cada estágio:} dois blocos básicos (convolução 3 $\rightarrow$ normalização
+				$\rightarrow$ ReLU $\rightarrow$ convolução 3 $\rightarrow$ normalização, somados ao
+				atalho e seguidos de ReLU); no primeiro bloco dos estágios 2 a 4, passo 2 e
+				atalho com projeção.\\
+				\textbf{Classificador:} descarte (0,5) $\rightarrow$ linear (1\,024 $\rightarrow$ 64)
+				$\rightarrow$ normalização em lote $\rightarrow$ ReLU $\rightarrow$ descarte (0,5)
+				$\rightarrow$ linear (64 $\rightarrow$ 1).};
+		\end{tikzpicture}
+	}{
+		\Fonte{elaborado pelo autor (2026). Dimensões da ResNet-18 completa
+			($P = 64$) com janela de 2~minutos (24\,000 amostras a 200\,Hz). As
+			demais configurações (\autoref{tab:resnet-configuracoes}) mudam o
+			número de blocos por estágio, a largura $P$ ou o tipo de bloco.}
+	}
+\end{figure}
 
 \subsubsection{Configurações avaliadas}
 \label{subsubsec:fund-resnet-config}
