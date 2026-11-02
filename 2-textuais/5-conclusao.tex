@@ -193,20 +193,30 @@ desvio-padrão da \gls{AUC} entre as cinco partições.
 	}
 \end{table}
 
-Os resultados reproduzem, na coorte de \citeonline{swee2026multimodal}, o
-quadro observado nos 517 pacientes em ritmo sinusal. Com os 44 marcadores,
-a \gls{AUC} média entre partições ficou entre 0,566 e 0,611, e o melhor
-modelo apenas de \gls{ECG} foi o de quatro marcadores pré-especificados,
-com 0,659 $\pm$ 0,078, cerca de 0,02 abaixo do valor de referência.
+Na coorte de \citeonline{swee2026multimodal}, o melhor modelo apenas de
+\gls{ECG} deste trabalho, com quatro marcadores pré-especificados, alcançou
+0,659 $\pm$ 0,078, desempenho próximo ao relatado por aqueles autores
+(0,682 $\pm$ 0,030). A diferença, de cerca de 0,02, é menor que a variação
+entre as partições da validação cruzada, e o valor de referência está
+dentro do intervalo de confiança da \gls{AUC} geral desse modelo
+(0,657 [0,595--0,719]); as duas abordagens, portanto, não se distinguem
+estatisticamente. Com os 44 marcadores, a \gls{AUC} média entre partições
+ficou entre 0,566 e 0,611, o mesmo quadro observado nos 517 pacientes em
+ritmo sinusal: poucos marcadores escolhidos de antemão superam o conjunto
+completo.
 Segmentos contíguos e o filtro de quarta ordem não alteraram o desempenho:
 a mesma análise com um segmento a cada 2~minutos e filtro de terceira ordem
 produziu 0,606 $\pm$ 0,112 com logística L1 e 0,656 $\pm$ 0,090 com os
-quatro marcadores. A diferença restante não parece, portanto, decorrer da
-extração dos marcadores, mas do modelo: \citeonline{swee2026multimodal}
-não resumem os segmentos por paciente, e sim processam a sequência de
-segmentos das 24~horas com uma rede convolucional temporal em um arcabouço
-de aprendizado de múltiplas instâncias, que pode capturar a evolução dos
-marcadores ao longo do registro. Outra diferença está na dispersão entre
+quatro marcadores. Os dois trabalhos diferem sobretudo na etapa de
+modelagem: aqui, os segmentos de cada paciente são resumidos pela média e
+pelo desvio-padrão e entram em modelos de aprendizado de máquina clássico;
+em \citeonline{swee2026multimodal}, a sequência de segmentos das 24~horas é
+processada por uma rede convolucional temporal em um arcabouço de
+aprendizado de múltiplas instâncias, capaz de acompanhar a evolução dos
+marcadores ao longo do registro. Mesmo com arquiteturas tão distintas, o
+desempenho ficou próximo, e replicar também essa etapa de modelagem
+permitiria verificar se ela acrescenta informação aos marcadores. Outra
+diferença está na dispersão entre
 partições, de $\pm$0,030 naquele trabalho contra $\pm$0,08 a $\pm$0,11
 aqui, o que sugere um esquema de validação diferente, não descrito em
 detalhe no material disponível.
@@ -281,10 +291,12 @@ vivos com seguimento mais curto.
           Em vez de resumir os segmentos de cada paciente pela média e pelo
           desvio-padrão, modelar a sequência de marcadores das 24~horas com
           redes temporais, como a rede convolucional temporal em aprendizado
-          de múltiplas instâncias de \citeonline{swee2026multimodal}. A
+          de múltiplas instâncias de \citeonline{swee2026multimodal}. Na
           replicação nas condições daquele trabalho
-          (\autoref{tab:res-replicacao-swee}) indicou que a diferença de
-          desempenho está no modelo, e não na extração dos marcadores.
+          (\autoref{tab:res-replicacao-swee}), os marcadores extraídos com
+          o pré-processamento desta dissertação tiveram desempenho próximo
+          ao relatado; reproduzir também a modelagem sequencial permitiria
+          avaliar se ela traz ganho adicional.
 
     \item \textbf{Representações pré-treinadas e orientadas por atributos
           clínicos.} Treinar o extrator de características do sinal em bases
