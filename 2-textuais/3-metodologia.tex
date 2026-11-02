@@ -406,9 +406,55 @@ probabilidade 0,1. A \autoref{fig:cnn-arquitetura} ilustra o fluxo.
 	\Caption{\label{fig:cnn-arquitetura} Arquitetura da rede convolucional
 		unidimensional}
 	\UFCfig{}{
-		\fbox{\includegraphics[width=16cm]{figuras/arquitetura_cnn.jpg}}
+		\begin{tikzpicture}[
+				font=\footnotesize,
+				caixa/.style={draw, rounded corners=2pt, align=center, minimum height=1.05cm, inner sep=3pt},
+				conv/.style={caixa, fill=blue!8, text width=2.05cm},
+				pool/.style={caixa, fill=orange!12, text width=2.3cm},
+				clf/.style={caixa, fill=green!8, text width=2.3cm},
+				io/.style={caixa, fill=gray!10, text width=1.75cm},
+				det/.style={draw, rounded corners=1pt, fill=blue!4, minimum width=3.3cm, minimum height=0.5cm, font=\scriptsize},
+				seta/.style={-{Stealth[length=2.2mm]}, thick},
+				node distance=0.32cm
+			]
+			% fluxo principal
+			\node[io] (in) {\textbf{Entrada}\\ECG X, Y, Z\\$[3 \times 24\,000]$};
+			\node[conv, right=of in] (b1) {\textbf{BlocoConv 1}\\16 canais\\$[16 \times 6\,000]$};
+			\node[conv, right=of b1] (b2) {\textbf{BlocoConv 2}\\32 canais\\$[32 \times 1\,500]$};
+			\node[conv, right=of b2] (b3) {\textbf{BlocoConv 3}\\64 canais\\$[64 \times 375]$};
+			\node[conv, right=of b3] (b4) {\textbf{BlocoConv 4}\\64 canais\\$[64 \times 93]$};
+			\node[pool, below=0.75cm of b4, text width=2.5cm] (gp) {\textbf{Agrupamento global}\\média e máximo: $[128]$};
+			\node[clf, below=0.75cm of b3, text width=2.05cm] (cl) {\textbf{Classificador}\\$128 \rightarrow 64 \rightarrow 1$};
+			\node[io, below=0.75cm of b2, text width=2.05cm] (out) {\textbf{Sigmoide}\\probabilidade de \gls{MSC}};
+			\draw[seta] (in) -- (b1);
+			\draw[seta] (b1) -- (b2);
+			\draw[seta] (b2) -- (b3);
+			\draw[seta] (b3) -- (b4);
+			\draw[seta] (b4) -- (gp);
+			\draw[seta] (gp) -- (cl);
+			\draw[seta] (cl) -- (out);
+			% chave do extrator
+			\draw[decorate, decoration={brace, amplitude=5pt, raise=3pt}, thick, gray]
+			(b1.north west) -- (b4.north east) node[midway, above=9pt, gray!80!black]
+			{\textbf{Extrator de características}: cada bloco reduz o comprimento em 4 vezes};
+			% detalhe de um bloco e do classificador
+			\node[draw, dashed, gray!80!black, rounded corners=2pt, fill=blue!3, align=left,
+				font=\scriptsize, anchor=north west, text width=13.6cm, inner sep=4pt]
+			(det) at ([yshift=-0.35cm]gp.south -| in.west)
+			{\textbf{Cada BlocoConv:} convolução 1D (núcleo de 15 amostras, 75\,ms) $\rightarrow$
+				normalização em lote $\rightarrow$ ReLU $\rightarrow$ agrupamento máximo (fator 4)
+				$\rightarrow$ descarte (0,1).\\
+				\textbf{Classificador:} descarte (0,5) $\rightarrow$ linear (128 $\rightarrow$ 64)
+				$\rightarrow$ normalização em lote $\rightarrow$ ReLU $\rightarrow$ descarte (0,5)
+				$\rightarrow$ linear (64 $\rightarrow$ 1).};
+		\end{tikzpicture}
 	}{
-		\Fonte{elaborado pelo autor (2026).}
+		\Fonte{elaborado pelo autor (2026). Dimensões da variante simples com
+			janela de 2~minutos (24\,000 amostras a 200\,Hz); as demais
+			variantes e a janela de 10~segundos estão na
+			\autoref{tab:cnn-dimensoes}. O agrupamento global concatena a média
+			e o máximo de cada um dos 64 canais ao longo do tempo, e só depois
+			dele atua o classificador.}
 	}
 \end{figure}
 
