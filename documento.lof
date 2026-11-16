@@ -1,5 +1,9 @@
 \babel@toc {brazil}{}\relax 
-\contentsline {figure}{\numberline {1}{\ignorespaces Arquitetura da rede convolucional unidimensional}}{31}{figure.caption.17}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Blocos residuais básico (tipo a) e de gargalo (tipo b)}}{35}{figure.caption.20}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Fluxograma de seleção da coorte}}{49}{figure.caption.26}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Fluxo da validação cruzada estratificada em 5 partições. As etapas 2--4 são repetidas para cada partição, com avaliação no nível do paciente.}}{60}{figure.caption.32}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Blocos residuais básico (tipo a) e de gargalo (tipo b)}}{43}{figure.caption.14}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Fluxograma de seleção da coorte}}{55}{figure.caption.17}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Trecho de 10 segundos do Holter de um paciente controle da coorte, nas derivações X, Y e Z, após o filtro passa-faixa de 0,5 a 40\,Hz}}{58}{figure.caption.19}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Arquitetura da rede convolucional unidimensional}}{62}{figure.caption.21}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Arquitetura da ResNet-18 unidimensional}}{65}{figure.caption.24}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Fluxo da validação cruzada estratificada em 5 partições. As etapas 2--4 são repetidas para cada partição, com avaliação no nível do paciente.}}{74}{figure.caption.32}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Curvas ROC das três melhores redes do Cenário I}}{98}{figure.caption.44}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Curvas ROC do melhor modelo de cada abordagem}}{110}{figure.caption.55}%

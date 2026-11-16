@@ -5,10 +5,42 @@
 \providecommand{\abntbstabout}[1]{}
 \abntbstabout{v-1.9.7 }
 
+\bibitem[Ba \textit{et al.} 2016]{ba2016layer}
+\abntrefinfo{Ba \textit{et al.}}{BA \textit{et al.}}{2016}
+{BA, J.~L.; KIROS, J.~R.; HINTON, G.~E. Layer normalization.
+\textbf{arXiv preprint arXiv:1607.06450}, 2016.}
+
+\bibitem[Bardy \textit{et al.} 2005]{bardy2005amiodarone}
+\abntrefinfo{Bardy \textit{et al.}}{BARDY \textit{et al.}}{2005}
+{BARDY, G.~H.; LEE, K.~L.; MARK, D.~B. \textit{et al.} Amiodarone or an
+  implantable cardioverter-defibrillator for congestive heart failure.
+\textbf{The New England Journal of Medicine}, v.~352, n.~3, p. 225--237, 2005.}
+
+\bibitem[Barker \textit{et al.} 2022]{barker2022machine}
+\abntrefinfo{Barker \textit{et al.}}{BARKER \textit{et al.}}{2022}
+{BARKER, J.; LI, X.; KHAVANDI, S.; KOECKERLING, D.; MAVILAKANDY, A.; PEPPER,
+  C.; BOUNTZIOUKA, V.; CHEN, L.; KOTB, A.; ANTOUN, I.; MANSIR, J.; SMITH-BYRNE,
+  K.; SCHLINDWEIN, F.~S.; DHUTIA, H.; TYUKIN, I.; NICOLSON, W.~B.; NG, G.~A.
+  Machine learning in sudden cardiac death risk prediction: a systematic
+  review.
+\textbf{EP Europace}, v.~24, n.~11, p. 1777--1787, 2022.}
+
 \bibitem[Bazett 1920]{bazett1920analysis}
 \abntrefinfo{Bazett}{BAZETT}{1920}
 {BAZETT, H.~C. An analysis of the time-relations of electrocardiograms.
 \textbf{Heart}, v.~7, p. 353--370, 1920.}
+
+\bibitem[Benjamini e Hochberg 1995]{benjamini1995controlling}
+\abntrefinfo{Benjamini e Hochberg}{BENJAMINI; HOCHBERG}{1995}
+{BENJAMINI, Y.; HOCHBERG, Y. Controlling the false discovery rate: a practical
+  and powerful approach to multiple testing.
+\textbf{Journal of the Royal Statistical Society: Series B (Methodological)},
+  v.~57, n.~1, p. 289--300, 1995.}
+
+\bibitem[Breiman 2001]{breiman2001random}
+\abntrefinfo{Breiman}{BREIMAN}{2001}
+{BREIMAN, L. Random forests.
+\textbf{Machine Learning}, v.~45, n.~1, p. 5--32, 2001.}
 
 \bibitem[Brennan \textit{et al.} 2001]{brennan2001poincare}
 \abntrefinfo{Brennan \textit{et al.}}{BRENNAN \textit{et al.}}{2001}
@@ -34,22 +66,29 @@
   curves. In:  \textbf{Proceedings of the 23rd International Conference on
   Machine Learning}. [S.l.: s.n.], 2006. p. 233--240.}
 
+\bibitem[Dosovitskiy \textit{et al.} 2021]{dosovitskiy2021image}
+\abntrefinfo{Dosovitskiy \textit{et al.}}{DOSOVITSKIY \textit{et al.}}{2021}
+{DOSOVITSKIY, A.; BEYER, L.; KOLESNIKOV, A.; WEISSENBORN, D.; ZHAI, X.;
+  UNTERTHINER, T.; DEHGHANI, M.; MINDERER, M.; HEIGOLD, G.; GELLY, S.;
+  USZKOREIT, J.; HOULSBY, N. An image is worth 16x16 words: transformers for
+  image recognition at scale. In:  \textbf{International Conference on Learning
+  Representations}. [S.l.: s.n.], 2021.}
+
 \bibitem[Efron e Tibshirani 1993]{efron1993introduction}
 \abntrefinfo{Efron e Tibshirani}{EFRON; TIBSHIRANI}{1993}
 {EFRON, B.; TIBSHIRANI, R.~J. \textbf{An Introduction to the Bootstrap}. New
   York: Chapman \& Hall, 1993.}
 
+\bibitem[Emrich \textit{et al.} 2024]{emrich2024}
+\abntrefinfo{Emrich \textit{et al.}}{EMRICH \textit{et al.}}{2024}
+{EMRICH, J.; GARGANO, A.; KOKA, T.; MUMA, M. Physiology-informed {ECG}
+  delineation based on peak prominence. In:  \textbf{Proceedings of the 32nd
+  European Signal Processing Conference (EUSIPCO)}. [S.l.: s.n.], 2024.}
+
 \bibitem[Fawcett 2006]{fawcett2006introduction}
 \abntrefinfo{Fawcett}{FAWCETT}{2006}
 {FAWCETT, T. An introduction to {ROC} analysis.
 \textbf{Pattern Recognition Letters}, v.~27, n.~8, p. 861--874, 2006.}
-
-\bibitem[Freire 2025]{freire2025scd}
-\abntrefinfo{Freire}{FREIRE}{2025}
-{FREIRE, L. \textbf{Sudden cardiac death risk stratification with deep
-  survival}. [S.l.]: GitHub, 2025.
-  \url{https://github.com/luizfreire96/scd_risk_stratification_deep_survival}.
-Acesso em: 30 set. 2026.}
 
 \bibitem[Gustafsson 1996]{gustafsson1996determining}
 \abntrefinfo{Gustafsson}{GUSTAFSSON}{1996}
@@ -82,6 +121,12 @@ Acesso em: 30 set. 2026.}
 {HE, K.; ZHANG, X.; REN, S.; SUN, J. Deep residual learning for image
   recognition. In:  \textbf{Proceedings of the IEEE Conference on Computer
   Vision and Pattern Recognition}. [S.l.: s.n.], 2016. p. 770--778.}
+
+\bibitem[Hurlbert 1984]{hurlbert1984pseudoreplication}
+\abntrefinfo{Hurlbert}{HURLBERT}{1984}
+{HURLBERT, S.~H. Pseudoreplication and the design of ecological field
+  experiments.
+\textbf{Ecological Monographs}, v.~54, n.~2, p. 187--211, 1984.}
 
 \bibitem[Ioffe e Szegedy 2015]{ioffe2015batch}
 \abntrefinfo{Ioffe e Szegedy}{IOFFE; SZEGEDY}{2015}
@@ -133,6 +178,14 @@ Acesso em: 30 set. 2026.}
   Conference on Artificial Intelligence}. [S.l.: s.n.], 1995. v.~2, p.
   1137--1145.}
 
+\bibitem[{La Rovere} \textit{et al.} 2003]{larovere2003short}
+\abntrefinfo{{La Rovere} \textit{et al.}}{{La Rovere} \textit{et al.}}{2003}
+{{La Rovere}, M.~T.; PINNA, G.~D.; MAESTRI, R.; MORTARA, A.; CAPOMOLLA, S.;
+  FEBO, O.; FERRARI, R.; FRANCHINI, M.; GNEMMI, M.; OPASICH, C.; RICCARDI,
+  P.~G.; TRAVERSI, E.; COBELLI, F. Short-term heart rate variability strongly
+  predicts sudden cardiac death in chronic heart failure patients.
+\textbf{Circulation}, v.~107, n.~4, p. 565--570, 2003.}
+
 \bibitem[LeCun \textit{et al.} 1998]{lecun1998gradient}
 \abntrefinfo{LeCun \textit{et al.}}{LECUN \textit{et al.}}{1998}
 {LECUN, Y.; BOTTOU, L.; BENGIO, Y.; HAFFNER, P. Gradient-based learning applied
@@ -151,6 +204,12 @@ Acesso em: 30 set. 2026.}
 \textbf{Journal of Medical Engineering \& Technology}, v.~43, n.~3, p.
   173--181, 2019.}
 
+\bibitem[Loshchilov e Hutter 2017]{loshchilov2017sgdr}
+\abntrefinfo{Loshchilov e Hutter}{LOSHCHILOV; HUTTER}{2017}
+{LOSHCHILOV, I.; HUTTER, F. {SGDR}: Stochastic gradient descent with warm
+  restarts. In:  \textbf{International Conference on Learning Representations
+  (ICLR)}. [S.l.: s.n.], 2017.}
+
 \bibitem[Loshchilov e Hutter 2019]{loshchilov2019decoupled}
 \abntrefinfo{Loshchilov e Hutter}{LOSHCHILOV; HUTTER}{2019}
 {LOSHCHILOV, I.; HUTTER, F. Decoupled weight decay regularization. In:
@@ -163,6 +222,12 @@ Acesso em: 30 set. 2026.}
   SCH{\"O}LZEL, C.; CHEN, S. H.~A. {NeuroKit2}: A {Python} toolbox for
   neurophysiological signal processing.
 \textbf{Behavior Research Methods}, v.~53, n.~4, p. 1689--1696, 2021.}
+
+\bibitem[Mann e Whitney 1947]{mann1947test}
+\abntrefinfo{Mann e Whitney}{MANN; WHITNEY}{1947}
+{MANN, H.~B.; WHITNEY, D.~R. On a test of whether one of two random variables
+  is stochastically larger than the other.
+\textbf{The Annals of Mathematical Statistics}, v.~18, n.~1, p. 50--60, 1947.}
 
 \bibitem[Mart{\'\i}n-Yebra \textit{et al.} 2024]{martinyebra2024music}
 \abntrefinfo{Mart{\'\i}n-Yebra \textit{et al.}}{MART{\'I}N-YEBRA \textit{et
@@ -185,6 +250,14 @@ Dispon{\'\i}vel em:
 {NAIR, V.; HINTON, G.~E. Rectified linear units improve restricted {B}oltzmann
   machines. In:  \textbf{Proceedings of the 27th International Conference on
   Machine Learning}. [S.l.: s.n.], 2010. p. 807--814.}
+
+\bibitem[Pedregosa \textit{et al.} 2011]{pedregosa2011scikit}
+\abntrefinfo{Pedregosa \textit{et al.}}{PEDREGOSA \textit{et al.}}{2011}
+{PEDREGOSA, F.; VAROQUAUX, G.; GRAMFORT, A.; MICHEL, V.; THIRION, B.; GRISEL,
+  O.; BLONDEL, M.; PRETTENHOFER, P.; WEISS, R.; DUBOURG, V.; VANDERPLAS, J.;
+  PASSOS, A.; COURNAPEAU, D.; BRUCHER, M.; PERROT, M.; DUCHESNAY, {\'E}.
+  Scikit-learn: Machine learning in {P}ython.
+\textbf{Journal of Machine Learning Research}, v.~12, p. 2825--2830, 2011.}
 
 \bibitem[Peduzzi \textit{et al.} 1996]{peduzzi1996simulation}
 \abntrefinfo{Peduzzi \textit{et al.}}{PEDUZZI \textit{et al.}}{1996}
@@ -222,12 +295,28 @@ Dispon{\'\i}vel em:
   the {ROC} plot when evaluating binary classifiers on imbalanced datasets.
 \textbf{PLoS ONE}, v.~10, n.~3, p. e0118432, 2015.}
 
+\bibitem[Schmidt \textit{et al.} 1999]{schmidt1999heart}
+\abntrefinfo{Schmidt \textit{et al.}}{SCHMIDT \textit{et al.}}{1999}
+{SCHMIDT, G.; MALIK, M.; BARTHEL, P.; SCHNEIDER, R.; ULM, K.; ROLNITZKY, L.;
+  CAMM, A.~J.; BIGGER, J.~T.; SCH{\"O}MIG, A. Heart-rate turbulence after
+  ventricular premature beats as a predictor of mortality after acute
+  myocardial infarction.
+\textbf{The Lancet}, v.~353, n.~9162, p. 1390--1396, 1999.}
+
 \bibitem[Srivastava \textit{et al.} 2014]{srivastava2014dropout}
 \abntrefinfo{Srivastava \textit{et al.}}{SRIVASTAVA \textit{et al.}}{2014}
 {SRIVASTAVA, N.; HINTON, G.; KRIZHEVSKY, A.; SUTSKEVER, I.; SALAKHUTDINOV, R.
   Dropout: a simple way to prevent neural networks from overfitting.
 \textbf{Journal of Machine Learning Research}, v.~15, n.~56, p. 1929--1958,
   2014.}
+
+\bibitem[Steinberg \textit{et al.} 2017]{steinberg2017ishne}
+\abntrefinfo{Steinberg \textit{et al.}}{STEINBERG \textit{et al.}}{2017}
+{STEINBERG, J.~S.; VARMA, N.; CYGANKIEWICZ, I.; AZIZ, P.; BALSAM, P. \textit{et
+  al.} 2017 {ISHNE}-{HRS} expert consensus statement on ambulatory {ECG} and
+  external cardiac monitoring/telemetry.
+\textbf{Annals of Noninvasive Electrocardiology}, v.~22, n.~3, p. e12447,
+  2017.}
 
 \bibitem[Swee \textit{et al.} 2026]{swee2026multimodal}
 \abntrefinfo{Swee \textit{et al.}}{SWEE \textit{et al.}}{2026}
@@ -249,6 +338,11 @@ Dispon{\'\i}vel em: \url{https://doi.org/10.64898/2026.04.21.26351421}.}
   of measurement, physiological interpretation, and clinical use.
 \textbf{Circulation}, v.~93, n.~5, p. 1043--1065, 1996.}
 
+\bibitem[Tomaselli e Zipes 2004]{tomaselli2004sudden}
+\abntrefinfo{Tomaselli e Zipes}{TOMASELLI; ZIPES}{2004}
+{TOMASELLI, G.~F.; ZIPES, D.~P. What causes sudden death in heart failure?
+\textbf{Circulation Research}, v.~95, n.~8, p. 754--763, 2004.}
+
 \bibitem[Vaswani \textit{et al.} 2017]{vaswani2017attention}
 \abntrefinfo{Vaswani \textit{et al.}}{VASWANI \textit{et al.}}{2017}
 {VASWANI, A.; SHAZEER, N.; PARMAR, N.; USZKOREIT, J.; JONES, L.; GOMEZ, A.~N.;
@@ -256,9 +350,35 @@ Dispon{\'\i}vel em: \url{https://doi.org/10.64898/2026.04.21.26351421}.}
   \textbf{Advances in Neural Information Processing Systems}. [S.l.: s.n.],
   2017. v.~30, p. 5998--6008.}
 
+\bibitem[Vazquez \textit{et al.} 2009]{vazquez2009music}
+\abntrefinfo{Vazquez \textit{et al.}}{VAZQUEZ \textit{et al.}}{2009}
+{VAZQUEZ, R.; BAYES-GENIS, A.; CYGANKIEWICZ, I.; PASCUAL-FIGAL, D.;
+  GRIGORIAN-SHAMAGIAN, L.; PAVON, R.; GONZALEZ-JUANATEY, J.~R.; CUBERO, J.~M.;
+  PASTOR, L.; ORDONEZ-LLANOS, J.; CINCA, J.; {de Luna}, A.~B. The {MUSIC} risk
+  score: a simple method for predicting mortality in ambulatory patients with
+  chronic heart failure.
+\textbf{European Heart Journal}, v.~30, n.~9, p. 1088--1096, 2009.}
+
+\bibitem[Verrier \textit{et al.} 2011]{verrier2011microvolt}
+\abntrefinfo{Verrier \textit{et al.}}{VERRIER \textit{et al.}}{2011}
+{VERRIER, R.~L.; KLINGENHEBEN, T.; MALIK, M.; EL-SHERIF, N.; EXNER, D.~V.;
+  HOHNLOSER, S.~H.; IKEDA, T.; MART{\'I}NEZ, J.~P.; NARAYAN, S.~M.; NIEMINEN,
+  T.; ROSENBAUM, D.~S. Microvolt {T}-wave alternans: physiological basis,
+  methods of measurement, and clinical utility --- consensus guideline by
+  {International Society for Holter and Noninvasive Electrocardiology}.
+\textbf{Journal of the American College of Cardiology}, v.~58, n.~13, p.
+  1309--1324, 2011.}
+
 \bibitem[Youden 1950]{youden1950index}
 \abntrefinfo{Youden}{YOUDEN}{1950}
 {YOUDEN, W.~J. Index for rating diagnostic tests.
 \textbf{Cancer}, v.~3, n.~1, p. 32--35, 1950.}
+
+\bibitem[Zeppenfeld \textit{et al.} 2022]{zeppenfeld2022esc}
+\abntrefinfo{Zeppenfeld \textit{et al.}}{ZEPPENFELD \textit{et al.}}{2022}
+{ZEPPENFELD, K.; TFELT-HANSEN, J.; RIVA, M. de \textit{et al.} 2022 {ESC}
+  guidelines for the management of patients with ventricular arrhythmias and
+  the prevention of sudden cardiac death.
+\textbf{European Heart Journal}, v.~43, n.~40, p. 3997--4126, 2022.}
 
 \end{thebibliography}

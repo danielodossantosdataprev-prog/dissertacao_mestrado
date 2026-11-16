@@ -172,7 +172,7 @@ positivo ou negativo, possa ser interpretado.
 \label{subsec:met-clinicas}
 
 Nos experimentos que combinam o sinal a variáveis clínicas, foram empregadas
-seis, de três tipos: a idade, variável numérica de valor inteiro, em anos; a
+seis variáveis clínicas, de três tipos: a idade, variável numérica de valor inteiro, em anos; a
 classe funcional \gls{NYHA}, variável categórica ordinal; e quatro variáveis
 binárias, codificadas como 0 (ausente) ou 1 (presente) --- gênero (1 =
 masculino), presença de ondas Q de necrose no \gls{ECG} de repouso,
@@ -395,8 +395,11 @@ de desempenho à arquitetura.
 \label{subsec:fund-cnn-arquitetura}
 
 A rede convolucional adotada neste trabalho é composta por blocos
-sequenciais, seguidos de agrupamento global e de um classificador de duas
-camadas. Cada bloco aplica, nesta ordem, convolução, normalização em lote,
+sequenciais, seguidos de agrupamento global e de um classificador. O
+classificador é a parte final da rede: duas camadas totalmente conectadas
+(lineares) que recebem o vetor produzido pelo agrupamento global, que resume
+a janela inteira, e o convertem em um único valor, transformado pela função
+sigmoide na probabilidade de \gls{MSC}. Cada bloco aplica, nesta ordem, convolução, normalização em lote,
 ativação \textit{ReLU}, agrupamento máximo com fator quatro e descarte com
 probabilidade 0,1. A \autoref{fig:cnn-arquitetura} ilustra o fluxo.
 
@@ -685,7 +688,10 @@ completa.
 		\end{tikzpicture}
 	}{
 		\Fonte{elaborado pelo autor (2026). Dimensões da ResNet-18 completa
-			($P = 64$) com janela de 2~minutos (24\,000 amostras a 200\,Hz). As
+			($P = 64$) com janela de 2~minutos (24\,000 amostras a 200\,Hz). O
+			classificador é o mesmo da rede convolucional: duas camadas
+			totalmente conectadas que convertem o vetor do agrupamento global
+			em um único valor, a probabilidade de \gls{MSC}. As
 			demais configurações (\autoref{tab:resnet-configuracoes}) mudam o
 			número de blocos por estágio, a largura $P$ ou o tipo de bloco.}
 	}
@@ -945,9 +951,10 @@ Cada paciente é representado por janelas extraídas de seu registro de
 24\,horas, e não pelo registro integral. A opção decorre de uma limitação
 prática: a 200\,Hz, três derivações durante 24\,horas correspondem a
 aproximadamente 17 milhões de amostras por paciente, volume incompatível com
-o processamento em lote na memória disponível.
-
-A \autoref{tab:config-sinal} reúne os parâmetros de representação.
+o processamento em lote na memória disponível. A
+\autoref{tab:config-sinal} reúne os parâmetros dessa representação, e os
+parágrafos seguintes justificam as escolhas principais: a duração da janela,
+o sorteio das posições e a separação entre filtragem e normalização.
 
 % ---- TABELA: parâmetros do sinal ----
 \begin{table}[h!]
@@ -1002,6 +1009,10 @@ eliminaria essa informação.
 
 A \autoref{tab:config-treino} apresenta os hiperparâmetros de otimização,
 comuns a todas as arquiteturas, salvo o número de épocas e a paciência.
+Adotar os mesmos valores para todas as redes permite atribuir as diferenças
+de desempenho à arquitetura, e não a ajustes específicos de cada uma. As
+escolhas que mais se afastam do usual --- regularização e descarte elevados
+e número reduzido de épocas --- são justificadas após a tabela.
 
 % ---- TABELA: hiperparâmetros de treino ----
 \begin{table}[h!]
@@ -1342,6 +1353,24 @@ do dia. Assim, o desvio-padrão da frequência cardíaca média, por exemplo, n�
 mede a variação batimento a batimento, mas a diferença de frequência entre os
 períodos do registro, incluindo o ciclo dia--noite.
 
+A escolha dos marcadores seguiu três critérios. O primeiro é o respaldo na
+literatura: foram incluídas as medidas de \gls{VFC} padronizadas pelas
+diretrizes da área, nos domínios do tempo e da frequência
+\cite{taskforce1996heart}, complementadas pelos descritores do gráfico de
+Poincaré \cite{brennan2001poincare} e pela entropia amostral
+\cite{richman2000physiological}; os intervalos da morfologia do batimento
+(QRS, QT e QTc), ligados à despolarização e à repolarização dos ventrículos;
+e as contagens de ectopia e pausas, na linha dos marcadores de segmentos
+curtos de \citeonline{swee2026multimodal}. O segundo critério é a
+possibilidade de cálculo automático e reprodutível em todos os registros,
+com ferramentas de código aberto \cite{makowski2021neurokit2} e sem anotação
+manual. O terceiro é a cobertura de aspectos distintos da atividade elétrica
+do coração --- a regulação autonômica do ritmo, a condução e a repolarização,
+e a instabilidade do ritmo ---, para que o conjunto não dependesse de uma
+única hipótese fisiológica. Marcadores que exigem delineação fina da onda T,
+como a alternância da onda T, não foram incluídos e são indicados como
+trabalho futuro (\autoref{sec:conc-futuros}).
+
 \begin{table}[h!]
 	\captionsetup{width=15.5cm}
 	\Caption{\label{tab:fund-biomarcadores} Marcadores eletrocardiográficos
@@ -1617,8 +1646,19 @@ predições fora da partição, com intervalo de confiança por
 \label{subsec:met-revisao-estatistica}
 
 Cada marcador, resumido por paciente, foi comparado entre casos e controles
-pelo teste de Mann-Whitney \cite{mann1947test}, que não pressupõe
-distribuição normal. Como dezenas de marcadores são testados
+pelo teste de Mann-Whitney \cite{mann1947test}. O teste ordena todos os
+pacientes pelo valor do marcador, do menor para o maior, e verifica se os
+casos tendem a ocupar posições mais altas, ou mais baixas, que os controles.
+Se o marcador não tivesse relação com o desfecho, casos e controles
+apareceriam misturados ao longo dessa ordenação; o valor-$p$ é a
+probabilidade de uma separação tão grande quanto a observada ocorrer apenas
+por acaso. Por usar somente a ordem dos valores, o teste não pressupõe
+distribuição normal e é pouco sensível a valores extremos, o que convém a
+marcadores de distribuição assimétrica, como as potências espectrais, e a
+grupos de tamanhos muito diferentes (55 casos e 462 controles). Sua
+estatística equivale, além disso, à \gls{AUC} do marcador isolado
+\cite{hanley1982meaning}, a mesma medida usada para avaliar os modelos.
+Como dezenas de marcadores são testados
 simultaneamente, os valores-$p$ foram corrigidos pelo procedimento de
 Benjamini-Hochberg, que controla a proporção esperada de falsos positivos
 entre os resultados declarados significativos \cite{benjamini1995controlling},
@@ -1649,11 +1689,25 @@ ajustadas no conjunto de treinamento de cada partição:
 	\item \textit{análise de componentes principais}\glsadd{PCA}\glsunset{PCA} \textit{seguida de regressão
 	logística}, que substitui os marcadores, fortemente correlacionados entre
 	si, por poucas combinações lineares não correlacionadas, ajustadas sem
-	uso do desfecho;
+	uso do desfecho. Foram empregados quatro componentes; no protocolo A,
+	foram testados também dois e três;
 	\item \textit{florestas aleatórias} \cite{breiman2001random}, com 500
 	árvores de profundidade limitada, capazes de representar relações não
 	lineares e interações entre marcadores.
 \end{itemize}
+
+A escolha desses modelos decorre do número de eventos. Com 55 casos, modelos
+com muitos parâmetros livres tendem a se ajustar ao ruído dos dados de
+treinamento \cite{peduzzi1996simulation}; por isso foram preferidos modelos
+simples e regularizados. A regressão logística é o modelo usual nos escores
+de risco clínico, e seus coeficientes são diretamente interpretáveis; as
+penalizações L2 e L1 permitem empregá-la com 44 variáveis correlacionadas
+entre si. A análise de componentes principais trata essa mesma correlação
+por outro caminho, reduzindo o número de variáveis antes do ajuste. A
+floresta aleatória foi incluída como contraponto não linear: se a relação
+entre os marcadores e o desfecho dependesse de limiares ou de interações,
+ela deveria superar os modelos lineares. Os modelos foram implementados com
+a biblioteca scikit-learn \cite{pedregosa2011scikit}.
 
 \noindent
 Todos os modelos ponderam as classes de forma inversamente proporcional à

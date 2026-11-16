@@ -14,9 +14,11 @@
 A predição de morte súbita cardíaca a partir do \gls{ECG} ambulatorial tem
 seguido dois caminhos. O primeiro, mais antigo, extrai do registro de Holter
 marcadores definidos por especialistas --- variabilidade da frequência
-cardíaca, turbulência da frequência, alternância da onda T, dinâmica da
-repolarização, contagem de arritmias --- e os combina com variáveis clínicas
-em modelos estatísticos. O segundo, mais recente, aplica redes neurais
+cardíaca \cite{taskforce1996heart,kleiger1987decreased}, turbulência da
+frequência \cite{schmidt1999heart}, alternância da onda T
+\cite{verrier2011microvolt}, dinâmica da repolarização, contagem de
+arritmias --- e os combina com variáveis clínicas em modelos estatísticos
+\cite{vazquez2009music,ramirez2017sudden}. O segundo, mais recente, aplica redes neurais
 profundas diretamente ao sinal, na expectativa de que a rede encontre padrões
 que os marcadores clássicos não capturam. Esse segundo caminho se apoia no
 sucesso das redes convolucionais em tarefas diagnósticas sobre o \gls{ECG},
@@ -28,8 +30,28 @@ padrão a ser reconhecido está presente no traçado e há dezenas de milhares
 de exemplos rotulados; na predição de um evento futuro, o padrão pode não
 existir no traçado e os eventos são poucos.
 
-Este capítulo apresenta três trabalhos que representam esses caminhos e que
-servem de referência para a interpretação dos resultados desta dissertação.
+Antes dos trabalhos analisados em detalhe, três estudos ajudam a situar o
+problema. \citeonline{larovere2003short} mostraram que a redução da potência
+de baixa frequência da variabilidade da frequência cardíaca, medida em
+registros curtos, é um preditor independente de morte súbita em pacientes
+com insuficiência cardíaca crônica, resultado que os autores confirmaram em
+uma segunda amostra de pacientes. \citeonline{vazquez2009music}
+desenvolveram, na própria coorte MUSIC, um escore de risco a partir de
+variáveis clínicas, ecocardiográficas, laboratoriais e do Holter, com
+modelos de Cox para mortalidade total, mortalidade cardíaca, morte por
+falência de bomba e morte súbita nos 992 pacientes. Mais recentemente,
+\citeonline{barker2022machine} revisaram de forma sistemática os estudos
+que aplicam aprendizado de máquina à predição de morte súbita. Dos 4\,356
+estudos triados, apenas 11 atenderam aos critérios de inclusão; a \gls{AUC}
+relatada variou de 0,71 a 0,96, mas cinco dos onze estudos apresentavam alto
+risco de viés e nenhum seguia um padrão de relato. Os autores concluem que o
+ganho do aprendizado de máquina sobre os modelos tradicionais pode ser
+modesto e que faltam evidências de melhor qualidade --- observação que
+motiva o cuidado com a avaliação adotado nesta dissertação.
+
+Este capítulo apresenta, em seguida, três trabalhos que representam os dois
+caminhos e que servem de referência para a interpretação dos resultados
+desta dissertação.
 O primeiro e o segundo utilizam a mesma base de dados deste trabalho, a
 coorte MUSIC \cite{martinyebra2024music}: um com marcadores clássicos e
 modelos de Cox, o outro com marcadores de segmentos curtos e aprendizado de
@@ -130,21 +152,30 @@ turbulência da frequência, e a combinação com a fração de ejeção não
 acrescentou desempenho (0,58). Os autores reconhecem o número reduzido de
 eventos e a ausência de validação externa.
 
-Dois elementos desse trabalho são particularmente relevantes aqui. O
-primeiro é a estratégia: o extrator de características foi aprendido em
-grandes bases de \gls{ECG} de repouso e com um rótulo substituto
-abundante, e apenas um classificador pequeno foi ajustado com os poucos
-eventos disponíveis --- o oposto do treinamento de ponta a ponta adotado
-nas redes desta dissertação. O segundo é o resultado no subgrupo de
-insuficiência cardíaca, população equivalente à da coorte MUSIC, em que
-mesmo esse modelo pré-treinado ficou próximo do limite inferior de
-discriminação útil.
+Dois pontos desse trabalho interessam diretamente a esta dissertação. O
+primeiro é a forma de treinar a rede. Com apenas 70 eventos, os autores não
+ajustaram a rede inteira com o desfecho; dividiram o treinamento em duas
+etapas. Na primeira, o codificador aprendeu a representar o \gls{ECG} sem
+usar o desfecho: primeiro reconstruindo trechos ocultos de \gls{ECG}s de
+repouso e, depois, estimando a fração de ejeção do paciente a partir do
+traçado. A fração de ejeção faz, nesse caso, o papel de \textit{rótulo
+substituto}: não é o desfecho de interesse, mas está relacionada a ele e
+está disponível para um número de exames muito maior que o de mortes, o que
+permite treinar uma rede grande. Na segunda etapa, o codificador foi mantido
+fixo, e apenas uma rede pequena foi treinada com os 70 eventos. Nas redes
+desta dissertação (Cenário~I), o caminho foi o oposto, o treinamento de
+ponta a ponta: todos os pesos da rede, de 14 mil a 16 milhões conforme a
+arquitetura, foram ajustados diretamente com o desfecho dos pacientes da
+coorte, que tem 55 eventos.
+
+O segundo ponto é o resultado no subgrupo de insuficiência cardíaca,
+população equivalente à da coorte MUSIC. Mesmo com o pré-treinamento, a
+\gls{AUC} nesse subgrupo foi de 0,60 [0,53--0,68], valor da mesma ordem dos
+obtidos nesta dissertação com as redes sobre o sinal (Cenário~I, de 0,48 a
+0,56) e com os marcadores extraídos do \gls{ECG} (Cenário~II, até 0,65).
 
 \section{Comparação e posicionamento deste trabalho}
 \label{sec:trab-comparacao}
-
-A comparação dos resultados desses trabalhos com os desta dissertação é
-apresentada nas conclusões (\autoref{sec:conc-comparacao}).
 
 Os três trabalhos revelam um padrão. Os desempenhos mais altos foram obtidos em
 condições que favorecem a discriminação: avaliação nos mesmos dados usados
@@ -169,7 +200,9 @@ não funcionaram, em vez de apenas da melhor
 elimina o atalho oferecido pela fibrilação atrial e torna a tarefa mais
 próxima do problema clínico de interesse: identificar, entre pacientes com
 insuficiência cardíaca em ritmo sinusal, aqueles com maior risco de morte
-súbita.
+súbita. A comparação numérica entre os resultados desses trabalhos e os
+desta dissertação é apresentada nas conclusões
+(\autoref{sec:conc-comparacao}).
 
 % \chapter{Trabalhos Relacionados}
 % \label{cap:trabalhos-relacionados}

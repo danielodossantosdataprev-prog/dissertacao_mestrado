@@ -541,7 +541,10 @@ marcadores, sozinhos, alcançaram \gls{AUC} entre 0,585 e 0,624, com
 intervalos de confiança que excluem o acaso por pequena margem. Os melhores
 resultados vieram dos modelos que reduzem a dimensão do problema --- a
 análise de componentes principais e a floresta aleatória ---, e não das
-regressões penalizadas sobre as 44 variáveis. Nenhum modelo baseado apenas
+regressões penalizadas sobre as 44 variáveis. O número de componentes
+principais pouco alterou o resultado: com dois, três e quatro componentes,
+a \gls{AUC} foi de 0,610, 0,602 e 0,624, com intervalos de confiança que se
+sobrepõem quase por completo. Nenhum modelo baseado apenas
 em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
 
 \begin{table}[h!]
@@ -558,6 +561,8 @@ em marcadores alcançou o modelo clínico, de \gls{AUC} 0,661.
 			\midrule
 			Marcadores, logística L2        & 44                            & 0,589 [0,507--0,671]  & 0,595 $\pm$ 0,066 & 0,180 \\
 			Marcadores, logística L1        & 44                            & 0,585 [0,503--0,666]  & 0,588 $\pm$ 0,044 & 0,163 \\
+			Marcadores, PCA (2) + logística & 44                            & 0,610 [0,524--0,692]  & 0,618 $\pm$ 0,064 & 0,192 \\
+			Marcadores, PCA (3) + logística & 44                            & 0,602 [0,514--0,685]  & 0,609 $\pm$ 0,058 & 0,193 \\
 			Marcadores, PCA (4) + logística & 44                            & 0,624 [0,535--0,708]  & 0,623 $\pm$ 0,052 & 0,232 \\
 			Marcadores, floresta aleatória  & 44                            & 0,621 [0,537--0,701]  & 0,627 $\pm$ 0,025 & 0,184 \\
 			\midrule
