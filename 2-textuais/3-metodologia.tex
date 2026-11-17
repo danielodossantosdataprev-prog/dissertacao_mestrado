@@ -395,8 +395,8 @@ de desempenho à arquitetura.
 \label{subsec:fund-cnn-arquitetura}
 
 A rede convolucional adotada neste trabalho é composta por blocos
-sequenciais, seguidos de agrupamento global e de camadas totalmente conectadas. Estas
-formam a parte final da rede, a cabeça de classificação: duas camadas
+sequenciais, seguidos de agrupamento global e de camadas totalmente conectadas
+(\textit{fully connected}). Estas formam a parte final da rede: duas camadas
 lineares que recebem o vetor produzido pelo agrupamento global, que resume
 a janela inteira, e o convertem em um único valor, transformado pela função
 sigmoide na probabilidade de \gls{MSC}. Cada bloco aplica, nesta ordem, convolução, normalização em lote,
