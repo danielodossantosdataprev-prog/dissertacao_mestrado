@@ -381,7 +381,7 @@ delas.
 	}
 \end{table}
 
-Todas as variantes compartilham o mesmo classificador final --- agrupamento
+Todas as variantes compartilham a mesma parte final --- agrupamento
 global por média e máximo, seguido de duas camadas totalmente conectadas com
 descarte --- e a mesma saída: um único \textit{logit} por janela, convertido
 em probabilidade pela \autoref{eq:logistica}. A diferença entre elas está
@@ -395,9 +395,9 @@ de desempenho à arquitetura.
 \label{subsec:fund-cnn-arquitetura}
 
 A rede convolucional adotada neste trabalho é composta por blocos
-sequenciais, seguidos de agrupamento global e de um classificador. O
-classificador é a parte final da rede: duas camadas totalmente conectadas
-(lineares) que recebem o vetor produzido pelo agrupamento global, que resume
+sequenciais, seguidos de agrupamento global e de camadas totalmente conectadas. Estas
+formam a parte final da rede, a cabeça de classificação: duas camadas
+lineares que recebem o vetor produzido pelo agrupamento global, que resume
 a janela inteira, e o convertem em um único valor, transformado pela função
 sigmoide na probabilidade de \gls{MSC}. Cada bloco aplica, nesta ordem, convolução, normalização em lote,
 ativação \textit{ReLU}, agrupamento máximo com fator quatro e descarte com
@@ -427,7 +427,7 @@ probabilidade 0,1. A \autoref{fig:cnn-arquitetura} ilustra o fluxo.
 			\node[conv, right=of b2] (b3) {\textbf{BlocoConv 3}\\64 canais\\$[64 \times 375]$};
 			\node[conv, right=of b3] (b4) {\textbf{BlocoConv 4}\\64 canais\\$[64 \times 93]$};
 			\node[pool, below=0.75cm of b4, text width=2.5cm] (gp) {\textbf{Agrupamento global}\\média e máximo: $[128]$};
-			\node[clf, below=0.75cm of b3, text width=2.05cm] (cl) {\textbf{Classificador}\\$128 \rightarrow 64 \rightarrow 1$};
+			\node[clf, below=0.75cm of b3, text width=2.05cm] (cl) {\textbf{Camadas totalmente conectadas}\\$128 \rightarrow 64 \rightarrow 1$};
 			\node[io, below=0.75cm of b2, text width=2.05cm] (out) {\textbf{Sigmoide}\\probabilidade de \gls{MSC}};
 			\draw[seta] (in) -- (b1);
 			\draw[seta] (b1) -- (b2);
@@ -447,7 +447,7 @@ probabilidade 0,1. A \autoref{fig:cnn-arquitetura} ilustra o fluxo.
 			{\textbf{Cada BlocoConv:} convolução 1D (núcleo de 15 amostras, 75\,ms) $\rightarrow$
 				normalização em lote $\rightarrow$ ReLU $\rightarrow$ agrupamento máximo (fator 4)
 				$\rightarrow$ descarte (0,1).\\
-				\textbf{Classificador:} descarte (0,5) $\rightarrow$ linear (128 $\rightarrow$ 64)
+				\textbf{Camadas totalmente conectadas:} descarte (0,5) $\rightarrow$ linear (128 $\rightarrow$ 64)
 				$\rightarrow$ normalização em lote $\rightarrow$ ReLU $\rightarrow$ descarte (0,5)
 				$\rightarrow$ linear (64 $\rightarrow$ 1).};
 		\end{tikzpicture}
@@ -457,7 +457,7 @@ probabilidade 0,1. A \autoref{fig:cnn-arquitetura} ilustra o fluxo.
 			variantes e a janela de 10~segundos estão na
 			\autoref{tab:cnn-dimensoes}. O agrupamento global concatena a média
 			e o máximo de cada um dos 64 canais ao longo do tempo, e só depois
-			dele atua o classificador.}
+			dele atuam as camadas totalmente conectadas.}
 	}
 \end{figure}
 
@@ -470,7 +470,7 @@ blocos e de filtros por bloco. A variante \textit{mínima} tem três blocos,
 com 8, 16 e 32 filtros; a \textit{simples}, quatro blocos, com 16, 32, 64 e
 64 filtros; a \textit{média}, quatro blocos, com 32, 64, 128 e 128 filtros.
 Todos os demais elementos --- largura do núcleo, agrupamento, descarte,
-classificador e inicialização --- são idênticos. Entre a menor e a maior
+camadas totalmente conectadas e inicialização --- são idênticos. Entre a menor e a maior
 variante, o número de parâmetros cresce cerca de 29 vezes. Se o desempenho
 não acompanhar esse crescimento, a limitação não está na capacidade da
 rede, mas na informação disponível nos dados.
@@ -560,11 +560,11 @@ blocos convolucionais, o gradiente alcança as camadas iniciais sem atenuação
 significativa, e os atalhos acrescentariam parâmetros sem benefício
 correspondente.
 
-\subsubsection{Classificador e número de parâmetros}
+\subsubsection{Camadas totalmente conectadas e número de parâmetros}
 \label{subsubsec:fund-cnn-classificador}
 
-O vetor resultante do agrupamento alimenta um classificador composto por
-duas camadas totalmente conectadas --- a primeira com 64 unidades,
+O vetor resultante do agrupamento alimenta duas camadas totalmente
+conectadas --- a primeira com 64 unidades,
 normalização em lote e ativação \textit{ReLU}, a segunda com uma unidade de
 saída ---, ambas precedidas por descarte com probabilidade 0,6. Os pesos das
 camadas convolucionais são inicializados conforme \citeonline{he2015delving},
@@ -590,7 +590,7 @@ sinal, os valores são os mesmos para as duas durações de janela.
 			Bloco 3                     & 7\,680                     & 30\,720  & 122\,880 \\
 			Bloco 4                     & ---                        & 61\,440  & 245\,760 \\
 			Normalização dos blocos     & 112                        & 352      & 704      \\
-			Classificador               & 4\,353                     & 8\,449   & 16\,641  \\
+			Camadas totalmente conectadas & 4\,353                     & 8\,449   & 16\,641  \\
 			\midrule
 			Total                       & 14\,425                    & 109\,361 & 418\,145 \\
 			Por paciente de treino      & 47                         & 354      & 1\,353   \\
@@ -628,7 +628,7 @@ precede quatro estágios de blocos residuais:
 	      $2P$, $4P$ e $8P$ canais internos, em que $P$ denota a largura inicial.
 	      O primeiro bloco dos estágios 2 a 4 emprega passo 2, dividindo o
 	      comprimento pela metade e exigindo projeção no atalho.
-	\item \textbf{Agrupamento global e classificador:} idênticos aos da
+	\item \textbf{Agrupamento global e camadas totalmente conectadas:} idênticos aos da
 	      \autoref{subsec:fund-cnn-arquitetura}, com o vetor resultante de
 	      dimensão $2 \times 8 \cdot P \cdot E$ ao combinar média e máximo.
 \end{itemize}
@@ -650,7 +650,7 @@ completa.
 				est/.style={caixa, fill=blue!8, text width=2.05cm},
 				ini/.style={caixa, fill=blue!15, text width=2.05cm},
 				pool/.style={caixa, fill=orange!12, text width=2.5cm},
-				clf/.style={caixa, fill=green!8, text width=2.05cm},
+				clf/.style={caixa, fill=green!8, text width=2.6cm},
 				io/.style={caixa, fill=gray!10, text width=1.75cm},
 				seta/.style={-{Stealth[length=2.2mm]}, thick},
 				node distance=0.28cm
@@ -662,7 +662,7 @@ completa.
 			\node[est, right=of e2] (e3) {\textbf{Estágio 3}\\2 blocos, passo 2\\$[256 \times 1\,500]$};
 			\node[est, below=0.75cm of e3] (e4) {\textbf{Estágio 4}\\2 blocos, passo 2\\$[512 \times 750]$};
 			\node[pool, left=0.45cm of e4] (gp) {\textbf{Agrupamento global}\\média e máximo: $[1\,024]$};
-			\node[clf, left=0.45cm of gp] (cl) {\textbf{Classificador}\\$1\,024 \rightarrow 64 \rightarrow 1$};
+			\node[clf, left=0.45cm of gp] (cl) {\textbf{Camadas totalmente conectadas}\\$1\,024 \rightarrow 64 \rightarrow 1$};
 			\node[io, left=0.45cm of cl, text width=2.05cm] (out) {\textbf{Sigmoide}\\probabilidade de \gls{MSC}};
 			\draw[seta] (in) -- (st);
 			\draw[seta] (st) -- (e1);
@@ -682,15 +682,15 @@ completa.
 				$\rightarrow$ ReLU $\rightarrow$ convolução 3 $\rightarrow$ normalização, somados ao
 				atalho e seguidos de ReLU); no primeiro bloco dos estágios 2 a 4, passo 2 e
 				atalho com projeção.\\
-				\textbf{Classificador:} descarte (0,5) $\rightarrow$ linear (1\,024 $\rightarrow$ 64)
+				\textbf{Camadas totalmente conectadas:} descarte (0,5) $\rightarrow$ linear (1\,024 $\rightarrow$ 64)
 				$\rightarrow$ normalização em lote $\rightarrow$ ReLU $\rightarrow$ descarte (0,5)
 				$\rightarrow$ linear (64 $\rightarrow$ 1).};
 		\end{tikzpicture}
 	}{
 		\Fonte{elaborado pelo autor (2026). Dimensões da ResNet-18 completa
-			($P = 64$) com janela de 2~minutos (24\,000 amostras a 200\,Hz). O
-			classificador é o mesmo da rede convolucional: duas camadas
-			totalmente conectadas que convertem o vetor do agrupamento global
+			($P = 64$) com janela de 2~minutos (24\,000 amostras a 200\,Hz). As
+			camadas totalmente conectadas são as mesmas da rede convolucional: duas
+			camadas lineares que convertem o vetor do agrupamento global
 			em um único valor, a probabilidade de \gls{MSC}. As
 			demais configurações (\autoref{tab:resnet-configuracoes}) mudam o
 			número de blocos por estágio, a largura $P$ ou o tipo de bloco.}
@@ -784,7 +784,7 @@ campo receptivo semelhante ao da ResNet-18, pois apenas uma das três
 convoluções de cada bloco de gargalo considera vizinhança temporal.
 
 Ainda que inferior à duração da janela, esse campo receptivo não limita a
-informação disponível ao classificador: o agrupamento global da
+informação disponível às camadas finais: o agrupamento global da
 \autoref{eq:pooling-global} combina as 750 posições do último estágio,
 abrangendo os dois minutos integralmente.
 
@@ -793,7 +793,7 @@ abrangendo os dois minutos integralmente.
 
 Os parâmetros concentram-se nos estágios finais, em que o número de canais é
 maior. Na ResNet-18 completa, o quarto estágio, com 512 canais, responde por
-aproximadamente três quartos do total. Na ResNet-50, o classificador recebe
+aproximadamente três quartos do total. Na ResNet-50, as camadas totalmente conectadas recebem
 vetor de 4\,096 dimensões --- 2\,048 de cada agrupamento ---, e sua primeira
 camada sozinha possui cerca de 525\,000 parâmetros.
 
@@ -854,10 +854,10 @@ codificadora com os parâmetros da \autoref{tab:atencao-config}.
 
 A saída do codificador, com as mesmas dimensões da entrada, passa pelo
 agrupamento global combinado de média e máximo, resultando em vetor de 512
-dimensões. Diferentemente das demais redes, o classificador consiste em uma
+dimensões. Diferentemente das demais redes, a parte final consiste em uma
 única camada linear precedida de descarte, sem camada intermediária: a
 capacidade adicional introduzida pela atenção dispensa a não linearidade
-extra no classificador.
+extra nessa parte.
 
 A \autoref{tab:atencao-parametros} decompõe os parâmetros.
 
@@ -876,7 +876,7 @@ A \autoref{tab:atencao-parametros} decompõe os parâmetros.
 			Atenção com múltiplas cabeças & 263\,168 & 17,6\,\% \\
 			Rede interna (FFN) & 262\,912 & 17,6\,\% \\
 			Normalização de camada & 1\,024 & 0,1\,\% \\
-			Classificador & 513 & $<$\,0,1\,\% \\
+			Camada linear final & 513 & $<$\,0,1\,\% \\
 			\midrule
 			Total & 1\,491\,553 & 100,0\,\% \\
 			\bottomrule
@@ -1815,7 +1815,7 @@ o modelo apenas clínico foi estimado pela diferença de \gls{AUC} com
 
 A combinação das variáveis clínicas com o sinal bruto foi avaliada por uma rede neural profunda com variáveis clínicas concatenadas: a ResNet-18 do Cenário I com um segundo ramo, que recebe as
 seis variáveis clínicas. As representações dos dois ramos são concatenadas
-antes do classificador, e a rede é treinada para prever a \gls{MSC} pelo
+antes das camadas totalmente conectadas, e a rede é treinada para prever a \gls{MSC} pelo
 mesmo protocolo das redes do Cenário I. Para medir a contribuição de cada
 modalidade, a mesma arquitetura foi treinada também apenas com o ramo
 clínico.
@@ -1835,8 +1835,8 @@ Para controlar esse desequilíbrio, foram comparadas três estratégias:
 	\item \textit{taxa de aprendizado discriminativa}, em que o ramo do sinal
 	      recebe taxa de $10^{-6}$ e decaimento de pesos de $10^{-1}$, e o restante
 	      da rede mantém $10^{-4}$ e $10^{-2}$;
-	\item \textit{ramo do sinal congelado}, em que apenas o ramo clínico e o
-	      classificador são ajustados.
+	\item \textit{ramo do sinal congelado}, em que apenas o ramo clínico e as
+	      camadas totalmente conectadas são ajustados.
 \end{itemize}
 
 

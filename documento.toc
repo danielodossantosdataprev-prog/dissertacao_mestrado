@@ -87,7 +87,7 @@
 \contentsline {subsubsection}{\numberline {4.3.2.2}Largura do núcleo}{63}{subsubsection.4.3.2.2}%
 \contentsline {subsubsection}{\numberline {4.3.2.3}Agrupamento combinado}{63}{subsubsection.4.3.2.3}%
 \contentsline {subsubsection}{\numberline {4.3.2.4}Ausência de conexões residuais}{63}{subsubsection.4.3.2.4}%
-\contentsline {subsubsection}{\numberline {4.3.2.5}Classificador e número de parâmetros}{64}{subsubsection.4.3.2.5}%
+\contentsline {subsubsection}{\numberline {4.3.2.5}Camadas totalmente conectadas e número de parâmetros}{64}{subsubsection.4.3.2.5}%
 \contentsline {subsection}{\numberline {4.3.3}Arquitetura das redes residuais}{64}{subsection.4.3.3}%
 \contentsline {subsubsection}{\numberline {4.3.3.1}Configurações avaliadas}{65}{subsubsection.4.3.3.1}%
 \contentsline {subsubsection}{\numberline {4.3.3.2}Dimensões e campo receptivo}{66}{subsubsection.4.3.3.2}%
@@ -128,7 +128,7 @@
 \contentsline {subsection}{\numberline {4.7.2}Combinação com os marcadores do ECG}{86}{subsection.4.7.2}%
 \contentsline {subsection}{\numberline {4.7.3}Combinação com o sinal: rede profunda com variáveis clínicas concatenadas}{86}{subsection.4.7.3}%
 \contentsline {subsubsection}{\numberline {4.7.3.1}Estratégias de treinamento da rede com concatenação}{86}{subsubsection.4.7.3.1}%
-\contentsline {section}{\numberline {4.8}Protocolo de avaliação}{86}{section.4.8}%
+\contentsline {section}{\numberline {4.8}Protocolo de avaliação}{87}{section.4.8}%
 \contentsline {subsection}{\numberline {4.8.1}Particionamento}{87}{subsection.4.8.1}%
 \contentsline {subsection}{\numberline {4.8.2}Validação e agregação por paciente}{88}{subsection.4.8.2}%
 \contentsline {subsection}{\numberline {4.8.3}Métricas}{89}{subsection.4.8.3}%
